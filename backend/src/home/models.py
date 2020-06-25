@@ -44,4 +44,11 @@ class Patient(models.Model):
         super().__init__(*args, **kwargs)
 
     def __str__(self):
-        return self.last_name + " " + self.first_name + " " + self.middle_name;
+        return self.last_name + " " + self.first_name + " " + self.middle_name
+
+class Occupation(models.Model):
+    title = models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.title
+    
