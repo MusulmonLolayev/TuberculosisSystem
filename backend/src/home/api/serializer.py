@@ -2,6 +2,8 @@ from rest_framework import serializers
 
 from home.models import Patient, District, Region, Country, Occupation
 
+from django.contrib.auth.models import User
+
 class CountrySerializer(serializers.ModelSerializer):
     class Meta:
         model = Country
@@ -19,13 +21,20 @@ class DistrictSerializer(serializers.ModelSerializer):
         model = District
         fields = '__all__'
 
+class OccupationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Occupation
+        fields = '__all__'
+
+
 class PatientSerializer(serializers.ModelSerializer):
-    district = DistrictSerializer(read_only=True)
+    #district = DistrictSerializer(read_only=True)
     class Meta:
         model = Patient
         fields = '__all__'
 
-class OccupationSerializer(serializers.ModelSerializer):
+
+class UserSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Occupation
+        model = User
         fields = '__all__'

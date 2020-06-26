@@ -8,10 +8,12 @@
       app
       >
       <div>
-        <router-link to="/home">Home</router-link>
+        <router-link to="/">Home</router-link>
         <router-link to="/news">News</router-link>
         <router-link to="/about">About</router-link>
         <router-link to="/create">Create</router-link>
+        <router-link to="/login">Login</router-link>
+        <span v-if='isLoggedIn'>| <a @click="logout">Logout</a></span>
       </div>
     </v-app-bar>
 
@@ -34,5 +36,18 @@
 
 export default {
   name: 'App',
+  computed: {
+    isLoggedIn: function() {
+      return this.$store.getters.isLoggedIn
+    }
+  },
+  methods: {
+    logout: function(){
+      this.$store.dispatch('logout')
+      .then(() =>{
+        this.$router.push('/login')
+      })
+    }
+  }
 };
 </script>

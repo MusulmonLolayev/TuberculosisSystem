@@ -5,10 +5,12 @@ import About from '../components/About'
 import Contact from '../components/Contact'
 import News from '../components/News'
 import Create from '../components/create/Create'
+import Login from '../components/Login'
+import store from '../vuex/store'
 
 Vue.use(Router)
 
-export default new Router({
+var router = new Router({
     mode: 'history',
     hash: false,
     routes: [
@@ -36,6 +38,25 @@ export default new Router({
             path: '/create',
             name: 'create',
             component: Create
+        },
+        {
+            path: '/login',
+            name: 'login',
+            component: Login
         }
     ]
 })
+
+router.beforeEach((to, from, next) => {
+    if(to.matched.some(record => record.meta.requiresAuth)) {
+      if (store.getters.isLoggedIn) {
+        next()
+        return
+      }
+      next('/login') 
+    } else {
+      next() 
+    }
+  })
+
+export default router

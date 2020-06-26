@@ -10,7 +10,7 @@
     <template v-slot:activator="{ on, attrs }">
       <v-text-field
         v-model="date"
-        label="label"
+        :label="label"
         v-bind="attrs"
         v-on="on" />
     </template>

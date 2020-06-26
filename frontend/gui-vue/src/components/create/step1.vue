@@ -5,31 +5,34 @@
                 <v-col cols="10" md="3">
                     <v-text-field
                         label="Last name"
+                        v-model="patient.last_name"
                         required/>
                 </v-col>
 
                 <v-col cols="10" md="3">
                     <v-text-field
                         label="First name"
+                        v-model="patient.first_name"
                         required />
                 </v-col>
 
                 <v-col cols="10" md="3">
                     <v-text-field
                         label="Middle name"
-                        required />
+                        v-model="patient.middle_name"
+                        />
                 </v-col>
             </v-row>
 
             <v-row>
                 <v-col cols="10" md="3">
-                    <datepicker label='Date of birthday'/>
+                    <datepicker label='Date of birthday' v-model="patient.birthday"/>
                 </v-col>
 
                 <v-col cols="10" md="3">
-                    <v-radio-group row>
-                        <v-radio label="Male" value="radio-1" />
-                        <v-radio label="Female" value="radio-2" />
+                    <v-radio-group v-model="patient.gender" row>
+                        <v-radio label="Male" value="1" :key="1"/>
+                        <v-radio label="Female" value="2" :key="2"/>
                     </v-radio-group>
                 </v-col>
             </v-row>
@@ -44,7 +47,6 @@
                         v-on:change="CountryChanged"
                         return-object
                         item-value="id"
-                        v-model="selectedCountry"
                         />
                 </v-col>
                 
@@ -56,7 +58,6 @@
                         v-on:change="RegionChanged"
                         return-object
                         item-value="id"
-                        v-model="selectedRegion"
                         />
                 </v-col>
                 <v-col cols="10" md="3">
@@ -66,21 +67,22 @@
                         item-text='name'
                         return-object
                         item-value="id"
-                        v-model="selectedDistrict"
+                        v-model="patient.district"
                         />
                 </v-col>
 
                 <v-col cols="10" md="9">
                     <v-text-field
                         label="Address line"
-                        required/>
+                        required
+                        v-model="patient.address"/>
                 </v-col>
             </v-row>
 
             <h2>Addinational information</h2>
             <v-row>
                 <v-col cols="10" md="3">
-                    <datepicker label='Date of birthday'/>
+                    <datepicker label='From date' v-model="patient.fromdate"/>
                 </v-col>
                 
                 <v-col cols="10" md="3">
@@ -90,7 +92,14 @@
                         item-text='title'
                         return-object
                         item-value="id"
-                        v-model="selectedOccupation" />
+                        v-model="patient.occupation" />
+                </v-col>
+
+                <v-col cols="10" md="3">
+                    <v-text-field
+                        label="Number"
+                        required
+                        v-model="patient.number"/>
                 </v-col>
             </v-row>
         </v-container>
@@ -105,18 +114,9 @@ export default {
     components: {
         datepicker,
     },
-    props: {},
-    data(){
+    props: ['patient'],
+    data: function(){
         return {
-            lastname: '',
-            firstname: '',
-            middlename: '',
-            birthday: new Date(),
-            gender: 1,
-            selectedCountry: {},   
-            selectedRegion: {},
-            selectedDistrict: {},
-            selectedOccupation: {}            
         }
     },
     computed: {
