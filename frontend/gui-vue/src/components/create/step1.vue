@@ -149,11 +149,11 @@ export default {
         ]),
 
         CountryChanged(a){
-            var url = "http://127.0.0.1:8000/api/regions/" + a.id
+            var url = "/regions/" + a.id
             this.GET_REGIONS_FROM_API(url);
         },
         RegionChanged(a){
-            var url = "http://127.0.0.1:8000/api/districts/" + a.id
+            var url = "/districts/" + a.id
             this.GET_DISTRICTS_FROM_API(url);
         },
 

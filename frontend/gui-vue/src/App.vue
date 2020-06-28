@@ -2,19 +2,16 @@
   <v-app>
     
     <v-app-bar 
-      color="primary"
       dense
       Collapse-On-Scroll
       app
       >
-      <div>
-        <router-link to="/">Home</router-link>
-        <router-link to="/news">News</router-link>
-        <router-link to="/about">About</router-link>
-        <router-link to="/create">Create</router-link>
-        <router-link to="/login">Login</router-link>
-        <span v-if='isLoggedIn'>| <a @click="logout">Logout</a></span>
-      </div>
+        <router-link to="/" class="router-link">Home</router-link>
+        <router-link to="/news" class="router-link">News</router-link>
+        <router-link to="/about" class="router-link">About</router-link>
+        <router-link to="/create" class="router-link">Create</router-link>
+        <router-link to="/login" class="router-link">Login</router-link>
+        <span v-if='isLoggedIn' class="router-link"><a @click="logout">Logout</a></span>
     </v-app-bar>
 
     <!-- Sizes your content based upon application components -->
@@ -45,9 +42,16 @@ export default {
     logout: function(){
       this.$store.dispatch('logout')
       .then(() =>{
-        this.$router.push('/login')
+        this.$router.push('/logout')
       })
     }
   }
 };
 </script>
+
+<style scoped>
+  .router-link{
+    margin-right: 10px;
+    margin-left: 10px;
+  }
+</style>

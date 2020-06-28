@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
+import Api from '../api/Api'
+//import jwt_decode from 'jwt-decode';
 
 Vue.use(Vuex)
 
@@ -33,20 +35,18 @@ let store = new Vuex.Store ({
             state.status = 'success'
             state.token = token
             state.user = user
-          },
-          auth_error(state){
+        },
+        auth_error(state){
             state.status = 'error'
-          },
-          logout(state){
+        },
+        logout(state){
             state.status = ''
             state.token = ''
-          },
+        },
     },
     actions: {
         GET_COUNTRIES_FROM_API({commit}){
-            return axios('http://127.0.0.1:8000/api/countries', {
-                method: 'GET'
-            })
+            return Api().get('/countries')
             .then((countries) => {
                 commit('SET_COUNTRIES_TO_STATE', countries.data);
                 return countries;
@@ -58,9 +58,7 @@ let store = new Vuex.Store ({
         },
 
         GET_REGIONS_FROM_API({commit}, url){
-            return axios(url, {
-                method: 'GET'
-            })
+            return Api().get(url)
             .then((regions) => {
                 commit('SET_REGIONS_TO_STATE', regions.data);
                 return regions;
@@ -72,9 +70,7 @@ let store = new Vuex.Store ({
         },
 
         GET_DISTRICTS_FROM_API({commit}, url){
-            return axios(url, {
-                method: 'GET'
-            })
+            return Api().get(url)
             .then((districts) => {
                 commit('SET_DISTRICTS_TO_STATE', districts.data);
                 return districts;
@@ -86,9 +82,7 @@ let store = new Vuex.Store ({
         },
 
         GET_OCCUPATIONS_FROM_API({commit}){
-            return axios('http://127.0.0.1:8000/api/occupations', {
-                method: 'GET'
-            })
+            return Api().get('/occupations')
             .then((occupations) => {
                 commit('SET_OCCUPATIONS_TO_STATE', occupations.data);
                 return occupations;
@@ -101,7 +95,7 @@ let store = new Vuex.Store ({
         login({commit}, user){
             return new Promise((resolve, reject) => {
                 commit('auth_request')
-                axios({url: 'http://127.0.0.1:8000/api/login', data: user, method: 'POST'})
+                Api().post('/login', {user})
                 .then(response => {
                     const token = response.data.token
                     const user = response.data.user
@@ -111,7 +105,7 @@ let store = new Vuex.Store ({
                     commit('auth_success', token, user)
                     resolve(response)
                 })
-                .error(error => {
+                .catch(error => {
                     commit('auth_error')
                     localStorage.removeItem('token')
                     reject(error)
@@ -125,7 +119,7 @@ let store = new Vuex.Store ({
                 delete axios.defaults.headers.common['Authorization']
                 resolve()
             })
-        }
+        },
     },
     getters: {
         COUNTRIES(state){

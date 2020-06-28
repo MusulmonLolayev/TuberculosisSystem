@@ -15,6 +15,8 @@ Vue.config.productionTip = false
 Vue.prototype.$http = Axios
 const token = localStorage.getItem('token')
 
+console.log(token)
+
 if (token){
   Vue.prototype.$http.defaults.headers.common['Authorization'] = token
 }
