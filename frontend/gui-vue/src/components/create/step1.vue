@@ -1,6 +1,5 @@
 <template>
         <v-container>
-            <h1>Step1: Initial information</h1>
             <v-row>
                 <v-col cols="10" md="3">
                     <v-text-field
@@ -37,7 +36,6 @@
                 </v-col>
             </v-row>
             
-            <h2>Address</h2>
             <v-row>
                 <v-col cols="10" md="3">
                     <v-select
@@ -79,7 +77,6 @@
                 </v-col>
             </v-row>
 
-            <h2>Addinational information</h2>
             <v-row>
                 <v-col cols="10" md="3">
                     <datepicker label='From date' v-model="patient.fromdate"/>

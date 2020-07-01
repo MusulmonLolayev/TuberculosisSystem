@@ -1,6 +1,6 @@
 <template>
   <v-container>
-      <h1>Step 2: Initial questions. Please, answer the questions below!</h1>
+      <h1>Please, answer the questions below!</h1>
       <v-row>
           <v-checkbox
             v-model="selected" 

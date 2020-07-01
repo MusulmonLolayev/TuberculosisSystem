@@ -1,10 +1,9 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import axios from 'axios'
 import Api from '../api/Api'
-//import jwt_decode from 'jwt-decode';
 
 Vue.use(Vuex)
+
 
 let store = new Vuex.Store ({
     state: {
@@ -13,7 +12,8 @@ let store = new Vuex.Store ({
         districts: [],
         occupations: [],
         token: localStorage.getItem('token') || '',
-        user: {}
+        user: {},
+        patients: [],
     },
     mutations: {
         SET_COUNTRIES_TO_STATE: (state, countries) =>{
@@ -27,6 +27,9 @@ let store = new Vuex.Store ({
         },
         SET_OCCUPATIONS_TO_STATE: (state, occupation) =>{
             state.occupations = occupation
+        },
+        SET_PATIETNS_TO_STATE: (state, patients) =>{
+            state.patients = patients
         },
         auth_request(state){
             state.status = 'loading'
@@ -101,7 +104,6 @@ let store = new Vuex.Store ({
                     const user = response.data.user
 
                     localStorage.setItem('token', token)
-                    axios.defaults.headers.common['Authorization'] = token
                     commit('auth_success', token, user)
                     resolve(response)
                 })
@@ -116,10 +118,23 @@ let store = new Vuex.Store ({
             return new Promise((resolve) => {
                 commit('logout')
                 localStorage.removeItem('token')
-                delete axios.defaults.headers.common['Authorization']
                 resolve()
             })
         },
+
+        GET_PATIETNS_FROM_API({commit}){
+            return Api().get('/patients')
+            .then((patients) => {
+                console.log('aaa');
+                commit('SET_PATIETNS_TO_STATE', patients.data);
+                return patients;
+            })
+            .catch((error) => {
+                console.log(error);
+                return error;
+            })
+        },
+        
     },
     getters: {
         COUNTRIES(state){
@@ -136,6 +151,9 @@ let store = new Vuex.Store ({
         },
         isLoggedIn: state => !!state.token,
         authStatus: state => state.status,
+        PATIENTS(state){
+            return state.patients;
+        }
     }
 });
 

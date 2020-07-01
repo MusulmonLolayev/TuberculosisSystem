@@ -7,6 +7,7 @@ import News from '../components/News'
 import Create from '../components/create/Create'
 import Login from '../components/Login'
 import store from '../vuex/store'
+import Data from '../components/workplace/data'
 
 Vue.use(Router)
 
@@ -43,6 +44,11 @@ var router = new Router({
             path: '/login',
             name: 'login',
             component: Login
+        },
+        {
+            path: '/data',
+            name: 'data',
+            component: Data
         }
     ]
 })
