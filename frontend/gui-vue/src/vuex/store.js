@@ -125,7 +125,6 @@ let store = new Vuex.Store ({
         GET_PATIETNS_FROM_API({commit}){
             return Api().get('/patients')
             .then((patients) => {
-                console.log('aaa');
                 commit('SET_PATIETNS_TO_STATE', patients.data);
                 return patients;
             })
@@ -134,7 +133,6 @@ let store = new Vuex.Store ({
                 return error;
             })
         },
-        
     },
     getters: {
         COUNTRIES(state){
@@ -149,8 +147,11 @@ let store = new Vuex.Store ({
         OCCUPATIONS(state){
             return state.occupations;
         },
+        
         isLoggedIn: state => !!state.token,
+        
         authStatus: state => state.status,
+        
         PATIENTS(state){
             return state.patients;
         }

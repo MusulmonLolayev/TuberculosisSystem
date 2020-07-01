@@ -1,7 +1,7 @@
 <template>
   <v-container fluid>
     <v-data-iterator
-      :items="items"
+      :items="PATIENTS"
       :items-per-page.sync="itemsPerPage"
       :page="page"
       :search="search"
@@ -67,10 +67,36 @@
             cols="12"
             sm="6"
             md="4"
-            lg="3"
+            lg="4"
           >
             <v-card>
-              <v-card-title class="subheading font-weight-bold">{{ item.name }}</v-card-title>
+              <v-card-title class="blue white--text">
+                  <span>
+                    {{ item.last_name + " " + item.first_name[0] + "." + item.middle_name[0] + "."}}
+                  </span>
+                  <v-spacer></v-spacer>
+                  <v-menu bottom left>
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-btn
+                        dark
+                        icon
+                        v-bind="attrs"
+                        v-on="on"
+                      >
+                        <v-icon>mdi-dots-vertical</v-icon>
+                      </v-btn>
+                    </template>
+
+                    <v-list>
+                      <v-list-item
+                        :key="1"
+                        @click="mnudetails(item)"
+                      >
+                        <v-list-item-title>Details</v-list-item-title>
+                      </v-list-item>
+                    </v-list>
+                  </v-menu>
+              </v-card-title>
 
               <v-divider></v-divider>
 
@@ -162,14 +188,16 @@
         itemsPerPage: 4,
         sortBy: 'name',
         keys: [
-          
+          'number',
+          'birthday',
+          'fromdate',
+          'gender'
         ],
-        //items: [],
       }
     },
     computed: {
       numberOfPages () {
-        return Math.ceil(this.items.length / this.itemsPerPage)
+        return Math.ceil(this.PATIENTS.length / this.itemsPerPage)
       },
       filteredKeys () {
         return this.keys.filter(key => key !== `Name`)
@@ -177,9 +205,6 @@
       ...mapGetters([
             'PATIENTS'
         ]),
-      items(){
-
-      }
     },
     methods: {
       nextPage () {
@@ -192,8 +217,18 @@
         this.itemsPerPage = number
       },
       ...mapActions([
-            'GET_COUNTRIES_FROM_API'
+            'GET_PATIETNS_FROM_API'
         ]),
+      mnudetails(patient){
+        this.$router.push(
+          {
+            name: 'detials', 
+            params: {patient: patient}
+          })
+      }
     },
+    mounted(){
+      this.GET_PATIETNS_FROM_API()
+    }
   }
 </script>

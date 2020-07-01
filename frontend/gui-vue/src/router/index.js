@@ -8,6 +8,7 @@ import Create from '../components/create/Create'
 import Login from '../components/Login'
 import store from '../vuex/store'
 import Data from '../components/workplace/data'
+import Detials from '../components/workplace/detials'
 
 Vue.use(Router)
 
@@ -49,7 +50,12 @@ var router = new Router({
             path: '/data',
             name: 'data',
             component: Data
-        }
+        },
+        {
+            path: '/detials/:patient',
+            name: 'detials',
+            component: Detials
+        },
     ]
 })
 
