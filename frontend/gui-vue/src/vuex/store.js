@@ -14,6 +14,7 @@ let store = new Vuex.Store ({
         token: localStorage.getItem('token') || '',
         user: {},
         patients: [],
+        district: {}
     },
     mutations: {
         SET_COUNTRIES_TO_STATE: (state, countries) =>{
@@ -30,6 +31,9 @@ let store = new Vuex.Store ({
         },
         SET_PATIETNS_TO_STATE: (state, patients) =>{
             state.patients = patients
+        },
+        SET_DISTRICT_TO_STATE: (state, district) =>{
+            state.district = district
         },
         auth_request(state){
             state.status = 'loading'
@@ -133,6 +137,17 @@ let store = new Vuex.Store ({
                 return error;
             })
         },
+        GET_DISTRICT_FROM_API({commit}, id){
+            return Api().get('/districts/' + id)
+            .then((response) =>{
+                commit('SET_DISTRICT_TO_STATE', response.data)
+                return response;
+            })
+            .catch((error) => {
+                console.log(error)
+                return error
+            })
+        }
     },
     getters: {
         COUNTRIES(state){
@@ -154,7 +169,10 @@ let store = new Vuex.Store ({
         
         PATIENTS(state){
             return state.patients;
-        }
+        },
+        DISTRICT(state){
+            return state.district;
+        },
     }
 });
 

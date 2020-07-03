@@ -8,6 +8,8 @@
       :sort-by="sortBy.toLowerCase()"
       :sort-desc="sortDesc"
       hide-default-footer
+      loading
+      loading-text="Loading... Please wait"
     >
       <template v-slot:header>
         <v-toolbar

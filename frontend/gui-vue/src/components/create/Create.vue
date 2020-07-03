@@ -59,7 +59,7 @@
 <script>
 import step1 from './step1'
 import step2 from './step2'
-import axios from 'axios'
+import Api from '@/api/Api'
 
 export default {
     components:{
@@ -91,15 +91,9 @@ export default {
     },
     methods: {
         btnSave(){
-            let patient = Object.assign({}, this.patient)
-
-            //patient.occupation_id = patient.occupation.id
-            patient.occupation = patient.occupation.id
-
-            //patient.district_id = patient.district.id
-            patient.district = patient.district.id
+            let patient = this.patient
              
-            axios.post('http://127.0.0.1:8000/api/patientcreate', {
+            Api.post('/patientcreate', {
                 patient,
             })
             .then(function(response){
