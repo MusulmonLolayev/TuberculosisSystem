@@ -3,20 +3,20 @@ from .views import PatientCreate
 
 from rest_framework.urlpatterns import format_suffix_patterns
 
-from .views import PatientListView, PatientDetialView, CountryListView, \
- CountryDetialView, RegionListView, DistrictListView, OccupationListView, \
- GetDistrictById, PatientEdit, DeletePatient
+from .views import PatientListView, CountryListView, \
+     RegionListView, DistrictListView, OccupationListView, \
+         GetDistrictById, PatientEdit, DeletePatient, ClinicalFormListView, \
+             LocalizationListView, PrevalenceListView, CharacterOfStoolListView, \
+                 PrimaryDiagnoseListView, TakingMedicineListView, ComplaintListView, ImmunogramListView, OtherListView
 
 urlpatterns = [
+    
+    # Get requests
     # /patients
     path('patients', PatientListView.as_view()),
-    # /patients/1
-    path('patients/<pk>', PatientDetialView.as_view()),
 
     # /countries
     path('countries', CountryListView.as_view()),
-    # /countries/1
-    path('countries/<pk>', CountryDetialView.as_view()),
 
     # /regions_by_country/countryId
     path('regions_by_country/<countryId>', RegionListView.as_view()),
@@ -26,9 +26,37 @@ urlpatterns = [
     # /districts/districtId
     path('districts/<districtId>', GetDistrictById),
 
-    # Occupation
+    # Occupations
     path('occupations', OccupationListView.as_view()),
 
+    # Clinical forms
+    path('clinicalforms', ClinicalFormListView.as_view()),
+
+    # Localization
+    path('localization', LocalizationListView.as_view()),
+
+    # Prevalence
+    path('prevalence', PrevalenceListView.as_view()),
+
+    # CharacterOfStoolListView
+    path('characterofstool', CharacterOfStoolListView.as_view()),
+
+    # /primarydiagnose/patientId
+    path('primarydiagnose/<patientId>', PrimaryDiagnoseListView.as_view()),
+
+    # /TakingMedicine/patientId
+    path('TakingMedicine/<patientId>', TakingMedicineListView.as_view()),
+
+    # /Complaint/patientId
+    path('Complaint/<patientId>', ComplaintListView.as_view()),
+
+    # /Immunogram/patientId
+    path('Immunogram/<patientId>', ImmunogramListView.as_view()),
+
+    # /other/patientId
+    path('other/<patientId>', OtherListView.as_view()),
+
+    # Post and delete requests
     # Create patient by Post request
     # /PatientCreate
     path('patientcreate', PatientCreate, name='patientcreate'),
@@ -40,6 +68,7 @@ urlpatterns = [
     # Patient patient by Delete request
     # /DeletePatient
     path('patientdelete', DeletePatient, name='patientdelete'),
+
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)

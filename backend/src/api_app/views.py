@@ -6,23 +6,21 @@ from rest_framework.parsers import JSONParser
 
 from django.contrib.auth.models import User
 
-from patientapp.models import Patient, Country, Region, District, Occupation
-from .serializer import PatientSerializer, CountrySerializer, DistrictSerializer, OccupationSerializer, UserSerializer
+from patientapp.models import Patient, Country, Region, District, Occupation, ClinicalForm, \
+    Localization, Prevalence, PrimaryDiagnose, TakingMedicine, CharacterOfStool, \
+        Complaint, BloodAnalysis, Immunogram, Other
 
+from .serializer import PatientSerializer, CountrySerializer, DistrictSerializer, \
+    OccupationSerializer, ClinicalFormSerializer, LocalizationSerializer, PrevalenceSerializer, \
+        PrimaryDiagnoseSerializer, TakingMedicineSerializer, CharacterOfStoolSerializer, \
+            ComplaintSerializer, BloodAnalysisSerializer, ImmunogramSerializer, OtherSerializer
 
+# Get requests of models or list views
 class PatientListView(ListAPIView):
     queryset = Patient.objects.filter(status=True)
     serializer_class = PatientSerializer
 
-class PatientDetialView(RetrieveAPIView):
-    queryset = Patient.objects.all()
-    serializer_class = PatientSerializer
-
 class CountryListView(ListAPIView):
-    queryset = Country.objects.all()
-    serializer_class = CountrySerializer
-
-class CountryDetialView(RetrieveAPIView):
     queryset = Country.objects.all()
     serializer_class = CountrySerializer
 
@@ -53,6 +51,98 @@ class OccupationListView(ListAPIView):
     queryset = Occupation.objects.all()
     serializer_class = OccupationSerializer
 
+class ClinicalFormListView(ListAPIView):
+    queryset = ClinicalForm.objects.all()
+    serializer_class = ClinicalFormSerializer
+
+class LocalizationListView(ListAPIView):
+    queryset = Localization.objects.all()
+    serializer_class = LocalizationSerializer
+
+class PrevalenceListView(ListAPIView):
+    queryset = Prevalence.objects.all()
+    serializer_class = PrevalenceSerializer
+
+class PrimaryDiagnoseListView(ListAPIView):
+    serializer_class = PrimaryDiagnoseSerializer
+
+    def get_queryset(self):
+        """
+        This view should return a list of all the primary diagnoses
+        for the currently patient.
+        """
+        patientId = self.kwargs['patientId']
+        return PrimaryDiagnose.objects.filter(patient_id=patientId)
+
+class TakingMedicineListView(ListAPIView):
+    serializer_class = TakingMedicineSerializer
+
+    def get_queryset(self):
+        """
+        This view should return a list of all the taking medicine
+        for the currently patient.
+        """
+        patientId = self.kwargs['patientId']
+        return TakingMedicine.objects.filter(patient_id=patientId)
+
+class CharacterOfStoolListView(ListAPIView):
+    queryset = CharacterOfStool.objects.all()
+    serializer_class = CharacterOfStoolSerializer
+
+class ComplaintListView(ListAPIView):
+    serializer_class = ComplaintSerializer
+
+    def get_queryset(self):
+        """
+        This view should return a list of all the complaint
+        for the currently patient.
+        """
+        patientId = self.kwargs['patientId']
+        return Complaint.objects.filter(patient_id=patientId)
+
+class BloodAnalysisListView(ListAPIView):
+    serializer_class = BloodAnalysisSerializer
+
+    def get_queryset(self):
+        """
+        This view should return a list of all the blood analysis
+        for the currently patient.
+        """
+        patientId = self.kwargs['patientId']
+        return BloodAnalysis.objects.filter(patient_id=patientId)
+
+class ImmunogramListView(ListAPIView):
+    serializer_class = ImmunogramSerializer
+
+    def get_queryset(self):
+        """
+        This view should return a list of all the immunogram
+        for the currently patient.
+        """
+        patientId = self.kwargs['patientId']
+        return Immunogram.objects.filter(patient_id=patientId)
+
+class OtherListView(ListAPIView):
+    serializer_class = OtherSerializer
+
+    serializer_class = ImmunogramSerializer
+
+    def get_queryset(self):
+        """
+        This view should return a list of all the Other
+        for the currently patient.
+        """
+        patientId = self.kwargs['patientId']
+        return Other.objects.filter(patient_id=patientId)
+
+@api_view(['GET'])
+def GetDistrictById(request, districtId):
+    district = District.objects.get(id=districtId)
+    if district:
+        return Response(DistrictSerializer(district).data, status=status.HTTP_200_OK)
+    return Response('Page not found', status=status.HTTP_404_NOT_FOUND)
+
+# Patient's actions
 @api_view(['POST'])
 def PatientCreate(request):
     patient = PatientSerializer(data=request.data.get('patient'))
@@ -91,13 +181,6 @@ def PatientEdit(request):
     print(patient.errors)
     return Response(patient.errors, status=status.HTTP_406_NOT_ACCEPTABLE)
 
-@api_view(['GET'])
-def GetDistrictById(request, districtId):
-    district = District.objects.get(id=districtId)
-    if district:
-        return Response(DistrictSerializer(district).data, status=status.HTTP_200_OK)
-    return Response('Page not found', status=status.HTTP_404_NOT_FOUND)
-
 @api_view(['DELETE'])
 def DeletePatient(request):
     patient = PatientSerializer(data=request.data)
@@ -116,3 +199,4 @@ def DeletePatient(request):
         return Response(patient, status=status.HTTP_200_OK)
     print(patient.errors)
     return Response(patient.errors, status=status.HTTP_406_NOT_ACCEPTABLE)
+
