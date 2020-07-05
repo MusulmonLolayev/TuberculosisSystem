@@ -26,7 +26,6 @@ class OccupationSerializer(serializers.ModelSerializer):
         model = Occupation
         fields = '__all__'
 
-
 class PatientSerializer(serializers.ModelSerializer):
     
     #district = DistrictSerializer()
@@ -40,3 +39,4 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = '__all__'
+
