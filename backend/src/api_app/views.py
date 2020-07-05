@@ -6,7 +6,7 @@ from rest_framework.parsers import JSONParser
 
 from django.contrib.auth.models import User
 
-from home.models import Patient, Country, Region, District, Occupation
+from patientapp.models import Patient, Country, Region, District, Occupation
 from .serializer import PatientSerializer, CountrySerializer, DistrictSerializer, OccupationSerializer, UserSerializer
 
 

@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from home.models import Patient, District, Region, Country, Occupation
+from patientapp.models import Patient, District, Region, Country, Occupation
 
 from django.contrib.auth.models import User
 
