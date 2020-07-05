@@ -11,7 +11,7 @@ from .serializer import PatientSerializer, CountrySerializer, DistrictSerializer
 
 
 class PatientListView(ListAPIView):
-    queryset = Patient.objects.all()
+    queryset = Patient.objects.filter(status=True)
     serializer_class = PatientSerializer
 
 class PatientDetialView(RetrieveAPIView):
@@ -64,19 +64,30 @@ def PatientCreate(request):
 
 @api_view(['POST'])
 def PatientEdit(request):
-    print(request.data)
     patient = PatientSerializer(data=request.data.get('patient'))
     if patient.is_valid():
         try:
-            print(patient.data)
+
+            patient = request.data.get('patient')
+
+
             obj = Patient.objects.get(id=request.data.get('patient').get('id'))
-            print(obj)
-            for key, value in request.data.get('patient').items():
-                setattr(obj, key, value)
+            
+            obj.number = patient.get('number')
+            obj.last_name = patient.get('last_name')
+            obj.first_name = patient.get('first_name')
+            obj.middle_name = patient.get('middle_name')
+            obj.birthday = patient.get('birthday')
+            obj.fromdate = patient.get('fromdate')
+            obj.address = patient.get('address')
+            obj.gender = patient.get('gender')
+            obj.district =  District.objects.get(id=patient.get('district'))
+            obj.occupation = Occupation.objects.get(id=patient.get('occupation'))
+            
             obj.save(force_update=True)
         except Patient.DoesNotExist:
-           Response(patient.data, status=status.HTTP_406_NOT_ACCEPTABLE) 
-        return Response(patient.data, status=status.HTTP_200_OK)
+           Response(patient, status=status.HTTP_406_NOT_ACCEPTABLE) 
+        return Response(patient, status=status.HTTP_200_OK)
     print(patient.errors)
     return Response(patient.errors, status=status.HTTP_406_NOT_ACCEPTABLE)
 
@@ -86,3 +97,22 @@ def GetDistrictById(request, districtId):
     if district:
         return Response(DistrictSerializer(district).data, status=status.HTTP_200_OK)
     return Response('Page not found', status=status.HTTP_404_NOT_FOUND)
+
+@api_view(['DELETE'])
+def DeletePatient(request):
+    patient = PatientSerializer(data=request.data)
+    if patient.is_valid():
+        try:
+
+            patient = request.data
+
+            obj = Patient.objects.get(id=request.data.get('id'))
+
+            obj.status = False
+
+            obj.save(force_update=True)
+        except Patient.DoesNotExist:
+           Response(patient, status=status.HTTP_406_NOT_ACCEPTABLE) 
+        return Response(patient, status=status.HTTP_200_OK)
+    print(patient.errors)
+    return Response(patient.errors, status=status.HTTP_406_NOT_ACCEPTABLE)

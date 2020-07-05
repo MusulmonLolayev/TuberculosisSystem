@@ -47,6 +47,7 @@ class Patient(models.Model):
     address = models.TextField(default='')
     gender = models.BooleanField(default=True)
     occupation = models.ForeignKey(Occupation, on_delete = models.CASCADE)
+    status = models.BooleanField(default=True)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

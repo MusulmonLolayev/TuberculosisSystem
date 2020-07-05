@@ -28,11 +28,13 @@ class OccupationSerializer(serializers.ModelSerializer):
 
 
 class PatientSerializer(serializers.ModelSerializer):
-    #district = DistrictSerializer(read_only=True)
+    
+    #district = DistrictSerializer()
+    #occupation = OccupationSerializer()
+    
     class Meta:
         model = Patient
         fields = '__all__'
-
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:

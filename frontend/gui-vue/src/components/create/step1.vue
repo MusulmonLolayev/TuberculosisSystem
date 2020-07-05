@@ -42,7 +42,7 @@
                         label="Country" 
                         :items="COUNTRIES"
                         item-text='name'
-                        v-on:change="CountryChanged"
+                        @change="countryChanged"
                         return-object
                         item-value="id"
                         v-model="selectedCountry"
@@ -54,7 +54,7 @@
                         label="Region"
                         :items="REGIONS"
                         item-text='name'
-                        v-on:change="RegionChanged"
+                        @change="regionChanged"
                         return-object
                         item-value="id"
                         v-model="selectedReigion"
@@ -68,6 +68,7 @@
                         return-object
                         item-value="id"
                         v-model="selectedDistrict"
+                        @change="districtChanged"
                         />
                 </v-col>
 
@@ -91,7 +92,8 @@
                         item-text='title'
                         return-object
                         item-value="id"
-                        v-model="patient.occupation" />
+                        @change="occupationChanged"
+                        v-model="selectedOccupation" />
                 </v-col>
 
                 <v-col cols="10" md="3">
@@ -127,6 +129,7 @@ export default {
             selectedCountry: {},
             selectedReigion: {},
             selectedDistrict: {},
+            selectedOccupation: {},
             gender: 0
         }
     },
@@ -148,13 +151,19 @@ export default {
             'GET_DISTRICT_FROM_API',
         ]),
 
-        CountryChanged(a){
-            var url = "/regions_by_country/" + a.id
+        countryChanged(e){
+            var url = "/regions_by_country/" + e.id
             this.GET_REGIONS_FROM_API(url);
         },
-        RegionChanged(a){
-            var url = "/districts_by_region/" + a.id
+        regionChanged(e){
+            var url = "/districts_by_region/" + e.id
             this.GET_DISTRICTS_FROM_API(url);
+        },
+        districtChanged(e){
+            this.patient.district = e.id
+        },
+        occupationChanged(e){
+            this.patient.occupation = e.id
         },
         birthdayChange(){
             this.patient.birthday = this.patient_edit.birthday.value
@@ -164,7 +173,8 @@ export default {
         },
         rbChange(e){
             this.patient.gender = e == 0 ? true : false
-        }
+        },
+
 
     },
     mounted(){
@@ -176,16 +186,19 @@ export default {
             // select region, country and district by patient for editing
             this.selectedCountry = this.DISTRICT.region.country.id
             // when the country changes then must notice about it by calling the method.
-            this.CountryChanged(this.DISTRICT.region.country)
+            this.countryChanged(this.DISTRICT.region.country)
             
             this.selectedReigion = this.DISTRICT.region.id
             // it is as same as the country selection
-            this.RegionChanged(this.DISTRICT.region)
+            this.regionChanged(this.DISTRICT.region)
 
             this.selectedDistrict = this.DISTRICT.id
 
             // set gender
             this.gender = this.patient.gender == true ? 0 : 1
+
+            // set occupation
+            this.selectedOccupation = this.patient.occupation
         }
     },
 }

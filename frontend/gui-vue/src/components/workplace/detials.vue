@@ -113,7 +113,20 @@ export default {
             'GET_DISTRICT_FROM_API',
         ]),
         btnDelete: function(){
-          console.log('Delete')
+            let patient = this.patient
+            let router = this.$router
+            console.log(patient)
+            Api().delete('/patientdelete', {
+                data: patient,
+            })
+            .then(function(response){
+                console.log(this)
+                console.log(response)
+                router.push('/data')
+            })
+            .catch(function(error){
+                console.log(error)
+            });
         },
         btnEdit: function(){
           this.edit_dialog = true

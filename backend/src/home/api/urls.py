@@ -5,7 +5,7 @@ from rest_framework.urlpatterns import format_suffix_patterns
 
 from .views import PatientListView, PatientDetialView, CountryListView, \
  CountryDetialView, RegionListView, DistrictListView, OccupationListView, \
- GetDistrictById, PatientEdit
+ GetDistrictById, PatientEdit, DeletePatient
 
 urlpatterns = [
     # /patients
@@ -36,6 +36,10 @@ urlpatterns = [
     # Patient patient by Post request
     # /PatientEdit
     path('patientedit', PatientEdit, name='patientedit'),
+
+    # Patient patient by Delete request
+    # /DeletePatient
+    path('patientdelete', DeletePatient, name='patientdelete'),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)
