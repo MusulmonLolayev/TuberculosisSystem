@@ -1,5 +1,6 @@
 <template>
     <div>
+        <MessageBox :data='message'/>
         <v-stepper
             alt-labels
         >
@@ -92,7 +93,9 @@
                 Continue
             </v-btn>
 
-            <v-btn text>Cancel</v-btn>        
+            <v-btn text @click="btnCancel">Cancel</v-btn>
+
+            <v-btn text @click="btnSave" color="primary" v-bind:disabled='!settings.IsUpdated'>Save</v-btn>
         </div>
     </div>
 </template>
@@ -106,7 +109,10 @@ import Complaint from './complaint'
 import BloodAnalysis from './bloodanalysis'
 import Immunogram from './immunogram'
 import Other from './other'
-import Api from '@/api/Api'
+import MessageBox from '../commons/messagebox'
+import MessgeBox_Class from '../commons/messagebox_class'
+
+//import Api from '@/api/Api'
 
 export default {
     components:{
@@ -117,10 +123,14 @@ export default {
         Complaint,
         BloodAnalysis,
         Immunogram,
-        Other
+        Other,
+        MessageBox,
     },
     data: function(){
         return {
+            settings: {
+                IsUpdated: false,
+            },
             step_count: 1,
             step_max: 3,
             patient: {
@@ -146,6 +156,7 @@ export default {
             other: {
 
             },
+            message: new MessgeBox_Class()
         }
     },
     computed:{
@@ -165,8 +176,17 @@ export default {
         
     },
     methods: {
+        btnSavingDisAgree(){
+            console.log('btnSavingDisAgree')
+        },
+        btnSavingAgree(){
+            console.log('btnSavingAgree')
+            this.settings.IsUpdated = false
+        },
         btnSave(){
-            let patient = this.patient
+            this.message.showMessage('Some title', 'some text', 'success', true, this.btnSavingAgree, this.btnSavingDisAgree)
+
+            /*let patient = this.patient
              
             Api.post('/patientcreate', {
                 patient,
@@ -176,7 +196,7 @@ export default {
             })
             .catch(function(error){
                 console.log(error)
-            });
+            });*/
         },
         stepBack(){
             if (this.step_count > 1){
@@ -190,7 +210,16 @@ export default {
                 this.step_count++;
                 console.log(this.step_count)
             }
-        }
+        },
+        btnCancel(){
+            if (this.IsUpdated){
+                // DO TO sth
+
+            }
+        },
+    },
+    updated: function(){
+        this.settings.IsUpdated = true
     }
 }
 </script>
