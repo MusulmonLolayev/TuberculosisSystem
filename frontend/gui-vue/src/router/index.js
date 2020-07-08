@@ -9,6 +9,7 @@ import Login from '../components/Login'
 import store from '../vuex/store'
 import Data from '../components/workplace/data'
 import Detials from '../components/workplace/detials'
+import DataMining from '../components/workplace/datamining'
 
 Vue.use(Router)
 
@@ -55,6 +56,11 @@ var router = new Router({
             path: '/detials/:patient',
             name: 'detials',
             component: Detials
+        },
+        {
+            path: '/datamining',
+            name: 'datamining',
+            component: DataMining
         },
     ]
 })

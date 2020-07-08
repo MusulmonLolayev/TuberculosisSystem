@@ -26,6 +26,17 @@
             <v-list-item-title>Data</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
+
+        <v-list-item link @click="gotodatamining">
+          <v-list-item-action>
+            <v-icon>mdi-database-search</v-icon>
+          </v-list-item-action>
+
+          <v-list-item-content>
+            <v-list-item-title>Data mining</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+        
         <v-divider />
 
         <v-list-item link @click="gotolog">
@@ -93,7 +104,10 @@ export default {
     },
     gotodata: function(){
       this.$router.push('/data')
-    }
+    },
+    gotodatamining: function(){
+      this.$router.push('/datamining')
+    },
   }
 };
 </script>

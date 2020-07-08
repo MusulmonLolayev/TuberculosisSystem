@@ -1,5 +1,4 @@
 from django.urls import path
-from .views import PatientCreate
 
 from rest_framework.urlpatterns import format_suffix_patterns
 
@@ -7,7 +6,8 @@ from .views import PatientListView, CountryListView, \
      RegionListView, DistrictListView, OccupationListView, \
          GetDistrictById, PatientEdit, DeletePatient, ClinicalFormListView, \
              LocalizationListView, PrevalenceListView, CharacterOfStoolListView, \
-                 PrimaryDiagnoseListView, TakingMedicineListView, ComplaintListView, ImmunogramListView, OtherListView
+                 PrimaryDiagnoseListView, TakingMedicineListView, ComplaintListView, ImmunogramListView, OtherListView, \
+                     PatientCreate
 
 urlpatterns = [
     

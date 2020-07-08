@@ -5,6 +5,17 @@
       focusable
       multiple
     >
+    <v-snackbar
+      :timeout="2000"
+      :value="show_message"
+      absolute
+      top
+      :color="message_type"
+      outlined
+      right
+    >
+      {{message}}
+    </v-snackbar>
       <v-expansion-panel expanded>
         <v-expansion-panel-header><h2>General information</h2></v-expansion-panel-header>
         <v-expansion-panel-content>
@@ -45,7 +56,7 @@
                   width="500"
                 >
                   <v-card>
-                    <step1 :patient="patient"/>
+                    <PatientCard :patient="patient"/>
                     <v-divider></v-divider>
 
                     <v-card-actions>
@@ -67,7 +78,9 @@
       </v-expansion-panel>
 
       <v-expansion-panel>
-        <v-expansion-panel-header>Panel 2</v-expansion-panel-header>
+        <v-expansion-panel-header>
+          <h2>Primary diagonose</h2>
+        </v-expansion-panel-header>
         <v-expansion-panel-content>
           Some content
         </v-expansion-panel-content>
@@ -86,7 +99,7 @@
 <script>
 
 import {mapActions, mapGetters} from 'vuex'
-import step1 from '../create/step1'
+import PatientCard from '../create/patient'
 import Api from '@/api/Api'
 
 export default {
@@ -95,7 +108,10 @@ export default {
         return {
             patient: this.$route.params.patient,
             edit_dialog: false,
-            panel: [0]
+            panel: [0],
+            show_message: false,
+            message_type: 'success',
+            message: '',
         }
     },
     mounted: function(){
@@ -115,12 +131,10 @@ export default {
         btnDelete: function(){
             let patient = this.patient
             let router = this.$router
-            console.log(patient)
             Api().delete('/patientdelete', {
                 data: patient,
             })
             .then(function(response){
-                console.log(this)
                 console.log(response)
                 router.push('/data')
             })
@@ -137,20 +151,31 @@ export default {
         },
         btnSave: function(){
             let patient = this.patient
+            let self = this
 
             Api().post('/patientedit', {
                 patient,
             })
             .then(function(response){
                 console.log(response)
+                self.showMessage('Success', 'success')
             })
             .catch(function(error){
                 console.log(error)
             });
+        },
+        sleep: function(ms){
+          return new Promise(resolve => setTimeout(resolve, ms));
+        },
+        showMessage: function(message, message_type){
+          //console.log('dddd')
+          this.message = message
+          this.message_type = message_type
+          this.show_message = true;
         }
     },
     components: {
-        step1
+        PatientCard
     }
 }
 </script>

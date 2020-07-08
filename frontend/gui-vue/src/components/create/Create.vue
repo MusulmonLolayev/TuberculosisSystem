@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-stepper v-model="step_count"
+        <v-stepper
             alt-labels
         >
             <v-stepper-header>
@@ -16,12 +16,27 @@
 
                 <v-divider></v-divider>
 
-                <v-stepper-step step="3" :editable='!isValidate_step2'>Name of step 3</v-stepper-step>
+                <v-stepper-step step="3" :editable='!isValidate_step2'>
+                    Primary diagnose
+                </v-stepper-step>
+
+                <v-divider></v-divider>
+
+                <v-stepper-step step="4" editable>
+                    Taking medicine and Complaint
+                </v-stepper-step>
+
+                <v-divider></v-divider>
+
+                <v-stepper-step step="5" editable>
+                    Blood, immunogram analysis and others
+                </v-stepper-step>
             </v-stepper-header>
 
             <v-stepper-items>
+                
                 <v-stepper-content step="1">
-                    <step1 :patient="patient"/>
+                    <PatientCard :patient="patient"/>
                 </v-stepper-content>
 
                 <v-stepper-content step="2">
@@ -29,8 +44,34 @@
                 </v-stepper-content>
 
                 <v-stepper-content step="3">
-                
+                    <PrimaryDiagnose :primarydiagnose='primarydiagnose'/>
                 </v-stepper-content>
+
+                <v-stepper-content step="4">
+                    <v-container>
+                        <v-row>
+                            <TakingMedicine :takingmedicine='takingmedicine'/>
+                        </v-row>
+                        <v-row>
+                            <Complaint :complaint='complaint'/>
+                        </v-row>
+                    </v-container>
+                </v-stepper-content>
+
+                <v-stepper-content step="5">
+                    <v-container>
+                        <v-row>
+                            <BloodAnalysis :bloodanalysis='bloodanalysis'/>
+                        </v-row>
+                        <v-row>
+                            <Immunogram :immunogram='immunogram'/>
+                        </v-row>
+                        <v-row>
+                            <Other :other='other' />
+                        </v-row>
+                    </v-container>
+                </v-stepper-content>
+
             </v-stepper-items>
         </v-stepper>
 
@@ -57,14 +98,26 @@
 </template>
 
 <script>
-import step1 from './step1'
+import PatientCard from './patient'
 import step2 from './step2'
+import PrimaryDiagnose from './primarydiagnose'
+import TakingMedicine from './takingmedicine'
+import Complaint from './complaint'
+import BloodAnalysis from './bloodanalysis'
+import Immunogram from './immunogram'
+import Other from './other'
 import Api from '@/api/Api'
 
 export default {
     components:{
-        step1,
-        step2
+        PatientCard,
+        step2,
+        PrimaryDiagnose,
+        TakingMedicine,
+        Complaint,
+        BloodAnalysis,
+        Immunogram,
+        Other
     },
     data: function(){
         return {
@@ -72,20 +125,42 @@ export default {
             step_max: 3,
             patient: {
             },
+            clinicalform: {
+
+            },
+            primarydiagnose: {
+
+            },
+            takingmedicine: {
+
+            },
+            complaint: {
+
+            },
+            bloodanalysis: {
+
+            },
+            immunogram: {
+
+            },
+            other: {
+
+            },
         }
     },
     computed:{
         isValidate_step1: function(){
-            return true;
+            return false
         },
         isValidate_step2: function(){
-            return true;
+            return false
         },
         isValidate_step3: function(){
-            return true;
+            return false
         },
         isValidate: function(){
-            return this.isValidate_step1 && this.isValidate_step2 && this.isValidate_step3
+            return false
+            //return this.isValidate_step1 && this.isValidate_step2 && this.isValidate_step3
         },
         
     },

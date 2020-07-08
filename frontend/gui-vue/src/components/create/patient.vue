@@ -111,7 +111,7 @@ import datepicker from '../inputs/datepicker'
 import {mapActions, mapGetters} from 'vuex'
 
 export default {
-    name: 'step1',
+    name: 'PatientCard',
     components: {
         datepicker,
     },
@@ -174,8 +174,6 @@ export default {
         rbChange(e){
             this.patient.gender = e == 0 ? true : false
         },
-
-
     },
     mounted(){
         this.GET_COUNTRIES_FROM_API()
@@ -203,7 +201,6 @@ export default {
     },
 }
 </script>
-
 
 <style scoped>
     .card-form {

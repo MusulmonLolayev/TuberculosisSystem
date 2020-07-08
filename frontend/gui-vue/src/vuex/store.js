@@ -14,7 +14,9 @@ let store = new Vuex.Store ({
         token: localStorage.getItem('token') || '',
         user: {},
         patients: [],
-        district: {}
+        district: {},
+        clinical_forms: [],
+        localizations: [],
     },
     mutations: {
         SET_COUNTRIES_TO_STATE: (state, countries) =>{
@@ -49,6 +51,12 @@ let store = new Vuex.Store ({
         logout(state){
             state.status = ''
             state.token = ''
+        },
+        SET_CLINICAL_FORMS_TO_STATE: (state, clinical_forms) => {
+            state.clinical_forms = clinical_forms
+        },
+        SET_LOCALIZATION_TO_STATE: (state, localizations) => {
+            state.localizations = localizations;
         },
     },
     actions: {
@@ -147,6 +155,28 @@ let store = new Vuex.Store ({
                 console.log(error)
                 return error
             })
+        },
+        GET_CLINICAL_FORMS_FROM_API({commit}){
+            return Api().get('/clinicalforms')
+            .then((response) => {
+                commit('SET_CLINICAL_FORMS_TO_STATE', response.data)
+                return response
+            })
+            .catch((error) => {
+                console.log(error)
+                return error
+            })
+        },
+        GET_LOCALIZATION_FROM_API({commit}){
+            return Api().get('/localization')
+            .then((response) => {
+                commit('SET_LOCALIZATION_TO_STATE', response.data)
+                return response
+            })
+            .catch((error) => {
+                console.log(error)
+                return error
+            })
         }
     },
     getters: {
@@ -172,6 +202,12 @@ let store = new Vuex.Store ({
         },
         DISTRICT(state){
             return state.district;
+        },
+        CLINICAL_FORMS(state){
+            return state.clinical_forms
+        },
+        LOCALIZATIONS(state){
+            return state.localizations
         },
     }
 });
