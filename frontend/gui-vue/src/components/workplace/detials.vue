@@ -153,7 +153,7 @@ export default {
             let patient = this.patient
             let self = this
 
-            Api().post('/patientedit', {
+            Api().put('/patient_request', {
                 patient,
             })
             .then(function(response){

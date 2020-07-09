@@ -2,19 +2,13 @@ from django.urls import path
 
 from rest_framework.urlpatterns import format_suffix_patterns
 
-from .views import PatientListView, CountryListView, \
+from .views import CountryListView, primary_request, \
      RegionListView, DistrictListView, OccupationListView, \
-         GetDistrictById, PatientEdit, DeletePatient, ClinicalFormListView, \
+         GetDistrictById, patient_request, ClinicalFormListView, \
              LocalizationListView, PrevalenceListView, CharacterOfStoolListView, \
-                 PrimaryDiagnoseListView, TakingMedicineListView, ComplaintListView, ImmunogramListView, OtherListView, \
-                     PatientCreate
+                 taking_request, complaint_request, immunogram_request, other_request
 
 urlpatterns = [
-    
-    # Get requests
-    # /patients
-    path('patients', PatientListView.as_view()),
-
     # /countries
     path('countries', CountryListView.as_view()),
 
@@ -41,34 +35,23 @@ urlpatterns = [
     # CharacterOfStoolListView
     path('characterofstool', CharacterOfStoolListView.as_view()),
 
-    # /primarydiagnose/patientId
-    path('primarydiagnose/<patientId>', PrimaryDiagnoseListView.as_view()),
+    # Patient patient by Post request
+    path('patient_request', patient_request),
+
+    # /primary_request
+    path('primary_request', primary_request),
 
     # /TakingMedicine/patientId
-    path('TakingMedicine/<patientId>', TakingMedicineListView.as_view()),
+    path('taking_request', taking_request),
 
-    # /Complaint/patientId
-    path('Complaint/<patientId>', ComplaintListView.as_view()),
+    # /Complaint
+    path('complaint_request', complaint_request),
 
-    # /Immunogram/patientId
-    path('Immunogram/<patientId>', ImmunogramListView.as_view()),
+    # /Immunogram
+    path('immunogram_request', immunogram_request),
 
-    # /other/patientId
-    path('other/<patientId>', OtherListView.as_view()),
-
-    # Post and delete requests
-    # Create patient by Post request
-    # /PatientCreate
-    path('patientcreate', PatientCreate, name='patientcreate'),
-
-    # Patient patient by Post request
-    # /PatientEdit
-    path('patientedit', PatientEdit, name='patientedit'),
-
-    # Patient patient by Delete request
-    # /DeletePatient
-    path('patientdelete', DeletePatient, name='patientdelete'),
-
+    # /other
+    path('other_request', other_request),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)

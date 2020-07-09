@@ -135,7 +135,7 @@ let store = new Vuex.Store ({
         },
 
         GET_PATIETNS_FROM_API({commit}){
-            return Api().get('/patients')
+            return Api().get('/patient_request')
             .then((patients) => {
                 commit('SET_PATIETNS_TO_STATE', patients.data);
                 return patients;

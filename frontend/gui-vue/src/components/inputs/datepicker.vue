@@ -12,7 +12,9 @@
         v-model="date.value"
         :label="label"
         v-bind="attrs"
-        v-on="on" />
+        v-on="on" 
+        @input="datechange"
+        />
     </template>
     <v-date-picker v-model="date.value"  @input="datechange"></v-date-picker>
   </v-menu>

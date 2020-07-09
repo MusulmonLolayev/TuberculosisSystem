@@ -49,6 +49,9 @@ class Patient(models.Model):
     # it is extra field for patient to help not deleting
     status = models.BooleanField(default=True)
 
+    """def save(self, **kwargs):
+        super().save(**kwargs)"""
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -129,9 +132,9 @@ class Complaint(models.Model):
     #диарея (да/нет)
     diarrhea = models.BooleanField(default=False)
     #нормальный стул  (да/нет)
-    pyrazinamide = models.BooleanField(default=False)
-    #normal_stool (да/нет)
-    ethambutol = models.BooleanField(default=False)
+    normal_stool = models.BooleanField(default=False)
+    #запоры (да/нет)
+    constipation = models.BooleanField(default=False)
     #Метеоризм  (да/нет)
     flatulence = models.BooleanField(default=False)
     #Боли в животе (да/нет)

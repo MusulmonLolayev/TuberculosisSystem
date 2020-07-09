@@ -1,4 +1,4 @@
-from rest_framework.generics import ListAPIView, RetrieveAPIView
+from rest_framework.generics import ListAPIView, RetrieveAPIView, UpdateAPIView
 from rest_framework.decorators import api_view
 from rest_framework import status
 from rest_framework.response import Response
@@ -14,11 +14,6 @@ from .serializer import PatientSerializer, CountrySerializer, DistrictSerializer
     OccupationSerializer, ClinicalFormSerializer, LocalizationSerializer, PrevalenceSerializer, \
         PrimaryDiagnoseSerializer, TakingMedicineSerializer, CharacterOfStoolSerializer, \
             ComplaintSerializer, BloodAnalysisSerializer, ImmunogramSerializer, OtherSerializer
-
-# Get requests of models or list views
-class PatientListView(ListAPIView):
-    queryset = Patient.objects.filter(status=True)
-    serializer_class = PatientSerializer
 
 class CountryListView(ListAPIView):
     queryset = Country.objects.all()
@@ -63,77 +58,9 @@ class PrevalenceListView(ListAPIView):
     queryset = Prevalence.objects.all()
     serializer_class = PrevalenceSerializer
 
-class PrimaryDiagnoseListView(ListAPIView):
-    serializer_class = PrimaryDiagnoseSerializer
-
-    def get_queryset(self):
-        """
-        This view should return a list of all the primary diagnoses
-        for the currently patient.
-        """
-        patientId = self.kwargs['patientId']
-        return PrimaryDiagnose.objects.filter(patient_id=patientId)
-
-class TakingMedicineListView(ListAPIView):
-    serializer_class = TakingMedicineSerializer
-
-    def get_queryset(self):
-        """
-        This view should return a list of all the taking medicine
-        for the currently patient.
-        """
-        patientId = self.kwargs['patientId']
-        return TakingMedicine.objects.filter(patient_id=patientId)
-
 class CharacterOfStoolListView(ListAPIView):
     queryset = CharacterOfStool.objects.all()
     serializer_class = CharacterOfStoolSerializer
-
-class ComplaintListView(ListAPIView):
-    serializer_class = ComplaintSerializer
-
-    def get_queryset(self):
-        """
-        This view should return a list of all the complaint
-        for the currently patient.
-        """
-        patientId = self.kwargs['patientId']
-        return Complaint.objects.filter(patient_id=patientId)
-
-class BloodAnalysisListView(ListAPIView):
-    serializer_class = BloodAnalysisSerializer
-
-    def get_queryset(self):
-        """
-        This view should return a list of all the blood analysis
-        for the currently patient.
-        """
-        patientId = self.kwargs['patientId']
-        return BloodAnalysis.objects.filter(patient_id=patientId)
-
-class ImmunogramListView(ListAPIView):
-    serializer_class = ImmunogramSerializer
-
-    def get_queryset(self):
-        """
-        This view should return a list of all the immunogram
-        for the currently patient.
-        """
-        patientId = self.kwargs['patientId']
-        return Immunogram.objects.filter(patient_id=patientId)
-
-class OtherListView(ListAPIView):
-    serializer_class = OtherSerializer
-
-    serializer_class = ImmunogramSerializer
-
-    def get_queryset(self):
-        """
-        This view should return a list of all the Other
-        for the currently patient.
-        """
-        patientId = self.kwargs['patientId']
-        return Other.objects.filter(patient_id=patientId)
 
 @api_view(['GET'])
 def GetDistrictById(request, districtId):
@@ -142,61 +69,261 @@ def GetDistrictById(request, districtId):
         return Response(DistrictSerializer(district).data, status=status.HTTP_200_OK)
     return Response('Page not found', status=status.HTTP_404_NOT_FOUND)
 
-# Patient's actions
-@api_view(['POST'])
-def PatientCreate(request):
-    patient = PatientSerializer(data=request.data.get('patient'))
-    if patient.is_valid():
-        patient.save()
-        return Response(patient.data, status=status.HTTP_201_CREATED)
-    print(patient.errors)
-    return Response(patient.errors, status=status.HTTP_406_NOT_ACCEPTABLE)
-
-@api_view(['POST'])
-def PatientEdit(request):
-    patient = PatientSerializer(data=request.data.get('patient'))
-    if patient.is_valid():
+@api_view(['GET', 'POST', 'PUT', 'DELETE'])
+def patient_request(request):
+    try:
+        # Get list of data
+        if request.method == 'GET':
+            return Response(PatientSerializer(Patient.objects.filter(status=True), many=True).data, status=200)
+        
+        # Create object
+        if request.method == 'POST':
+            serializer = PatientSerializer(data=request.data.get('patient'))
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data.get('id'), status=201)
+            else:
+                print(serializer.errors)
+                return Response(serializer.errors, status=406)
+        
+        # find suitable instance
         try:
-
-            patient = request.data.get('patient')
-
-
-            obj = Patient.objects.get(id=request.data.get('patient').get('id'))
-            
-            obj.number = patient.get('number')
-            obj.last_name = patient.get('last_name')
-            obj.first_name = patient.get('first_name')
-            obj.middle_name = patient.get('middle_name')
-            obj.birthday = patient.get('birthday')
-            obj.fromdate = patient.get('fromdate')
-            obj.address = patient.get('address')
-            obj.gender = patient.get('gender')
-            obj.district =  District.objects.get(id=patient.get('district'))
-            obj.occupation = Occupation.objects.get(id=patient.get('occupation'))
-            
-            obj.save(force_update=True)
+            patient = Patient.objects.get(id=request.data.get('patient').get('id'))
         except Patient.DoesNotExist:
-           Response(patient, status=status.HTTP_406_NOT_ACCEPTABLE) 
-        return Response(patient, status=status.HTTP_200_OK)
-    print(patient.errors)
-    return Response(patient.errors, status=status.HTTP_406_NOT_ACCEPTABLE)
+            return Response(status=404)
+        
+        # Update object
+        if request.method == 'PUT':
+            #print(request.data)
+            serializer = PatientSerializer(patient, data=request.data.get('patient'))
+            if serializer.is_valid():
+                serializer.save()
+            return Response(status=200)
+        else:
+            patient.status = False
+            patient.save()
+            return Response(status=200)
+    except:
+        Response(status=500)
 
-@api_view(['DELETE'])
-def DeletePatient(request):
-    patient = PatientSerializer(data=request.data)
-    if patient.is_valid():
+@api_view(['POST', 'DELETE', 'PUT', 'GET'])
+def primary_request(request):
+    try:
+        # Get list of data
+        if request.method == 'GET':
+            return Response(PrimaryDiagnoseSerializer(PrimaryDiagnose
+            .objects.filter(patient_id=request.data.get('patient_id')), many=True).data, status=200)
+        
+        # Create object
+        if request.method == 'POST':
+            serializer = PrimaryDiagnoseSerializer(data=request.data.get('primarydiagnose'))
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data.get('id'), status=201)
+            else:
+                print(serializer.errors)
+                return Response(serializer.errors, status=406)
+        
+        # find suitable instance
         try:
+            primarydiagnose = PrimaryDiagnose.objects.get(id=request.data.get('primarydiagnose').get('id'))
+        except PrimaryDiagnose.DoesNotExist:
+            return Response(status=404)
+        
+        # Update object
+        if request.method == 'PUT':
+            #print(request.data)
+            serializer = PrimaryDiagnoseSerializer(primarydiagnose, data=request.data.get('primarydiagnose'))
+            if serializer.is_valid():
+                serializer.save()
+            return Response(status=200)
+        else:
+            primarydiagnose.delete()
+            return Response(status=200)
+    except:
+        Response(status=500)
 
-            patient = request.data
+@api_view(['POST', 'DELETE', 'PUT', 'GET'])
+def taking_request(request):
+    try:
+        # Get list of data
+        if request.method == 'GET':
+            return Response(TakingMedicineSerializer(TakingMedicine
+            .objects.filter(patient_id=request.data.get('patient_id')), many=True).data, status=200)
+        
+        # Create object
+        if request.method == 'POST':
+            serializer = TakingMedicineSerializer(data=request.data.get('takingmedicine'))
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data.get('id'), status=201)
+            else:
+                print(serializer.errors)
+                return Response(serializer.errors, status=406)
+        
+        # find suitable instance
+        try:
+            takingmedicine = TakingMedicine.objects.get(id=request.data.get('takingmedicine').get('id'))
+        except TakingMedicine.DoesNotExist:
+            return Response(status=404)
+        
+        # Update object
+        if request.method == 'PUT':
+            #print(request.data)
+            serializer = TakingMedicineSerializer(takingmedicine, data=request.data.get('takingmedicine'))
+            if serializer.is_valid():
+                serializer.save()
+            return Response(status=200)
+        else:
+            takingmedicine.delete()
+            return Response(status=200)
+    except:
+        Response(status=500)
 
-            obj = Patient.objects.get(id=request.data.get('id'))
+@api_view(['POST', 'DELETE', 'PUT', 'GET'])
+def complaint_request(request):
+    try:
+        # Get list of data
+        if request.method == 'GET':
+            return Response(ComplaintSerializer(Complaint
+            .objects.filter(patient_id=request.data.get('patient_id')), many=True).data, status=200)
+        
+        # Create object
+        if request.method == 'POST':
+            serializer = ComplaintSerializer(data=request.data.get('complaint'))
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data.get('id'), status=201)
+            else:
+                print(serializer.errors)
+                return Response(serializer.errors, status=406)
+        
+        # find suitable instance
+        try:
+            complaint = Complaint.objects.get(id=request.data.get('complaint').get('id'))
+        except Complaint.DoesNotExist:
+            return Response(status=404)
+        
+        # Update object
+        if request.method == 'PUT':
+            #print(request.data)
+            serializer = ComplaintSerializer(complaint, data=request.data.get('complaint'))
+            if serializer.is_valid():
+                serializer.save()
+            return Response(status=200)
+        else:
+            complaint.delete()
+            return Response(status=200)
+    except:
+        Response(status=500)
 
-            obj.status = False
+@api_view(['POST', 'DELETE', 'PUT', 'GET'])
+def blood_request(request):
+    try:
+        # Get list of data
+        if request.method == 'GET':
+            return Response(BloodAnalysisSerializer(BloodAnalysis
+            .objects.filter(patient_id=request.data.get('patient_id')), many=True).data, status=200)
+        
+        # Create object
+        if request.method == 'POST':
+            serializer = BloodAnalysisSerializer(data=request.data.get('bloodanalysis'))
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data.get('id'), status=201)
+            else:
+                print(serializer.errors)
+                return Response(serializer.errors, status=406)
+        
+        # find suitable instance
+        try:
+            bloodanalysis = BloodAnalysis.objects.get(id=request.data.get('bloodanalysis').get('id'))
+        except BloodAnalysis.DoesNotExist:
+            return Response(status=404)
+        
+        # Update object
+        if request.method == 'PUT':
+            #print(request.data)
+            serializer = BloodAnalysisSerializer(bloodanalysis, data=request.data.get('bloodanalysis'))
+            if serializer.is_valid():
+                serializer.save()
+            return Response(status=200)
+        else:
+            complaint.delete()
+            return Response(status=200)
+    except:
+        Response(status=500)
 
-            obj.save(force_update=True)
-        except Patient.DoesNotExist:
-           Response(patient, status=status.HTTP_406_NOT_ACCEPTABLE) 
-        return Response(patient, status=status.HTTP_200_OK)
-    print(patient.errors)
-    return Response(patient.errors, status=status.HTTP_406_NOT_ACCEPTABLE)
+@api_view(['POST', 'DELETE', 'PUT', 'GET'])
+def immunogram_request(request):
+    try:
+        # Get list of data
+        if request.method == 'GET':
+            return Response(ImmunogramSerializer(Immunogram
+            .objects.filter(patient_id=request.data.get('patient_id')), many=True).data, status=200)
+        
+        # Create object
+        if request.method == 'POST':
+            serializer = ImmunogramSerializer(data=request.data.get('immunogram'))
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data.get('id'), status=201)
+            else:
+                print(serializer.errors)
+                return Response(serializer.errors, status=406)
+        
+        # find suitable instance
+        try:
+            immunogram = Immunogram.objects.get(id=request.data.get('immunogram').get('id'))
+        except Immunogram.DoesNotExist:
+            return Response(status=404)
+        
+        # Update object
+        if request.method == 'PUT':
+            #print(request.data)
+            serializer = ImmunogramSerializer(immunogram, data=request.data.get('immunogram'))
+            if serializer.is_valid():
+                serializer.save()
+            return Response(status=200)
+        else:
+            immunogram.delete()
+            return Response(status=200)
+    except:
+        Response(status=500)
 
+@api_view(['POST', 'DELETE', 'PUT', 'GET'])
+def other_request(request):
+    try:
+        # Get list of data
+        if request.method == 'GET':
+            return Response(OtherSerializer(Other
+            .objects.filter(patient_id=request.data.get('patient_id')), many=True).data, status=200)
+        
+        # Create object
+        if request.method == 'POST':
+            serializer = OtherSerializer(data=request.data.get('other'))
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data.get('id'), status=201)
+            else:
+                print(serializer.errors)
+                return Response(serializer.errors, status=406)
+        
+        # find suitable instance
+        try:
+            other = Other.objects.get(id=request.data.get('other').get('id'))
+        except Other.DoesNotExist:
+            return Response(status=404)
+        
+        # Update object
+        if request.method == 'PUT':
+            #print(request.data)
+            serializer = OtherSerializer(other, data=request.data.get('other'))
+            if serializer.is_valid():
+                serializer.save()
+            return Response(status=200)
+        else:
+            other.delete()
+            return Response(status=200)
+    except:
+        Response(status=500)

@@ -1,6 +1,7 @@
 from django.contrib import admin
 from .models import Country, Question, Region, Patient, District, Occupation, \
-    ClinicalForm, Localization, Prevalence, CharacterOfStool
+    ClinicalForm, Localization, Prevalence, CharacterOfStool, PrimaryDiagnose, \
+        TakingMedicine
 
 admin.site.register(Country)
 admin.site.register(Question)
@@ -12,3 +13,5 @@ admin.site.register(ClinicalForm)
 admin.site.register(Localization)
 admin.site.register(Prevalence)
 admin.site.register(CharacterOfStool)
+admin.site.register(PrimaryDiagnose)
+admin.site.register(TakingMedicine)

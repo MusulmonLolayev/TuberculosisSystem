@@ -3,6 +3,7 @@
         <MessageBox :data='message'/>
         <v-stepper
             alt-labels
+            v-model="step_count"
         >
             <v-stepper-header>
                 <v-stepper-step editable step="1">            
@@ -80,7 +81,7 @@
             <v-btn class="btn-actions"
                 color="primary"
                 @click="stepBack"
-                :disabled='this.step_count == 1'
+                :disabled='!(step_count > 1)'
             >
                 Back
             </v-btn>
@@ -88,7 +89,7 @@
             <v-btn
                 color="primary"
                 @click="stepContinue"
-                :disabled='isValidate'
+                :disabled='!(step_count < step_max)'
             >
                 Continue
             </v-btn>
@@ -112,7 +113,7 @@ import Other from './other'
 import MessageBox from '../commons/messagebox'
 import MessgeBox_Class from '../commons/messagebox_class'
 
-//import Api from '@/api/Api'
+import Api from '@/api/Api'
 
 export default {
     components:{
@@ -132,7 +133,7 @@ export default {
                 IsUpdated: false,
             },
             step_count: 1,
-            step_max: 3,
+            step_max: 5,
             patient: {
             },
             clinicalform: {
@@ -176,45 +177,166 @@ export default {
         
     },
     methods: {
-        btnSavingDisAgree(){
-            console.log('btnSavingDisAgree')
+        btnCanelingAgree(){
+            console.log('btnCanelingAgree')
+            this.$router.go(-1)
         },
-        btnSavingAgree(){
-            console.log('btnSavingAgree')
-            this.settings.IsUpdated = false
+        async SavePatient(){
+            try{
+                let patient = this.patient
+                // Check this patient has id which means that the patient was created in database
+                // if id is undefined then create object, otherwise edit it
+                if (typeof patient.id == 'undefined'){
+                    await Api().post('/patient_request', {
+                        patient,
+                    })
+                    .then(function(response){
+                        patient.id = response.data
+                    })
+                    .catch((e) => {
+                        console.log(e)
+                        this.message.showMessage('Error', 'Error text: ' + e, 'error')        
+                    })
+                }
+                else{
+                    await Api().put('/patient_request', {
+                        patient,
+                    })
+                    .then(function(response){
+                        console.log(response)
+                    })
+                    .catch((e) => {
+                        console.log(e)
+                        this.message.showMessage('Error', 'Error text: ' + e, 'error')        
+                    })
+                }
+            }
+            catch(e){
+                console.log(e)
+                this.message.showMessage('Error', 'Error text: ' + e, 'error')
+            }
         },
-        btnSave(){
-            this.message.showMessage('Some title', 'some text', 'success', true, this.btnSavingAgree, this.btnSavingDisAgree)
+        async SaveQuestions(){
 
-            /*let patient = this.patient
-             
-            Api.post('/patientcreate', {
-                patient,
-            })
-            .then(function(response){
-                console.log(response)
-            })
-            .catch(function(error){
-                console.log(error)
-            });*/
+        },
+        async SavePrimaryDiagnose(){
+            try{
+
+                // Check this patient has id which means that the patient was created in database
+                // if id is undefined then create object
+                if (typeof this.patient.id == 'undefined'){
+                    await this.SavePatient()
+                }
+
+                // Chech the primary diagnose id to be undefined to know ethier create instane or edit
+                this.primarydiagnose.patient = this.patient.id
+                let primarydiagnose = this.primarydiagnose
+                
+                if (typeof primarydiagnose.id == 'undefined'){
+                    await Api().post('/primary_request', {
+                        primarydiagnose
+                    })
+                    .then(function(response){
+                        console.log(response)
+                        primarydiagnose.id = response.data
+                    })
+                    .catch((e) => {
+                        console.log(e)
+                        this.message.showMessage('Error', 'Error text: ' + e, 'error')        
+                    })
+                }
+                else{
+                    await Api().put('/primary_request', {
+                        primarydiagnose
+                    })
+                    .then(function(response){
+                        console.log(response)
+                    })
+                    .catch((e) => {
+                        console.log(e)
+                        this.message.showMessage('Error', 'Error text: ' + e, 'error')        
+                    })
+                }
+            }
+            catch(e){
+                console.log(e)
+                this.message.showMessage('Error', 'Error text: ' + e, 'error')
+            }
+        },
+        async SaveTakingMedicineAndComplaint(){
+            try{
+
+                // Check this patient has id which means that the patient was created in database
+                // if id is undefined then create object
+                if (typeof this.patient.id == 'undefined'){
+                    await this.SavePatient()
+                }
+
+                // Chech the primary diagnose id to be undefined to know ethier create instane or edit
+                this.takingmedicine.patient = this.patient.id
+                let takingmedicine = this.takingmedicine
+                
+                if (typeof takingmedicine.id == 'undefined'){
+                    await Api().post('/taking_request', {
+                        takingmedicine
+                    })
+                    .then(function(response){
+                        console.log(response)
+                        takingmedicine.id = response.data
+                    })
+                    .catch((e) => {
+                        console.log(e)
+                        this.message.showMessage('Error', 'Error text: ' + e, 'error')        
+                    })
+                }
+                else{
+                    await Api().put('/taking_request', {
+                        takingmedicine
+                    })
+                    .then(function(response){
+                        console.log(response)
+                    })
+                    .catch((e) => {
+                        console.log(e)
+                        this.message.showMessage('Error', 'Error text: ' + e, 'error')        
+                    })
+                }
+            }
+            catch(e){
+                console.log(e)
+                this.message.showMessage('Error', 'Error text: ' + e, 'error')
+            }
+        },
+        async SaveBloodImmunogramAndOther(){
+
+        },
+        async btnSave(){
+            //this.message.showMessage('Saving data', 'Do you want to save data?', 'success', true, this.btnSavingAgree)
+            switch (this.step_count){
+                case 1: this.SavePatient(); break;
+                case 2: this.SaveQuestions(); break;
+                case 3: this.SavePrimaryDiagnose(); break;
+                case 4: this.SaveTakingMedicineAndComplaint(); break;
+                case 5: this.SaveBloodImmunogramAndOther(); break;
+            }            
         },
         stepBack(){
             if (this.step_count > 1){
                 this.step_count--;
-                console.log(this.step_count)
             }
                 
         },
         stepContinue(){
             if (this.step_count < this.step_max){
                 this.step_count++;
-                console.log(this.step_count)
             }
         },
         btnCancel(){
-            if (this.IsUpdated){
-                // DO TO sth
-
+            if (this.settings.IsUpdated){
+                this.message.showMessage('Canceling', 'Do you want to cancel creating? You have some creating data.', 'warning', true, this.btnCanelingAgree)
+            }
+            else{
+                this.btnCanelingAgree()
             }
         },
     },

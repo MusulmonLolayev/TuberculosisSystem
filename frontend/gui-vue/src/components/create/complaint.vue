@@ -9,14 +9,14 @@
       </v-col>
       <v-col cols='10' md='3'>
         <v-checkbox
-          v-model="complaint.pyrazinamide"
-          label="Pyrazinamide"
+          v-model="complaint.normal_stool"
+          label="Normal stool"
         />
       </v-col>
       <v-col cols='10' md='3'>
         <v-checkbox
-          v-model="complaint.ethambutol"
-          label="Ethambutol"
+          v-model="complaint.constipation"
+          label="Constipation"
         />
       </v-col>
       <v-col cols='10' md='3'>
