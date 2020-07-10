@@ -34,7 +34,10 @@
               hide-details
               :items="keys"
               label="Sort by"
-            ></v-select>
+              clearable
+            >
+            
+            </v-select>
             <v-spacer></v-spacer>
             <v-btn-toggle
               v-model="sortDesc"
@@ -67,8 +70,8 @@
             v-for="item in props.items"
             :key="item.name"
             cols="12"
-            sm="6"
-            md="4"
+            sm="5"
+            md="3"
             lg="4"
           >
             <v-card>
@@ -103,13 +106,42 @@
               <v-divider></v-divider>
 
               <v-list dense>
-                <v-list-item
-                  v-for="(key, index) in filteredKeys"
-                  :key="index"
-                >
-                  <v-list-item-content :class="{ 'blue--text': sortBy === key }">{{ key }}:</v-list-item-content>
-                  <v-list-item-content class="align-end" :class="{ 'blue--text': sortBy === key }">{{ item[key.toLowerCase()] }}</v-list-item-content>
+                <v-list-item :key="0">
+                  <v-list-item-content :class="{ 'blue--text': sortBy === filteredKeys[0] }">
+                    Number:
+                  </v-list-item-content>
+                  <v-list-item-content class="align-end" :class="{ 'blue--text': sortBy === filteredKeys[0] }">
+                    {{item['number']}}
+                  </v-list-item-content>
                 </v-list-item>
+
+                <v-list-item :key="1">
+                  <v-list-item-content :class="{ 'blue--text': sortBy === filteredKeys[1] }">
+                    Birthday:
+                  </v-list-item-content>
+                  <v-list-item-content class="align-end" :class="{ 'blue--text': sortBy === filteredKeys[1] }">
+                    {{item['birthday']}}
+                  </v-list-item-content>
+                </v-list-item>
+
+                <v-list-item :key="2">
+                  <v-list-item-content :class="{ 'blue--text': sortBy === filteredKeys[2] }">
+                    From date:
+                  </v-list-item-content>
+                  <v-list-item-content class="align-end" :class="{ 'blue--text': sortBy === filteredKeys[2] }">
+                    {{item['fromdate']}}
+                  </v-list-item-content>
+                </v-list-item>
+
+                <v-list-item :key="3">
+                  <v-list-item-content :class="{ 'blue--text': sortBy === filteredKeys[3] }">
+                    Gender:
+                  </v-list-item-content>
+                  <v-list-item-content class="align-end" :class="{ 'blue--text': sortBy === filteredKeys[3] }">
+                    {{item['gender'] == true ? 'Male' : 'Female'}}
+                  </v-list-item-content>
+                </v-list-item>
+                
               </v-list>
             </v-card>
           </v-col>

@@ -6,7 +6,7 @@ from .views import CountryListView, primary_request, \
      RegionListView, DistrictListView, OccupationListView, \
          GetDistrictById, patient_request, ClinicalFormListView, \
              LocalizationListView, PrevalenceListView, CharacterOfStoolListView, \
-                 taking_request, complaint_request, immunogram_request, other_request
+                 taking_request, complaint_request, immunogram_request, other_request, blood_request
 
 urlpatterns = [
     # /countries
@@ -46,6 +46,9 @@ urlpatterns = [
 
     # /Complaint
     path('complaint_request', complaint_request),
+
+    # /Blood
+    path('blood_request', blood_request),
 
     # /Immunogram
     path('immunogram_request', immunogram_request),

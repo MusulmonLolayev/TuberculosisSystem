@@ -43,7 +43,7 @@
                 label="Weakness"
                 />
           </v-col>
-          <v-col cols='10' md='2'>
+          <v-col cols='10' md='3'>
               <v-checkbox
                 v-model="other.allergodermatosis"
                 label="Allergodermatosis"

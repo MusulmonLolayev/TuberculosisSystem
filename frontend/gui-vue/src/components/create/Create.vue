@@ -181,13 +181,13 @@ export default {
             console.log('btnCanelingAgree')
             this.$router.go(-1)
         },
-        async SavePatient(){
+        SavePatient(){
             try{
                 let patient = this.patient
                 // Check this patient has id which means that the patient was created in database
                 // if id is undefined then create object, otherwise edit it
                 if (typeof patient.id == 'undefined'){
-                    await Api().post('/patient_request', {
+                    Api().post('/patient_request', {
                         patient,
                     })
                     .then(function(response){
@@ -195,11 +195,11 @@ export default {
                     })
                     .catch((e) => {
                         console.log(e)
-                        this.message.showMessage('Error', 'Error text: ' + e, 'error')        
+                        this.message.showMessage('Error', 'Error text: ' + e, 'error')
                     })
                 }
                 else{
-                    await Api().put('/patient_request', {
+                    Api().put('/patient_request', {
                         patient,
                     })
                     .then(function(response){
@@ -272,7 +272,7 @@ export default {
                     await this.SavePatient()
                 }
 
-                // Chech the primary diagnose id to be undefined to know ethier create instane or edit
+                // Check the primary diagnose id to be undefined to know ethier create instane or edit
                 this.takingmedicine.patient = this.patient.id
                 let takingmedicine = this.takingmedicine
                 
@@ -301,6 +301,35 @@ export default {
                         this.message.showMessage('Error', 'Error text: ' + e, 'error')        
                     })
                 }
+
+                // Complaint
+                this.complaint.patient = this.patient.id
+                let complaint = this.complaint
+                if (typeof complaint.id == 'undefined'){
+                    await Api().post('/complaint_request', {
+                        complaint
+                    })
+                    .then(function(response){
+                        console.log(response)
+                        complaint.id = response.data
+                    })
+                    .catch((e) => {
+                        console.log(e)
+                        this.message.showMessage('Error', 'Error text: ' + e, 'error')        
+                    })
+                }
+                else{
+                    await Api().put('/complaint_request', {
+                        complaint
+                    })
+                    .then(function(response){
+                        console.log(response)
+                    })
+                    .catch((e) => {
+                        console.log(e)
+                        this.message.showMessage('Error', 'Error text: ' + e, 'error')        
+                    })
+                }
             }
             catch(e){
                 console.log(e)
@@ -308,10 +337,110 @@ export default {
             }
         },
         async SaveBloodImmunogramAndOther(){
+            try{
 
+                // Check this patient has id which means that the patient was created in database
+                // if id is undefined then create object
+                if (typeof this.patient.id == 'undefined'){
+                    await this.SavePatient()
+                }
+
+                // Check the blood id to be undefined to know ethier create instane or edit
+                this.bloodanalysis.patient = this.patient.id
+                let bloodanalysis = this.bloodanalysis
+                
+                if (typeof bloodanalysis.id == 'undefined'){
+                    await Api().post('/blood_request', {
+                        bloodanalysis
+                    })
+                    .then(function(response){
+                        console.log(response)
+                        bloodanalysis.id = response.data
+                    })
+                    .catch((e) => {
+                        console.log(e)
+                        this.message.showMessage('Error', 'Error text: ' + e, 'error')        
+                    })
+                }
+                else{
+                    await Api().put('/blood_request', {
+                        bloodanalysis
+                    })
+                    .then(function(response){
+                        console.log(response)
+                    })
+                    .catch((e) => {
+                        console.log(e)
+                        this.message.showMessage('Error', 'Error text: ' + e, 'error')        
+                    })
+                }
+
+                // immunogram
+                this.immunogram.patient = this.patient.id
+                let immunogram = this.immunogram
+                if (typeof immunogram.id == 'undefined'){
+                    await Api().post('/immunogram_request', {
+                        immunogram
+                    })
+                    .then(function(response){
+                        console.log(response)
+                        immunogram.id = response.data
+                    })
+                    .catch((e) => {
+                        console.log(e)
+                        this.message.showMessage('Error', 'Error text: ' + e, 'error')        
+                    })
+                }
+                else{
+                    await Api().put('/immunogram_request', {
+                        immunogram
+                    })
+                    .then(function(response){
+                        console.log(response)
+                    })
+                    .catch((e) => {
+                        console.log(e)
+                        this.message.showMessage('Error', 'Error text: ' + e, 'error')        
+                    })
+                }
+
+                // other
+                this.other.patient = this.patient.id
+                let other = this.other
+                if (typeof other.id == 'undefined'){
+                    await Api().post('/other_request', {
+                        other
+                    })
+                    .then(function(response){
+                        console.log(response)
+                        other.id = response.data
+                    })
+                    .catch((e) => {
+                        console.log(e)
+                        this.message.showMessage('Error', 'Error text: ' + e, 'error')        
+                    })
+                }
+                else{
+                    await Api().put('/other_request', {
+                        other
+                    })
+                    .then(function(response){
+                        console.log(response)
+                    })
+                    .catch((e) => {
+                        console.log(e)
+                        this.message.showMessage('Error', 'Error text: ' + e, 'error')        
+                    })
+                }
+            }
+            catch(e){
+                console.log(e)
+                this.message.showMessage('Error', 'Error text: ' + e, 'error')
+            }
         },
         async btnSave(){
             //this.message.showMessage('Saving data', 'Do you want to save data?', 'success', true, this.btnSavingAgree)
+            console.log(this.step_count)
             switch (this.step_count){
                 case 1: this.SavePatient(); break;
                 case 2: this.SaveQuestions(); break;

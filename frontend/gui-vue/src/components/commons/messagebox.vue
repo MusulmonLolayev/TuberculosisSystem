@@ -24,6 +24,7 @@
             color="green darken-1"
             text
             @click="btnDisagree"
+            :disabled='this.data.btnDisAgree == null'
           >
             Disagree
           </v-btn>
@@ -32,6 +33,7 @@
             color="green darken-1"
             text
             @click="btnAgree"
+            :disabled='this.data.btnAgree == null'
           >
             Agree
           </v-btn>
@@ -48,13 +50,13 @@ export default {
     methods: {
         btnAgree: function() {
             this.data.dialog = false
-            if (typeof this.data.btnAgree != 'undefined'){
+            if (this.data.btnAgree != null){
               this.data.btnAgree()
             }
         },
         btnDisagree: function() {
             this.data.dialog = false
-            if (typeof this.data.btnDisAgree != 'undefined'){
+            if (this.data.btnDisAgree != null){
               this.data.btnDisAgree()
             }
         }

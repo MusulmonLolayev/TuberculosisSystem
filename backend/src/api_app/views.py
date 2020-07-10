@@ -72,6 +72,8 @@ def GetDistrictById(request, districtId):
 @api_view(['GET', 'POST', 'PUT', 'DELETE'])
 def patient_request(request):
     try:
+        print(request.data)
+
         # Get list of data
         if request.method == 'GET':
             return Response(PatientSerializer(Patient.objects.filter(status=True), many=True).data, status=200)
@@ -91,18 +93,19 @@ def patient_request(request):
             patient = Patient.objects.get(id=request.data.get('patient').get('id'))
         except Patient.DoesNotExist:
             return Response(status=404)
-        
+
         # Update object
         if request.method == 'PUT':
-            #print(request.data)
             serializer = PatientSerializer(patient, data=request.data.get('patient'))
             if serializer.is_valid():
                 serializer.save()
-            return Response(status=200)
+                return Response(status=200)
+            else:
+                return Response(serializer.errors, status=406)
         else:
             patient.status = False
             patient.save()
-            return Response(status=200)
+            return Response('Deleted', status=200)
     except:
         Response(status=500)
 
@@ -136,7 +139,9 @@ def primary_request(request):
             serializer = PrimaryDiagnoseSerializer(primarydiagnose, data=request.data.get('primarydiagnose'))
             if serializer.is_valid():
                 serializer.save()
-            return Response(status=200)
+                return Response(status=200)
+            else:
+                return Response(serializer.errors, status=406)
         else:
             primarydiagnose.delete()
             return Response(status=200)
@@ -173,7 +178,9 @@ def taking_request(request):
             serializer = TakingMedicineSerializer(takingmedicine, data=request.data.get('takingmedicine'))
             if serializer.is_valid():
                 serializer.save()
-            return Response(status=200)
+                return Response(status=200)
+            else:
+                return Response(serializer.errors, status=406)
         else:
             takingmedicine.delete()
             return Response(status=200)
@@ -210,7 +217,9 @@ def complaint_request(request):
             serializer = ComplaintSerializer(complaint, data=request.data.get('complaint'))
             if serializer.is_valid():
                 serializer.save()
-            return Response(status=200)
+                return Response(status=200)
+            else:
+                return Response(serializer.errors, status=406)
         else:
             complaint.delete()
             return Response(status=200)
@@ -225,6 +234,7 @@ def blood_request(request):
             return Response(BloodAnalysisSerializer(BloodAnalysis
             .objects.filter(patient_id=request.data.get('patient_id')), many=True).data, status=200)
         
+        print(request.data)
         # Create object
         if request.method == 'POST':
             serializer = BloodAnalysisSerializer(data=request.data.get('bloodanalysis'))
@@ -247,7 +257,9 @@ def blood_request(request):
             serializer = BloodAnalysisSerializer(bloodanalysis, data=request.data.get('bloodanalysis'))
             if serializer.is_valid():
                 serializer.save()
-            return Response(status=200)
+                return Response(status=200)
+            else:
+                return Response(serializer.errors, status=406)
         else:
             complaint.delete()
             return Response(status=200)
@@ -284,7 +296,9 @@ def immunogram_request(request):
             serializer = ImmunogramSerializer(immunogram, data=request.data.get('immunogram'))
             if serializer.is_valid():
                 serializer.save()
-            return Response(status=200)
+                return Response(status=200)
+            else:
+                return Response(serializer.errors, status=406)
         else:
             immunogram.delete()
             return Response(status=200)
@@ -321,7 +335,9 @@ def other_request(request):
             serializer = OtherSerializer(other, data=request.data.get('other'))
             if serializer.is_valid():
                 serializer.save()
-            return Response(status=200)
+                return Response(status=200)
+            else:
+                return Response(serializer.errors, status=406)
         else:
             other.delete()
             return Response(status=200)
