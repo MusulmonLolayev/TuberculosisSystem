@@ -5,7 +5,7 @@ import Api from '../api/Api'
 Vue.use(Vuex)
 
 
-let store = new Vuex.Store ({
+let store = new Vuex.Store({
     state: {
         countries: [],
         regions: [],
@@ -17,38 +17,40 @@ let store = new Vuex.Store ({
         district: {},
         clinical_forms: [],
         localizations: [],
+        prevalences: [],
+        character_stools: [],
     },
     mutations: {
-        SET_COUNTRIES_TO_STATE: (state, countries) =>{
+        SET_COUNTRIES_TO_STATE: (state, countries) => {
             state.countries = countries
         },
-        SET_REGIONS_TO_STATE: (state, regions) =>{
+        SET_REGIONS_TO_STATE: (state, regions) => {
             state.regions = regions
         },
-        SET_DISTRICTS_TO_STATE: (state, districts) =>{
+        SET_DISTRICTS_TO_STATE: (state, districts) => {
             state.districts = districts
         },
-        SET_OCCUPATIONS_TO_STATE: (state, occupation) =>{
+        SET_OCCUPATIONS_TO_STATE: (state, occupation) => {
             state.occupations = occupation
         },
-        SET_PATIETNS_TO_STATE: (state, patients) =>{
+        SET_PATIETNS_TO_STATE: (state, patients) => {
             state.patients = patients
         },
-        SET_DISTRICT_TO_STATE: (state, district) =>{
+        SET_DISTRICT_TO_STATE: (state, district) => {
             state.district = district
         },
-        auth_request(state){
+        auth_request(state) {
             state.status = 'loading'
         },
-        auth_success(state, token, user){
+        auth_success(state, token, user) {
             state.status = 'success'
             state.token = token
             state.user = user
         },
-        auth_error(state){
+        auth_error(state) {
             state.status = 'error'
         },
-        logout(state){
+        logout(state) {
             state.status = ''
             state.token = ''
         },
@@ -58,75 +60,85 @@ let store = new Vuex.Store ({
         SET_LOCALIZATION_TO_STATE: (state, localizations) => {
             state.localizations = localizations;
         },
+        SET_PREVALENCES_TO_STATE: (state, prevalences) => {
+            state.prevalences = prevalences
+        },
+        SET_CHARACTER_STOOLS_TO_STATE: (state, characters) => {
+            state.character_stools = characters
+        }
     },
     actions: {
-        GET_COUNTRIES_FROM_API({commit}){
-            return Api().get('/countries')
-            .then((countries) => {
-                commit('SET_COUNTRIES_TO_STATE', countries.data);
-                return countries;
-            })
-            .catch((error) => {
-                console.log(error);
-                return error;
-            })
+        GET_COUNTRIES_FROM_API({ commit }) {
+            if (typeof this.countries == 'undefined' || this.countries.length == 0)
+                return Api().get('/countries')
+                    .then((countries) => {
+                        commit('SET_COUNTRIES_TO_STATE', countries.data);
+                        return countries;
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                        return error;
+                    })
         },
 
-        GET_REGIONS_FROM_API({commit}, url){
-            return Api().get(url)
-            .then((regions) => {
-                commit('SET_REGIONS_TO_STATE', regions.data);
-                return regions;
-            })
-            .catch((error) => {
-                console.log(error);
-                return error;
-            })
+        GET_REGIONS_FROM_API({ commit }, url) {
+            if (typeof this.regions == 'undefined' || this.regions.length == 0)
+                return Api().get(url)
+                    .then((regions) => {
+                        commit('SET_REGIONS_TO_STATE', regions.data);
+                        return regions;
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                        return error;
+                    })
         },
 
-        GET_DISTRICTS_FROM_API({commit}, url){
-            return Api().get(url)
-            .then((districts) => {
-                commit('SET_DISTRICTS_TO_STATE', districts.data);
-                return districts;
-            })
-            .catch((error) => {
-                console.log(error);
-                return error;
-            })
+        GET_DISTRICTS_FROM_API({ commit }, url) {
+            if (typeof this.districts == 'undefined' || this.districts.length == 0)
+                return Api().get(url)
+                    .then((districts) => {
+                        commit('SET_DISTRICTS_TO_STATE', districts.data);
+                        return districts;
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                        return error;
+                    })
         },
 
-        GET_OCCUPATIONS_FROM_API({commit}){
-            return Api().get('/occupations')
-            .then((occupations) => {
-                commit('SET_OCCUPATIONS_TO_STATE', occupations.data);
-                return occupations;
-            })
-            .catch((error) => {
-                console.log(error);
-                return error;
-            })
+        GET_OCCUPATIONS_FROM_API({ commit }) {
+            if (typeof this.occupations == 'undefined' || this.occupations.length == 0)
+                return Api().get('/occupations')
+                    .then((occupations) => {
+                        commit('SET_OCCUPATIONS_TO_STATE', occupations.data);
+                        return occupations;
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                        return error;
+                    })
         },
-        login({commit}, user){
+        login({ commit }, user) {
             return new Promise((resolve, reject) => {
                 commit('auth_request')
-                Api().post('/login', {user})
-                .then(response => {
-                    const token = response.data.token
-                    const user = response.data.user
+                Api().post('/login', { user })
+                    .then(response => {
+                        const token = response.data.token
+                        const user = response.data.user
 
-                    localStorage.setItem('token', token)
-                    commit('auth_success', token, user)
-                    resolve(response)
-                })
-                .catch(error => {
-                    commit('auth_error')
-                    localStorage.removeItem('token')
-                    reject(error)
-                })
+                        localStorage.setItem('token', token)
+                        commit('auth_success', token, user)
+                        resolve(response)
+                    })
+                    .catch(error => {
+                        commit('auth_error')
+                        localStorage.removeItem('token')
+                        reject(error)
+                    })
             })
         },
-        logout({commit}){
+        logout({ commit }) {
             return new Promise((resolve) => {
                 commit('logout')
                 localStorage.removeItem('token')
@@ -134,81 +146,109 @@ let store = new Vuex.Store ({
             })
         },
 
-        GET_PATIETNS_FROM_API({commit}){
+        GET_PATIETNS_FROM_API({ commit }) {
             return Api().get('/patient_request')
-            .then((patients) => {
-                commit('SET_PATIETNS_TO_STATE', patients.data);
-                return patients;
-            })
-            .catch((error) => {
-                console.log(error);
-                return error;
-            })
+                .then((patients) => {
+                    commit('SET_PATIETNS_TO_STATE', patients.data);
+                    return patients;
+                })
+                .catch((error) => {
+                    console.log(error);
+                    return error;
+                })
         },
-        GET_DISTRICT_FROM_API({commit}, id){
+        GET_DISTRICT_FROM_API({ commit }, id) {
             return Api().get('/districts/' + id)
-            .then((response) =>{
-                commit('SET_DISTRICT_TO_STATE', response.data)
-                return response;
-            })
-            .catch((error) => {
-                console.log(error)
-                return error
-            })
+                .then((response) => {
+                    commit('SET_DISTRICT_TO_STATE', response.data)
+                    return response;
+                })
+                .catch((error) => {
+                    console.log(error)
+                    return error
+                })
         },
-        GET_CLINICAL_FORMS_FROM_API({commit}){
-            return Api().get('/clinicalforms')
-            .then((response) => {
-                commit('SET_CLINICAL_FORMS_TO_STATE', response.data)
-                return response
-            })
-            .catch((error) => {
-                console.log(error)
-                return error
-            })
+        GET_CLINICAL_FORMS_FROM_API({ commit }) {
+            if (typeof this.clinical_forms == 'undefined' || this.clinical_forms.length == 0)
+                return Api().get('/clinicalforms')
+                    .then((response) => {
+                        commit('SET_CLINICAL_FORMS_TO_STATE', response.data)
+                        return response
+                    })
+                    .catch((error) => {
+                        console.log(error)
+                        return error
+                    })
         },
-        GET_LOCALIZATION_FROM_API({commit}){
-            return Api().get('/localization')
-            .then((response) => {
-                commit('SET_LOCALIZATION_TO_STATE', response.data)
-                return response
-            })
-            .catch((error) => {
-                console.log(error)
-                return error
-            })
+        GET_LOCALIZATION_FROM_API({ commit }) {
+            if (typeof this.localizations == 'undefined' || this.localizations.length == 0)
+                return Api().get('/localization')
+                    .then((response) => {
+                        commit('SET_LOCALIZATION_TO_STATE', response.data)
+                        return response
+                    })
+                    .catch((error) => {
+                        console.log(error)
+                        return error
+                    })
+        },
+        GET_PREVALENCES_FROM_API({ commit }) {
+            if (typeof this.prevalences == 'undefined' || this.prevalences.length == 0)
+                return Api().get('/prevalence')
+                    .then((response) => {
+                        commit('SET_PREVALENCES_TO_STATE', response.data)
+                    })
+                    .catch((error) => {
+                        console.log(error)
+                    })
+        },
+        GET_CHARACTER_STOOL_FROM_API({ commit }) {
+            if (typeof this.character_stools == 'undefined' || this.character_stools.length == 0)
+                return Api().get('/characterofstool')
+                    .then((response) => {
+                        commit('SET_CHARACTER_STOOLS_TO_STATE', response.data)
+                    })
+                    .catch((error) => {
+                        console.log(error)
+                    })
         }
     },
     getters: {
-        COUNTRIES(state){
+        COUNTRIES(state) {
             return state.countries;
         },
-        REGIONS(state){
+        REGIONS(state) {
             return state.regions;
         },
-        DISTRICTS(state){
+        DISTRICTS(state) {
             return state.districts;
         },
-        OCCUPATIONS(state){
+        OCCUPATIONS(state) {
             return state.occupations;
         },
-        
+
         isLoggedIn: state => !!state.token,
-        
+
         authStatus: state => state.status,
-        
-        PATIENTS(state){
+
+        PATIENTS(state) {
             return state.patients;
         },
-        DISTRICT(state){
+        DISTRICT(state) {
             return state.district;
         },
-        CLINICAL_FORMS(state){
+        CLINICAL_FORMS(state) {
             return state.clinical_forms
         },
-        LOCALIZATIONS(state){
+        LOCALIZATIONS(state) {
             return state.localizations
         },
+        PREVALENCES(state) {
+            return state.prevalences
+        },
+        CHARACTER_STOOLS(state){
+            return state.character_stools
+        }
     }
 });
 

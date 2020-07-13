@@ -45,7 +45,7 @@
 <script>
 
 export default {
-    name: 'MessageBox',
+    name: 'v-message-box',
     props: ['data'],
     methods: {
         btnAgree: function() {

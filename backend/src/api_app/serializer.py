@@ -37,29 +37,6 @@ class PatientSerializer(serializers.ModelSerializer):
     class Meta:
         model = Patient
         fields = '__all__'
-    """def save(self, *args, **kwargs):
-        return super(Patient, self).save(*args, **kwargs)"""
-    
-    def update_as_SQL(self, id):
-        data = self.data
-        query = "UPDATE patientapp_patient SET number={0}, last_name='{1}', " + \
-            "first_name='{2}', middle_name='{3}', birthday='{4}', address='{5}', " + \
-                "fromdate='{6}', gender={7}, district_id={8}, occupation_id={9}, status={10} WHERE id={11}"
-        query = query.format(
-            data.get('number'),
-            data.get('last_name'),
-            data.get('first_name'),
-            data.get('middle_name'),
-            data.get('birthday'),
-            data.get('address'),
-            data.get('fromdate'),
-            data.get('gender'),
-            data.get('district'),
-            data.get('occupation'),
-            data.get('status'),
-            id
-            )
-        print(query)
 
 class ClinicalFormSerializer(serializers.ModelSerializer):
     class Meta:

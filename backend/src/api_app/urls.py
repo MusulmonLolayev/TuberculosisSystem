@@ -8,6 +8,9 @@ from .views import CountryListView, primary_request, \
              LocalizationListView, PrevalenceListView, CharacterOfStoolListView, \
                  taking_request, complaint_request, immunogram_request, other_request, blood_request
 
+from .views import PrimaryDiagnoseListView, TakingMedicineListView, ComplaintListView, \
+    BloodListView, ImmunogramListView, OtherListView
+
 urlpatterns = [
     # /countries
     path('countries', CountryListView.as_view()),
@@ -40,21 +43,28 @@ urlpatterns = [
 
     # /primary_request
     path('primary_request', primary_request),
+    # /primary_request/
+    path('primary_request/<patient_id>', PrimaryDiagnoseListView.as_view()),
 
     # /TakingMedicine/patientId
     path('taking_request', taking_request),
+    path('taking_request/<patient_id>', TakingMedicineListView.as_view()),
 
     # /Complaint
     path('complaint_request', complaint_request),
+    path('complaint_request/<patient_id>', ComplaintListView.as_view()),
 
     # /Blood
     path('blood_request', blood_request),
+    path('blood_request/<patient_id>', BloodListView.as_view()),
 
     # /Immunogram
     path('immunogram_request', immunogram_request),
+    path('immunogram_request/<patient_id>', ImmunogramListView.as_view()),
 
     # /other
     path('other_request', other_request),
+    path('other_request/<patient_id>', OtherListView.as_view()),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)

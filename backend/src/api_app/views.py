@@ -62,6 +62,54 @@ class CharacterOfStoolListView(ListAPIView):
     queryset = CharacterOfStool.objects.all()
     serializer_class = CharacterOfStoolSerializer
 
+class PrimaryDiagnoseListView(ListAPIView):
+    serializer_class = PrimaryDiagnoseSerializer
+
+    def get_queryset(self):
+
+        patient_id = self.kwargs['patient_id']
+        return PrimaryDiagnose.objects.filter(patient_id=patient_id)
+
+class TakingMedicineListView(ListAPIView):
+    serializer_class = TakingMedicineSerializer
+
+    def get_queryset(self):
+
+        patient_id = self.kwargs['patient_id']
+        return TakingMedicine.objects.filter(patient_id=patient_id)
+
+class ComplaintListView(ListAPIView):
+    serializer_class = ComplaintSerializer
+
+    def get_queryset(self):
+
+        patient_id = self.kwargs['patient_id']
+        return Complaint.objects.filter(patient_id=patient_id)
+
+class BloodListView(ListAPIView):
+    serializer_class = BloodAnalysisSerializer
+
+    def get_queryset(self):
+
+        patient_id = self.kwargs['patient_id']
+        return BloodAnalysis.objects.filter(patient_id=patient_id)
+
+class ImmunogramListView(ListAPIView):
+    serializer_class = ImmunogramSerializer
+
+    def get_queryset(self):
+
+        patient_id = self.kwargs['patient_id']
+        return Immunogram.objects.filter(patient_id=patient_id)
+
+class OtherListView(ListAPIView):
+    serializer_class = OtherSerializer
+
+    def get_queryset(self):
+
+        patient_id = self.kwargs['patient_id']
+        return Other.objects.filter(patient_id=patient_id)
+
 @api_view(['GET'])
 def GetDistrictById(request, districtId):
     district = District.objects.get(id=districtId)
@@ -72,8 +120,6 @@ def GetDistrictById(request, districtId):
 @api_view(['GET', 'POST', 'PUT', 'DELETE'])
 def patient_request(request):
     try:
-        print(request.data)
-
         # Get list of data
         if request.method == 'GET':
             return Response(PatientSerializer(Patient.objects.filter(status=True), many=True).data, status=200)
@@ -109,14 +155,16 @@ def patient_request(request):
     except:
         Response(status=500)
 
-@api_view(['POST', 'DELETE', 'PUT', 'GET'])
+@api_view(['POST', 'DELETE', 'PUT'])
 def primary_request(request):
     try:
         # Get list of data
         if request.method == 'GET':
+            print(request.data)
             return Response(PrimaryDiagnoseSerializer(PrimaryDiagnose
             .objects.filter(patient_id=request.data.get('patient_id')), many=True).data, status=200)
-        
+        print(request.data)
+
         # Create object
         if request.method == 'POST':
             serializer = PrimaryDiagnoseSerializer(data=request.data.get('primarydiagnose'))
@@ -141,14 +189,15 @@ def primary_request(request):
                 serializer.save()
                 return Response(status=200)
             else:
+                print(serializer.errors)
                 return Response(serializer.errors, status=406)
         else:
             primarydiagnose.delete()
             return Response(status=200)
     except:
-        Response(status=500)
+        return Response(status=500)
 
-@api_view(['POST', 'DELETE', 'PUT', 'GET'])
+@api_view(['POST', 'DELETE', 'PUT'])
 def taking_request(request):
     try:
         # Get list of data
@@ -187,14 +236,9 @@ def taking_request(request):
     except:
         Response(status=500)
 
-@api_view(['POST', 'DELETE', 'PUT', 'GET'])
+@api_view(['POST', 'DELETE', 'PUT'])
 def complaint_request(request):
-    try:
-        # Get list of data
-        if request.method == 'GET':
-            return Response(ComplaintSerializer(Complaint
-            .objects.filter(patient_id=request.data.get('patient_id')), many=True).data, status=200)
-        
+    try:        
         # Create object
         if request.method == 'POST':
             serializer = ComplaintSerializer(data=request.data.get('complaint'))
@@ -205,6 +249,7 @@ def complaint_request(request):
                 print(serializer.errors)
                 return Response(serializer.errors, status=406)
         
+        print(request.data)
         # find suitable instance
         try:
             complaint = Complaint.objects.get(id=request.data.get('complaint').get('id'))
@@ -226,7 +271,7 @@ def complaint_request(request):
     except:
         Response(status=500)
 
-@api_view(['POST', 'DELETE', 'PUT', 'GET'])
+@api_view(['POST', 'DELETE', 'PUT'])
 def blood_request(request):
     try:
         # Get list of data
@@ -266,14 +311,10 @@ def blood_request(request):
     except:
         Response(status=500)
 
-@api_view(['POST', 'DELETE', 'PUT', 'GET'])
+@api_view(['POST', 'DELETE', 'PUT'])
 def immunogram_request(request):
     try:
-        # Get list of data
-        if request.method == 'GET':
-            return Response(ImmunogramSerializer(Immunogram
-            .objects.filter(patient_id=request.data.get('patient_id')), many=True).data, status=200)
-        
+       
         # Create object
         if request.method == 'POST':
             serializer = ImmunogramSerializer(data=request.data.get('immunogram'))
@@ -305,14 +346,9 @@ def immunogram_request(request):
     except:
         Response(status=500)
 
-@api_view(['POST', 'DELETE', 'PUT', 'GET'])
+@api_view(['POST', 'DELETE', 'PUT'])
 def other_request(request):
     try:
-        # Get list of data
-        if request.method == 'GET':
-            return Response(OtherSerializer(Other
-            .objects.filter(patient_id=request.data.get('patient_id')), many=True).data, status=200)
-        
         # Create object
         if request.method == 'POST':
             serializer = OtherSerializer(data=request.data.get('other'))

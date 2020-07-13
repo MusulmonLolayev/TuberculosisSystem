@@ -1,6 +1,6 @@
 <template>
     <div>
-        <MessageBox :data='message'/>
+        <v-message-box :data='mBox'/>
         <v-stepper
             alt-labels
             v-model="step_count"
@@ -38,24 +38,24 @@
             <v-stepper-items>
                 
                 <v-stepper-content step="1">
-                    <PatientCard :patient="patient"/>
+                    <v-patient :patient="patient"/>
                 </v-stepper-content>
 
                 <v-stepper-content step="2">
-                    <step2 />
+                    <v-step2 />
                 </v-stepper-content>
 
                 <v-stepper-content step="3">
-                    <PrimaryDiagnose :primarydiagnose='primarydiagnose'/>
+                    <v-primary-edit :primarydiagnose='primarydiagnose'/>
                 </v-stepper-content>
 
                 <v-stepper-content step="4">
                     <v-container>
                         <v-row>
-                            <TakingMedicine :takingmedicine='takingmedicine'/>
+                            <v-taking-medicine :takingmedicine='takingmedicine'/>
                         </v-row>
                         <v-row>
-                            <Complaint :complaint='complaint'/>
+                            <v-complaint :complaint='complaint'/>
                         </v-row>
                     </v-container>
                 </v-stepper-content>
@@ -63,13 +63,13 @@
                 <v-stepper-content step="5">
                     <v-container>
                         <v-row>
-                            <BloodAnalysis :bloodanalysis='bloodanalysis'/>
+                            <v-blood-analysis :bloodanalysis='bloodanalysis'/>
                         </v-row>
                         <v-row>
-                            <Immunogram :immunogram='immunogram'/>
+                            <v-immunogram :immunogram='immunogram'/>
                         </v-row>
                         <v-row>
-                            <Other :other='other' />
+                            <v-other :other='other' />
                         </v-row>
                     </v-container>
                 </v-stepper-content>
@@ -102,30 +102,31 @@
 </template>
 
 <script>
-import PatientCard from './patient'
-import step2 from './step2'
-import PrimaryDiagnose from './primarydiagnose'
-import TakingMedicine from './takingmedicine'
-import Complaint from './complaint'
-import BloodAnalysis from './bloodanalysis'
-import Immunogram from './immunogram'
-import Other from './other'
-import MessageBox from '../commons/messagebox'
-import MessgeBox_Class from '../commons/messagebox_class'
+import vPatient from './v-patient'
+import vStep2 from './v-step2'
+import vPrimaryEdit from './v-primary-edit'
+import vTakingMedicine from './v-taking-medicine'
+import vComplaint from './v-complaint'
+import vBloodAnalysis from './v-blood-analysis'
+import vImmunogram from './v-immunogram'
+import vOther from './v-other'
+import vMessageBox from '../commons/v-message-box'
+import MessgeBox from '../commons/messagebox.js'
 
 import Api from '@/api/Api'
 
 export default {
+    name: 'v-create',
     components:{
-        PatientCard,
-        step2,
-        PrimaryDiagnose,
-        TakingMedicine,
-        Complaint,
-        BloodAnalysis,
-        Immunogram,
-        Other,
-        MessageBox,
+        vPatient,
+        vStep2,
+        vPrimaryEdit,
+        vTakingMedicine,
+        vComplaint,
+        vBloodAnalysis,
+        vImmunogram,
+        vOther,
+        vMessageBox,
     },
     data: function(){
         return {
@@ -157,7 +158,7 @@ export default {
             other: {
 
             },
-            message: new MessgeBox_Class()
+            mBox: new MessgeBox()
         }
     },
     computed:{
@@ -195,7 +196,7 @@ export default {
                     })
                     .catch((e) => {
                         console.log(e)
-                        this.message.showMessage('Error', 'Error text: ' + e, 'error')
+                        this.mBox.showMessage('Error', 'Error text: ' + e, 'error')
                     })
                 }
                 else{
@@ -207,13 +208,13 @@ export default {
                     })
                     .catch((e) => {
                         console.log(e)
-                        this.message.showMessage('Error', 'Error text: ' + e, 'error')        
+                        this.mBox.showMessage('Error', 'Error text: ' + e, 'error')        
                     })
                 }
             }
             catch(e){
                 console.log(e)
-                this.message.showMessage('Error', 'Error text: ' + e, 'error')
+                this.mBox.showMessage('Error', 'Error text: ' + e, 'error')
             }
         },
         async SaveQuestions(){
@@ -242,7 +243,7 @@ export default {
                     })
                     .catch((e) => {
                         console.log(e)
-                        this.message.showMessage('Error', 'Error text: ' + e, 'error')        
+                        this.mBox.showMessage('Error', 'Error text: ' + e, 'error')        
                     })
                 }
                 else{
@@ -254,13 +255,13 @@ export default {
                     })
                     .catch((e) => {
                         console.log(e)
-                        this.message.showMessage('Error', 'Error text: ' + e, 'error')        
+                        this.mBox.showMessage('Error', 'Error text: ' + e, 'error')        
                     })
                 }
             }
             catch(e){
                 console.log(e)
-                this.message.showMessage('Error', 'Error text: ' + e, 'error')
+                this.mBox.showMessage('Error', 'Error text: ' + e, 'error')
             }
         },
         async SaveTakingMedicineAndComplaint(){
@@ -286,7 +287,7 @@ export default {
                     })
                     .catch((e) => {
                         console.log(e)
-                        this.message.showMessage('Error', 'Error text: ' + e, 'error')        
+                        this.mBox.showMessage('Error', 'Error text: ' + e, 'error')        
                     })
                 }
                 else{
@@ -315,7 +316,7 @@ export default {
                     })
                     .catch((e) => {
                         console.log(e)
-                        this.message.showMessage('Error', 'Error text: ' + e, 'error')        
+                        this.mBox.showMessage('Error', 'Error text: ' + e, 'error')        
                     })
                 }
                 else{
@@ -327,13 +328,13 @@ export default {
                     })
                     .catch((e) => {
                         console.log(e)
-                        this.message.showMessage('Error', 'Error text: ' + e, 'error')        
+                        this.mBox.showMessage('Error', 'Error text: ' + e, 'error')        
                     })
                 }
             }
             catch(e){
                 console.log(e)
-                this.message.showMessage('Error', 'Error text: ' + e, 'error')
+                this.mBox.showMessage('Error', 'Error text: ' + e, 'error')
             }
         },
         async SaveBloodImmunogramAndOther(){
@@ -359,7 +360,7 @@ export default {
                     })
                     .catch((e) => {
                         console.log(e)
-                        this.message.showMessage('Error', 'Error text: ' + e, 'error')        
+                        this.mBox.showMessage('Error', 'Error text: ' + e, 'error')        
                     })
                 }
                 else{
@@ -371,7 +372,7 @@ export default {
                     })
                     .catch((e) => {
                         console.log(e)
-                        this.message.showMessage('Error', 'Error text: ' + e, 'error')        
+                        this.mBox.showMessage('Error', 'Error text: ' + e, 'error')        
                     })
                 }
 
@@ -388,7 +389,7 @@ export default {
                     })
                     .catch((e) => {
                         console.log(e)
-                        this.message.showMessage('Error', 'Error text: ' + e, 'error')        
+                        this.mBox.showMessage('Error', 'Error text: ' + e, 'error')        
                     })
                 }
                 else{
@@ -400,7 +401,7 @@ export default {
                     })
                     .catch((e) => {
                         console.log(e)
-                        this.message.showMessage('Error', 'Error text: ' + e, 'error')        
+                        this.mBox.showMessage('Error', 'Error text: ' + e, 'error')        
                     })
                 }
 
@@ -417,7 +418,7 @@ export default {
                     })
                     .catch((e) => {
                         console.log(e)
-                        this.message.showMessage('Error', 'Error text: ' + e, 'error')        
+                        this.mBox.showMessage('Error', 'Error text: ' + e, 'error')        
                     })
                 }
                 else{
@@ -429,13 +430,13 @@ export default {
                     })
                     .catch((e) => {
                         console.log(e)
-                        this.message.showMessage('Error', 'Error text: ' + e, 'error')        
+                        this.mBox.showMessage('Error', 'Error text: ' + e, 'error')        
                     })
                 }
             }
             catch(e){
                 console.log(e)
-                this.message.showMessage('Error', 'Error text: ' + e, 'error')
+                this.mBox.showMessage('Error', 'Error text: ' + e, 'error')
             }
         },
         async btnSave(){
@@ -462,7 +463,7 @@ export default {
         },
         btnCancel(){
             if (this.settings.IsUpdated){
-                this.message.showMessage('Canceling', 'Do you want to cancel creating? You have some creating data.', 'warning', true, this.btnCanelingAgree)
+                this.mBox.showMessage('Canceling', 'Do you want to cancel creating? You have some creating data.', 'warning', true, this.btnCanelingAgree)
             }
             else{
                 this.btnCanelingAgree()

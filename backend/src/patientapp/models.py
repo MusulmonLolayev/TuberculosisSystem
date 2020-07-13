@@ -102,6 +102,8 @@ class PrimaryDiagnose(models.Model):
 
     # status for taking on computing
     status = models.BooleanField(default=True)
+    # created date
+    date = models.DateField(default=datetime.date.today)
 
 class TakingMedicine(models.Model):
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
@@ -119,6 +121,8 @@ class TakingMedicine(models.Model):
 
     # status for taking on computing
     status = models.BooleanField(default=True)
+
+    date = models.DateField(default=datetime.date.today)
 
 # Характер стула (список) in Column AP
 class CharacterOfStool(models.Model):
@@ -147,6 +151,7 @@ class Complaint(models.Model):
 
     # status for taking on computing
     status = models.BooleanField(default=True)
+    date = models.DateField(default=datetime.date.today)
 
 class BloodAnalysis(models.Model):
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
@@ -177,6 +182,8 @@ class BloodAnalysis(models.Model):
     # status for taking on computing
     status = models.BooleanField(default=True)
 
+    date = models.DateField(default=datetime.date.today)
+
 class Immunogram(models.Model):
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
 
@@ -203,6 +210,7 @@ class Immunogram(models.Model):
 
     # status for taking on computing
     status = models.BooleanField(default=True)
+    date = models.DateField(default=datetime.date.today)
 
 class Other(models.Model):
 
@@ -235,3 +243,4 @@ class Other(models.Model):
 
     # status for taking on computing
     status = models.BooleanField(default=True)
+    date = models.DateField(default=datetime.date.today)

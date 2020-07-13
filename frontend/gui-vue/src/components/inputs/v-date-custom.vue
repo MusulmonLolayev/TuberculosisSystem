@@ -23,7 +23,7 @@
 
 <script>
 export default {
-  name: 'DatePicker',
+  name: 'v-date-custom',
   data: () => ({
     //date: (typeof this.current_value == 'undefined') ? new Date() : Date.parse(this.current_value),
     menu: false,

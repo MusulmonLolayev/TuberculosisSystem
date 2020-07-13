@@ -37,7 +37,7 @@
 
 <script>
 export default {
-    name: 'step2',
+    name: 'v-step2',
     data: function(){
         return{
             questions: [

@@ -25,7 +25,7 @@
 
             <v-row>
                 <v-col cols="10" md="3">
-                    <datepicker label='Date of birthday' :date="patient_edit.birthday" :change="birthdayChange"/>
+                    <v-date-custom label='Date of birthday' :date="patient_edit.birthday" :change="birthdayChange"/>
                 </v-col>
 
                 <v-col cols="10" md="3">
@@ -82,7 +82,7 @@
 
             <v-row>
                 <v-col cols="10" md="3">
-                    <datepicker label='From date' :date="patient_edit.fromdate" :change="fromdateChange"/>
+                    <v-date-custom label='From date' :date="patient_edit.fromdate" :change="fromdateChange"/>
                 </v-col>
                 
                 <v-col cols="10" md="3">
@@ -107,13 +107,13 @@
 </template>
 
 <script>
-import datepicker from '../inputs/datepicker'
+import vDateCustom from '../inputs/v-date-custom'
 import {mapActions, mapGetters} from 'vuex'
 
 export default {
-    name: 'PatientCard',
+    name: 'v-patient',
     components: {
-        datepicker,
+        vDateCustom,
     },
     props: ['patient'],
     data: function(){

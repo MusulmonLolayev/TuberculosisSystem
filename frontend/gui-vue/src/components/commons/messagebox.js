@@ -1,4 +1,4 @@
-export default class MessageBox_Class{
+export default class MessageBox{
     title = ''
     message = ''
     alert_type = ''

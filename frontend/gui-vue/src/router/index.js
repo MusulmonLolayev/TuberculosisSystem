@@ -4,7 +4,7 @@ import Home from '../components/Home'
 import About from '../components/About'
 import Contact from '../components/Contact'
 import News from '../components/News'
-import Create from '../components/create/Create'
+import vCreate from '../components/create/v-create'
 import Login from '../components/Login'
 import store from '../vuex/store'
 import Data from '../components/workplace/data'
@@ -40,7 +40,7 @@ var router = new Router({
         {
             path: '/create',
             name: 'create',
-            component: Create
+            component: vCreate
         },
         {
             path: '/login',

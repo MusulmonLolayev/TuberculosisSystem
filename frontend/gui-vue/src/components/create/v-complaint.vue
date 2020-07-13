@@ -1,0 +1,78 @@
+<template>
+  <v-container>
+    <v-row>
+      <v-col cols="10" md="4">
+        <v-checkbox v-model="complaint.diarrhea" label="Diarrhea" />
+      </v-col>
+      <v-col cols="10" md="4">
+        <v-checkbox v-model="complaint.normal_stool" label="Normal stool" />
+      </v-col>
+      <v-col cols="10" md="4">
+        <v-checkbox v-model="complaint.constipation" label="Constipation" />
+      </v-col>
+      <v-col cols="10" md="4">
+        <v-checkbox v-model="complaint.flatulence" label="Flatulence" />
+      </v-col>
+      <v-col cols="10" md="4">
+        <v-checkbox v-model="complaint.stomachache" label="Stomachache" />
+      </v-col>
+      <v-col cols="10" md="4">
+        Stool frequency:
+        <v-text-field v-model="complaint.from_stool_frequency" label="from" type='number'/>
+        <v-text-field v-model="complaint.to_stool_frequency" label="to"  type='number'/>
+      </v-col>
+      <v-col cols="10" md="4">
+        <v-select
+          label="Character"
+          :items="CHARACTER_STOOLS"
+          item-text="name"
+          item-value="id"
+          v-model="complaint.character"
+        />
+      </v-col>
+      <v-col cols="10" md="4">
+        <v-checkbox v-model="complaint.status" label="Status" />
+      </v-col>
+      <v-col cols="10" md="4">
+        <v-date-custom :date="editItem.date" :change='dateChange' label="Date" />
+      </v-col>
+    </v-row>
+  </v-container>
+</template>
+
+<script>
+import { mapGetters, mapActions } from "vuex";
+import vDateCustom from '../inputs/v-date-custom'
+
+export default {
+  name: "v-complaint",
+  props: ["complaint"],
+  data: function() {
+    return {
+      editItem: {
+        date: {
+          value: this.complaint.date
+        }
+      }
+    };
+  },
+  computed: {
+    ...mapGetters(["CHARACTER_STOOLS"])
+  },
+  methods: {
+    ...mapActions(["GET_CHARACTER_STOOL_FROM_API"]),
+    dateChange() {
+      this.complaint.date = this.editItem.date.value;
+    }
+  },
+  mounted: function() {
+    this.GET_CHARACTER_STOOL_FROM_API();
+  },
+  components: {
+    vDateCustom
+  }
+};
+</script>
+
+<style>
+</style>
