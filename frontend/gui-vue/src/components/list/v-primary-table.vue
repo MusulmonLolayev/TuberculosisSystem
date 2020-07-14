@@ -1,6 +1,7 @@
 <template>
   <div>
-    <v-message-box :data="mBox" />
+    <v-message-box :message="mBox" />
+    <v-alert-box :alert='aBox' />
     <v-data-table :headers="headers" :items="items" sort-by="calories" class="elevation-1">
       <template v-slot:top>
         <v-toolbar flat color="white">
@@ -44,6 +45,8 @@ import Api from "@/api/Api";
 import { mapGetters, mapActions } from "vuex";
 import vMessageBox from "../commons/v-message-box";
 import MessageBox from "../commons/messagebox.js";
+import vAlertBox from "../commons/v-alert-box.vue";
+import AlertBox from "../commons/alertbox.js";
 
 export default {
   data: () => ({
@@ -88,7 +91,8 @@ export default {
     editedIndex: -1,
     editedItem: {},
     defaultItem: null,
-    mBox: new MessageBox()
+    mBox: new MessageBox(),
+    aBox: new AlertBox(),
   }),
   props: ["patient"],
   computed: {
@@ -193,7 +197,7 @@ export default {
     },
 
     editItem(item) {
-      this.editedIndex = this.primaries.indexOf(item);
+      this.editedIndex = this.items.indexOf(item);
       this.editedItem = this.toObject(item);
       this.dialog = true;
     },
@@ -222,6 +226,7 @@ export default {
           })
           .then(() => {
             console.log("Updated");
+            this.aBox.showMessage('Updated')
             Object.assign(
               this.items[this.editedIndex],
               this.toTemplate(this.editedItem)
@@ -273,7 +278,8 @@ export default {
   },
   components: {
     vPrimaryEdit,
-    vMessageBox
+    vMessageBox,
+    vAlertBox
   },
   mounted: function() {}
 };

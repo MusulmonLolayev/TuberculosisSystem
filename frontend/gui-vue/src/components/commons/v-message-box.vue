@@ -1,19 +1,20 @@
 <template>
   <v-dialog
-      v-model="data.dialog"
+      v-model="message.dialog"
       max-width="300"
-      :persistent='data.persistent'
+      :persistent='message.persistent'
     >
       <v-card>
         <v-card-title class="headline">
-            {{data.title}}
+            {{message.title}}
         </v-card-title>
         <v-divider />
+        <v-spacer></v-spacer>
         <v-card-text>
           <v-alert
-            :type='data.alert_type'
+            :type='message.alert_type'
           >
-            {{data.message}}
+            {{message.message}}
           </v-alert>
         </v-card-text>
         <v-divider />
@@ -24,7 +25,7 @@
             color="green darken-1"
             text
             @click="btnDisagree"
-            :disabled='this.data.btnDisAgree == null'
+            v-if='this.message.btnDisAgree != null'
           >
             Disagree
           </v-btn>
@@ -33,7 +34,7 @@
             color="green darken-1"
             text
             @click="btnAgree"
-            :disabled='this.data.btnAgree == null'
+            v-if='this.message.btnAgree != null'
           >
             Agree
           </v-btn>
@@ -46,18 +47,18 @@
 
 export default {
     name: 'v-message-box',
-    props: ['data'],
+    props: ['message'],
     methods: {
         btnAgree: function() {
-            this.data.dialog = false
-            if (this.data.btnAgree != null){
-              this.data.btnAgree()
+            this.message.dialog = false
+            if (this.message.btnAgree != null){
+              this.message.btnAgree()
             }
         },
         btnDisagree: function() {
-            this.data.dialog = false
-            if (this.data.btnDisAgree != null){
-              this.data.btnDisAgree()
+            this.message.dialog = false
+            if (this.message.btnDisAgree != null){
+              this.message.btnDisAgree()
             }
         }
     },

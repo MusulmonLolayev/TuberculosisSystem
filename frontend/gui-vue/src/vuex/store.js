@@ -80,7 +80,6 @@ let store = new Vuex.Store({
                         return error;
                     })
         },
-
         GET_REGIONS_FROM_API({ commit }, url) {
             if (typeof this.regions == 'undefined' || this.regions.length == 0)
                 return Api().get(url)
@@ -93,7 +92,6 @@ let store = new Vuex.Store({
                         return error;
                     })
         },
-
         GET_DISTRICTS_FROM_API({ commit }, url) {
             if (typeof this.districts == 'undefined' || this.districts.length == 0)
                 return Api().get(url)
@@ -106,7 +104,6 @@ let store = new Vuex.Store({
                         return error;
                     })
         },
-
         GET_OCCUPATIONS_FROM_API({ commit }) {
             if (typeof this.occupations == 'undefined' || this.occupations.length == 0)
                 return Api().get('/occupations')
@@ -145,7 +142,6 @@ let store = new Vuex.Store({
                 resolve()
             })
         },
-
         GET_PATIETNS_FROM_API({ commit }) {
             return Api().get('/patient_request')
                 .then((patients) => {

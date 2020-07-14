@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-message-box :data='mBox'/>
+        <v-message-box :message='mBox'/>
         <v-stepper
             alt-labels
             v-model="step_count"
@@ -462,12 +462,7 @@ export default {
             }
         },
         btnCancel(){
-            if (this.settings.IsUpdated){
-                this.mBox.showMessage('Canceling', 'Do you want to cancel creating? You have some creating data.', 'warning', true, this.btnCanelingAgree)
-            }
-            else{
-                this.btnCanelingAgree()
-            }
+            this.mBox.showMessage('Canceling', 'Do you want to cancel creating? You have some creating data.', 'warning', true, this.btnCanelingAgree)
         },
     },
     updated: function(){

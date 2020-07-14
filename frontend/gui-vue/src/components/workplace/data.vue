@@ -214,12 +214,12 @@
   export default {
     data () {
       return {
-        itemsPerPageArray: [4, 8, 12],
+        itemsPerPageArray: [4, 8, 12, 16],
         search: '',
         filter: {},
         sortDesc: false,
         page: 1,
-        itemsPerPage: 4,
+        itemsPerPage: 8,
         sortBy: 'name',
         keys: [
           'number',
