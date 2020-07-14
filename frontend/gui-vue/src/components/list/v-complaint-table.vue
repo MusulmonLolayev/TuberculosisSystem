@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-message-box :data="mBox" />
+    <v-message-box :message="mBox" />
     <v-data-table :headers="headers" :items="items" sort-by="calories" class="elevation-1">
       <template v-slot:top>
         <v-toolbar flat color="white">
@@ -124,17 +124,18 @@ export default {
 
   created() {
     this.initialize();
-    this.GET_CHARACTER_STOOL_FROM_API();
   },
 
   methods: {
-    initialize() {
+    async initialize() {
+      await this.GET_CHARACTER_STOOL_FROM_API();
+
       let mBox = this.mBox;
       let patient_id = this.patient.id;
-      Api()
+      await Api()
         .get("/complaint_request/" + patient_id)
         .then(respone => {
-          console.log(respone);
+          //console.log(respone);
           respone.data.map(item => {
             this.items.push(this.toTemplate(item));
           });

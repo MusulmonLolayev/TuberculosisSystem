@@ -109,20 +109,20 @@ export default {
   },
 
   created() {
-    this.GET_CLINICAL_FORMS_FROM_API();
-    this.GET_LOCALIZATION_FROM_API();
-    this.GET_PREVALENCES_FROM_API();
     this.initialize();
   },
 
   methods: {
-    initialize() {
+    async initialize() {
+
+      await Promise.all([this.GET_CLINICAL_FORMS_FROM_API(), this.GET_LOCALIZATION_FROM_API(), this.GET_PREVALENCES_FROM_API()])
+
       let patient_id = this.patient.id;
       let mBox = this.mBox;
-      Api()
+      await Api()
         .get("/primary_request/" + patient_id)
         .then(respone => {
-          console.log(respone);
+          //console.log(respone);
           respone.data.map(item => {
             this.items.push(this.toTemplate(item));
           });

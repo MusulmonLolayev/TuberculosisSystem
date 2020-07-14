@@ -137,11 +137,8 @@ export default {
             step_max: 5,
             patient: {
             },
-            clinicalform: {
-
-            },
             primarydiagnose: {
-
+                
             },
             takingmedicine: {
 
@@ -178,6 +175,9 @@ export default {
         
     },
     methods: {
+        initialize(){
+            
+        },
         btnCanelingAgree(){
             console.log('btnCanelingAgree')
             this.$router.go(-1)
@@ -196,7 +196,7 @@ export default {
                     })
                     .catch((e) => {
                         console.log(e)
-                        this.mBox.showMessage('Error', 'Error text: ' + e, 'error')
+                        this.mBox.showMessage('Error', e, 'error')
                     })
                 }
                 else{
@@ -208,13 +208,13 @@ export default {
                     })
                     .catch((e) => {
                         console.log(e)
-                        this.mBox.showMessage('Error', 'Error text: ' + e, 'error')        
+                        this.mBox.showMessage('Error', e, 'error')        
                     })
                 }
             }
             catch(e){
                 console.log(e)
-                this.mBox.showMessage('Error', 'Error text: ' + e, 'error')
+                this.mBox.showMessage('Error', e, 'error')
             }
         },
         async SaveQuestions(){
@@ -243,7 +243,7 @@ export default {
                     })
                     .catch((e) => {
                         console.log(e)
-                        this.mBox.showMessage('Error', 'Error text: ' + e, 'error')        
+                        this.mBox.showMessage('Error', e, 'error')        
                     })
                 }
                 else{
@@ -255,13 +255,13 @@ export default {
                     })
                     .catch((e) => {
                         console.log(e)
-                        this.mBox.showMessage('Error', 'Error text: ' + e, 'error')        
+                        this.mBox.showMessage('Error', e, 'error')        
                     })
                 }
             }
             catch(e){
                 console.log(e)
-                this.mBox.showMessage('Error', 'Error text: ' + e, 'error')
+                this.mBox.showMessage('Error', e, 'error')
             }
         },
         async SaveTakingMedicineAndComplaint(){
@@ -287,7 +287,7 @@ export default {
                     })
                     .catch((e) => {
                         console.log(e)
-                        this.mBox.showMessage('Error', 'Error text: ' + e, 'error')        
+                        this.mBox.showMessage('Error', e, 'error')        
                     })
                 }
                 else{
@@ -299,7 +299,7 @@ export default {
                     })
                     .catch((e) => {
                         console.log(e)
-                        this.message.showMessage('Error', 'Error text: ' + e, 'error')        
+                        this.message.showMessage('Error', e, 'error')        
                     })
                 }
 
@@ -316,7 +316,7 @@ export default {
                     })
                     .catch((e) => {
                         console.log(e)
-                        this.mBox.showMessage('Error', 'Error text: ' + e, 'error')        
+                        this.mBox.showMessage('Error', e, 'error')        
                     })
                 }
                 else{
@@ -328,13 +328,13 @@ export default {
                     })
                     .catch((e) => {
                         console.log(e)
-                        this.mBox.showMessage('Error', 'Error text: ' + e, 'error')        
+                        this.mBox.showMessage('Error', e, 'error')        
                     })
                 }
             }
             catch(e){
                 console.log(e)
-                this.mBox.showMessage('Error', 'Error text: ' + e, 'error')
+                this.mBox.showMessage('Error', e, 'error')
             }
         },
         async SaveBloodImmunogramAndOther(){
@@ -360,7 +360,7 @@ export default {
                     })
                     .catch((e) => {
                         console.log(e)
-                        this.mBox.showMessage('Error', 'Error text: ' + e, 'error')        
+                        this.mBox.showMessage('Error', e, 'error')        
                     })
                 }
                 else{
@@ -372,7 +372,7 @@ export default {
                     })
                     .catch((e) => {
                         console.log(e)
-                        this.mBox.showMessage('Error', 'Error text: ' + e, 'error')        
+                        this.mBox.showMessage('Error', e, 'error')        
                     })
                 }
 
@@ -389,7 +389,7 @@ export default {
                     })
                     .catch((e) => {
                         console.log(e)
-                        this.mBox.showMessage('Error', 'Error text: ' + e, 'error')        
+                        this.mBox.showMessage('Error', e, 'error')        
                     })
                 }
                 else{
@@ -401,7 +401,7 @@ export default {
                     })
                     .catch((e) => {
                         console.log(e)
-                        this.mBox.showMessage('Error', 'Error text: ' + e, 'error')        
+                        this.mBox.showMessage('Error', e, 'error')        
                     })
                 }
 
@@ -418,7 +418,7 @@ export default {
                     })
                     .catch((e) => {
                         console.log(e)
-                        this.mBox.showMessage('Error', 'Error text: ' + e, 'error')        
+                        this.mBox.showMessage('Error', e, 'error')        
                     })
                 }
                 else{
@@ -430,13 +430,13 @@ export default {
                     })
                     .catch((e) => {
                         console.log(e)
-                        this.mBox.showMessage('Error', 'Error text: ' + e, 'error')        
+                        this.mBox.showMessage('Error', e, 'error')        
                     })
                 }
             }
             catch(e){
                 console.log(e)
-                this.mBox.showMessage('Error', 'Error text: ' + e, 'error')
+                this.mBox.showMessage('Error', e, 'error')
             }
         },
         async btnSave(){

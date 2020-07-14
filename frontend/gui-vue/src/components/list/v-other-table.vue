@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-message-box :data="mBox" />
+    <v-message-box :message="mBox" />
     <v-data-table :headers="headers" :items="items" sort-by="calories" class="elevation-1">
       <template v-slot:top>
         <v-toolbar flat color="white">
@@ -149,7 +149,7 @@ export default {
       Api()
         .get("/other_request/" + patient_id)
         .then(respone => {
-          console.log(respone);
+          //console.log(respone);
           respone.data.map(item => {
             this.items.push(this.toTemplate(item));
           });

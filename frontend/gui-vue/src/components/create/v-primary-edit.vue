@@ -63,7 +63,7 @@
       </v-col>
 
       <v-col cols="10" md="4">
-        <v-date-custom :date="editItem.date" :change='dateChange' label="Date" />
+        <v-date-custom :date="editItem.date" :change="dateChange" label="Date" />
       </v-col>
     </v-row>
   </v-container>
@@ -71,7 +71,7 @@
 
 <script>
 import { mapGetters, mapActions } from "vuex";
-import vDateCustom from '../inputs/v-date-custom'
+import vDateCustom from "../inputs/v-date-custom";
 
 export default {
   name: "v-primary-edit",
@@ -86,6 +86,32 @@ export default {
     };
   },
   methods: {
+    async initialize() {
+      await Promise.all([
+        this.GET_CLINICAL_FORMS_FROM_API(),
+        this.GET_LOCALIZATION_FROM_API(),
+        this.GET_PREVALENCES_FROM_API()
+      ]);
+      /*console.log('if ga keldi...')
+      if (typeof this.primarydiagnose.id == 'undefined'){
+        console.log('if ishladi...')
+        // then default vaules to primary diagnose
+        this.primarydiagnose.clinicalform = this.CLINICAL_FORMS[0].id,
+        this.primarydiagnose.localization = this.LOCALIZATIONS[0].id,
+        this.primarydiagnose.prevalence = this.PREVALENCES[0].id,
+        this.primarydiagnose.infiltration = false
+        this.primarydiagnose.decay = false
+        this.primarydiagnose.seeding = false
+        this.primarydiagnose.resorption = false
+        this.primarydiagnose.compaction = false
+        this.primarydiagnose.scarring = false
+        this.primarydiagnose.calcification = false
+        this.primarydiagnose.bk = false
+
+        //this.primarydiagnose.date: new Date(),
+        this.primarydiagnose.status = false
+      }*/
+    },
     ...mapActions([
       "GET_CLINICAL_FORMS_FROM_API",
       "GET_LOCALIZATION_FROM_API",
@@ -98,10 +124,8 @@ export default {
   computed: {
     ...mapGetters(["CLINICAL_FORMS", "LOCALIZATIONS", "PREVALENCES"])
   },
-  mounted() {
-    this.GET_CLINICAL_FORMS_FROM_API();
-    this.GET_LOCALIZATION_FROM_API();
-    this.GET_PREVALENCES_FROM_API();
+  created: function(){
+    this.initialize()
   },
   components: {
     vDateCustom
