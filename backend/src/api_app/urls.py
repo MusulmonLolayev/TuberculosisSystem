@@ -2,14 +2,7 @@ from django.urls import path
 
 from rest_framework.urlpatterns import format_suffix_patterns
 
-from .views import CountryListView, primary_request, \
-     RegionListView, DistrictListView, OccupationListView, \
-         GetDistrictById, patient_request, ClinicalFormListView, \
-             LocalizationListView, PrevalenceListView, CharacterOfStoolListView, \
-                 taking_request, complaint_request, immunogram_request, other_request, blood_request
-
-from .views import PrimaryDiagnoseListView, TakingMedicineListView, ComplaintListView, \
-    BloodListView, ImmunogramListView, OtherListView
+from .views import *
 
 urlpatterns = [
     # /countries
@@ -65,6 +58,14 @@ urlpatterns = [
     # /other
     path('other_request', other_request),
     path('other_request/<patient_id>', OtherListView.as_view()),
+
+    # /Questions
+    path('question_request', question_request),
+    path('question_request/<question_title_id>', QuestionListView.as_view()),
+
+    # /Question title
+    path('question_titles', QuestionTitleListView.as_view()),
+    path('question_title_request', question_title_request),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)

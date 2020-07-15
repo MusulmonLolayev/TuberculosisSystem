@@ -1,8 +1,6 @@
 from rest_framework import serializers
 
-from patientapp.models import Patient, District, Region, Country, Occupation, \
-    ClinicalForm, Localization, Prevalence, PrimaryDiagnose, TakingMedicine, \
-    CharacterOfStool, Complaint, BloodAnalysis, Immunogram, Other
+from patientapp.models import *
 
 from django.contrib.auth.models import User
 
@@ -84,6 +82,19 @@ class ImmunogramSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class OtherSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Other
+        fields = '__all__'
+
+class QuestionTitleSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = QuestionTitle
+        fields = '__all__'
+
+class QuestionSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Question
         fields = '__all__'

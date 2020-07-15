@@ -1,13 +1,6 @@
 from django.db import models
 import datetime
 
-class Question(models.Model):
-    text = models.TextField()
-    point = models.IntegerField()
-    weight = models.FloatField()
-    
-    def __str__(self):
-        return self.text
 
 class Country(models.Model):
     name = models.CharField(max_length=30)
@@ -213,7 +206,6 @@ class Immunogram(models.Model):
     date = models.DateField(default=datetime.date.today)
 
 class Other(models.Model):
-
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
 
     # Переносимость противотуберкулезной терапии (удовлетворительная, не удовлетворительная)
@@ -244,3 +236,19 @@ class Other(models.Model):
     # status for taking on computing
     status = models.BooleanField(default=True)
     date = models.DateField(default=datetime.date.today)
+
+class QuestionTitle(models.Model):
+    title = models.TextField(max_length=250, default='')
+    isMany = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.title
+
+class Question(models.Model):
+    question_title = models.ForeignKey(QuestionTitle, on_delete=models.PROTECT)
+    text = models.TextField()
+    point = models.IntegerField(default=1)
+    weight = models.FloatField(default=1)
+    
+    def __str__(self):
+        return self.text
