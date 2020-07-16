@@ -1,90 +1,88 @@
 <template>
-  <div style="margin-left: 30px">
-    <v-row>
-      <v-col cols="10" md="3">
-        <v-text-field label="Last name" v-model="patient.last_name" required />
-      </v-col>
+  <v-row>
+    <v-col cols="10" md="3">
+      <v-text-field label="Last name" v-model="patient.last_name" required />
+    </v-col>
 
-      <v-col cols="10" md="3">
-        <v-text-field label="First name" v-model="patient.first_name" required />
-      </v-col>
+    <v-col cols="10" md="3">
+      <v-text-field label="First name" v-model="patient.first_name" required />
+    </v-col>
 
-      <v-col cols="10" md="3">
-        <v-text-field label="Middle name" v-model="patient.middle_name" required />
-      </v-col>
-      <v-col cols="10" md="3">
-        <v-date-custom
-          label="Date of birthday"
-          :date="patient_edit.birthday"
-          :change="birthdayChange"
-        />
-      </v-col>
+    <v-col cols="10" md="3">
+      <v-text-field label="Middle name" v-model="patient.middle_name" required />
+    </v-col>
+    <v-col cols="10" md="3">
+      <v-date-custom
+        label="Date of birthday"
+        :date="patient_edit.birthday"
+        :change="birthdayChange"
+      />
+    </v-col>
 
-      <v-col cols="10" md="3">
-        <v-radio-group row v-model="gender" @change="rbChange">
-          <v-radio label="Male" :value="0" />
-          <v-radio label="Female" :value="1" />
-        </v-radio-group>
-      </v-col>
-      <v-col cols="10" md="3">
-        <v-select
-          label="Country"
-          :items="COUNTRIES"
-          item-text="name"
-          @change="countryChanged"
-          return-object
-          item-value="id"
-          v-model="selectedCountry"
-        />
-      </v-col>
+    <v-col cols="10" md="3">
+      <v-radio-group row v-model="gender" @change="rbChange">
+        <v-radio label="Male" :value="0" />
+        <v-radio label="Female" :value="1" />
+      </v-radio-group>
+    </v-col>
+    <v-col cols="10" md="3">
+      <v-select
+        label="Country"
+        :items="COUNTRIES"
+        item-text="name"
+        @change="countryChanged"
+        return-object
+        item-value="id"
+        v-model="selectedCountry"
+      />
+    </v-col>
 
-      <v-col cols="10" md="3">
-        <v-select
-          label="Region"
-          :items="REGIONS"
-          item-text="name"
-          @change="regionChanged"
-          return-object
-          item-value="id"
-          v-model="selectedReigion"
-        />
-      </v-col>
-      <v-col cols="10" md="3">
-        <v-select
-          label="District"
-          :items="DISTRICTS"
-          item-text="name"
-          return-object
-          item-value="id"
-          v-model="selectedDistrict"
-          @change="districtChanged"
-        />
-      </v-col>
+    <v-col cols="10" md="3">
+      <v-select
+        label="Region"
+        :items="REGIONS"
+        item-text="name"
+        @change="regionChanged"
+        return-object
+        item-value="id"
+        v-model="selectedReigion"
+      />
+    </v-col>
+    <v-col cols="10" md="3">
+      <v-select
+        label="District"
+        :items="DISTRICTS"
+        item-text="name"
+        return-object
+        item-value="id"
+        v-model="selectedDistrict"
+        @change="districtChanged"
+      />
+    </v-col>
 
-      <v-col cols="10" md="9">
-        <v-text-field label="Address line" required v-model="patient.address" />
-      </v-col>
-      <v-col cols="10" md="3">
-        <v-date-custom label="From date" :date="patient_edit.fromdate" :change="fromdateChange" />
-      </v-col>
+    <v-col cols="10" md="6">
+      <v-text-field label="Address line" required v-model="patient.address" />
+    </v-col>
+    <v-col cols="10" md="3">
+      <v-date-custom label="From date" :date="patient_edit.fromdate" :change="fromdateChange" />
+    </v-col>
 
-      <v-col cols="10" md="3">
-        <v-select
-          label="Occupation"
-          :items="OCCUPATIONS"
-          item-text="title"
-          return-object
-          item-value="id"
-          @change="occupationChanged"
-          v-model="selectedOccupation"
-        />
-      </v-col>
+    <v-col cols="10" md="3">
+      <v-select
+        label="Occupation"
+        :items="OCCUPATIONS"
+        item-text="title"
+        return-object
+        item-value="id"
+        @change="occupationChanged"
+        v-model="selectedOccupation"
+      />
+    </v-col>
 
-      <v-col cols="10" md="3">
-        <v-text-field label="Number" required v-model="patient.number" />
-      </v-col>
-    </v-row>
-  </div>
+    <v-col cols="10" md="3">
+      <v-text-field label="Number" required v-model="patient.number" type='number'/>
+    </v-col>
+  </v-row>
 </template>
 
 <script>
@@ -125,9 +123,8 @@ export default {
   },
   methods: {
     async initialize() {
-      
-      await this.GET_COUNTRIES_FROM_API()
-      await this.GET_OCCUPATIONS_FROM_API()
+      await this.GET_COUNTRIES_FROM_API();
+      await this.GET_OCCUPATIONS_FROM_API();
 
       if (typeof this.patient.id != "undefined") {
         await this.GET_DISTRICT_FROM_API(this.patient.district);

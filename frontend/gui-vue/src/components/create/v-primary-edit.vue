@@ -1,7 +1,7 @@
 <template>
-  <v-container>
+  <div>
     <v-row>
-      <v-col cols="10" md="4">
+      <v-col cols="10" md="3">
         <v-select
           label="Clinical form of Tuberculosis"
           :items="CLINICAL_FORMS"
@@ -10,7 +10,7 @@
           v-model="primarydiagnose.clinicalform"
         />
       </v-col>
-      <v-col cols="10" md="4">
+      <v-col cols="10" md="3">
         <v-select
           label="Localization"
           :items="LOCALIZATIONS"
@@ -19,7 +19,7 @@
           v-model="primarydiagnose.localization"
         />
       </v-col>
-      <v-col cols="10" md="4">
+      <v-col cols="10" md="3">
         <v-select
           label="Prevalence"
           :items="PREVALENCES"
@@ -28,27 +28,25 @@
           v-model="primarydiagnose.prevalence"
         />
       </v-col>
-    </v-row>
-    <v-row>
-      <v-col cols="10" md="4">
+      <v-col cols="10" md="3">
         <v-checkbox v-model="primarydiagnose.infiltration" label="Infiltration" />
       </v-col>
-      <v-col cols="10" md="4">
+      <v-col cols="10" md="3">
         <v-checkbox v-model="primarydiagnose.decay" label="Decay" />
       </v-col>
-      <v-col cols="10" md="4">
+      <v-col cols="10" md="3">
         <v-checkbox v-model="primarydiagnose.seeding" label="Seeding" />
       </v-col>
-      <v-col cols="10" md="4">
+      <v-col cols="10" md="3">
         <v-checkbox v-model="primarydiagnose.resorption" label="Resorption" />
       </v-col>
-      <v-col cols="10" md="4">
+      <v-col cols="10" md="3">
         <v-checkbox v-model="primarydiagnose.compaction" label="Compaction" />
       </v-col>
-      <v-col cols="10" md="4">
+      <v-col cols="10" md="3">
         <v-checkbox v-model="primarydiagnose.scarring" label="Scarring" />
       </v-col>
-      <v-col cols="10" md="4">
+      <v-col cols="10" md="3">
         <v-checkbox v-model="primarydiagnose.calcification" label="Calcification" />
       </v-col>
       <v-col cols="10" md="3">
@@ -58,15 +56,15 @@
           <v-radio label="-" :value="false" />
         </v-radio-group>
       </v-col>
-      <v-col cols="10" md="4">
+      <v-col cols="10" md="3">
         <v-checkbox v-model="primarydiagnose.status" label="Status" />
       </v-col>
 
-      <v-col cols="10" md="4">
+      <v-col cols="10" md="3">
         <v-date-custom :date="editItem.date" :change="dateChange" label="Date" />
       </v-col>
     </v-row>
-  </v-container>
+  </div>
 </template>
 
 <script>
@@ -124,8 +122,8 @@ export default {
   computed: {
     ...mapGetters(["CLINICAL_FORMS", "LOCALIZATIONS", "PREVALENCES"])
   },
-  created: function(){
-    this.initialize()
+  created: function() {
+    this.initialize();
   },
   components: {
     vDateCustom

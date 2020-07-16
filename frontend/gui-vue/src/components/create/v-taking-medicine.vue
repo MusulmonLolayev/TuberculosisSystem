@@ -1,37 +1,37 @@
 <template>
-  <v-container>
-    <v-row>
-      <v-col cols="10" md="3">
-        <v-date-custom
-          label="From date of taking medicine"
-          :date="takingmedicine_edit.fromdate"
-          :change="fromdateChange"
-        />
-      </v-col>
-      <v-col cols="10" md="2">
-        <v-checkbox v-model="takingmedicine.streptomycin" label="Streptomycin" />
-      </v-col>
-      <v-col cols="10" md="2">
-        <v-checkbox v-model="takingmedicine.rifampicin" label="Rifampicin" />
-      </v-col>
+<div >
+  <v-row>
+    <v-col cols="10" md="3">
+      <v-date-custom
+        label="From date of taking medicine"
+        :date="takingmedicine_edit.fromdate"
+        :change="fromdateChange"
+      />
+    </v-col>
+    <v-col cols="10" md="3">
+      <v-checkbox v-model="takingmedicine.streptomycin" label="Streptomycin" />
+    </v-col>
+    <v-col cols="10" md="3">
+      <v-checkbox v-model="takingmedicine.rifampicin" label="Rifampicin" />
+    </v-col>
 
-      <v-col cols="10" md="2">
-        <v-checkbox v-model="takingmedicine.isoniazid" label="Isoniazid" />
-      </v-col>
-      <v-col cols="10" md="2">
-        <v-checkbox v-model="takingmedicine.pyrazinamide" label="Pyrazinamide" />
-      </v-col>
-      <v-col cols="10" md="2">
-        <v-checkbox v-model="takingmedicine.ethambutol" label="Ethambutol" />
-      </v-col>
-      <v-col cols="10" md="4">
-        <v-checkbox v-model="takingmedicine.status" label="Status" />
-      </v-col>
-      <v-col cols="10" md="3">
-        <v-date-custom label="Date" :date="takingmedicine_edit.date" :change="dateChange" />
-      </v-col>
-    </v-row>
-  </v-container>
+    <v-col cols="10" md="3">
+      <v-checkbox v-model="takingmedicine.isoniazid" label="Isoniazid" />
+    </v-col>
+    <v-col cols="10" md="3">
+      <v-checkbox v-model="takingmedicine.pyrazinamide" label="Pyrazinamide" />
+    </v-col>
+    <v-col cols="10" md="3">
+      <v-checkbox v-model="takingmedicine.ethambutol" label="Ethambutol" />
+    </v-col>
+    <v-col cols="10" md="3">
+      <v-checkbox v-model="takingmedicine.status" label="Status" />
+    </v-col>
+    <v-col cols="10" md="3">
+      <v-date-custom label="Date" :date="takingmedicine_edit.date" :change="dateChange" />
+    </v-col>
+  </v-row>
+  </div>
 </template>
 
 <script>
