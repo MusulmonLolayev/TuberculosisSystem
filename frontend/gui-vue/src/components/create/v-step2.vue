@@ -13,13 +13,13 @@
               multiple
               :label="option_item.text"
               style="margin:0px"
-              v-model="selected_check"
+              v-model="selected.checkbox"
               :value="option_item.id"
             />
           </li>
         </ul>
         <ul v-else>
-          <v-radio-group v-model="selected_radio" multiple style="margin:0px" row @change="Checked">
+          <v-radio-group v-model="selected.radio" multiple style="margin:0px" row>
             <li
               v-for="(option_item, option_index) in get_questions(item.id)"
               :key="index + '_' + option_index"
@@ -40,12 +40,11 @@ import MessgeBox from "../commons/messagebox.js";
 
 export default {
   name: "v-step2",
+  props: ['selected'],
   data: function() {
     return {
       question_titles: [],
       questions: [],
-      selected_check: [],
-      selected_radio: [],
       mBox: new MessgeBox()
     };
   },
@@ -77,9 +76,6 @@ export default {
       });
       return res;
     },
-    Checked() {
-      console.log(this.selected_radio);
-    }
   },
   components: {
     vMessageBox

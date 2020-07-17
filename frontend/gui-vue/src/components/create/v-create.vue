@@ -24,7 +24,7 @@
 
         <v-stepper-content step="1">
           <div style="margin-left: 20px; margin-right: 20px">
-            <v-step2 />
+            <v-step2 :selected="initial_question_selected" />
           </div>
         </v-stepper-content>
 
@@ -165,6 +165,11 @@ export default {
       step_count: 0,
       step_max: 7,
       patient: {},
+      initial_question_selected: {
+        checkbox: [],
+        radio: []
+      },
+      initial_question: {},
       primarydiagnose: {},
       takingmedicine: {},
       complaint: {},
@@ -193,18 +198,20 @@ export default {
     }*/
   },
   methods: {
-    initialize() {},
+    initialize() {
+      // Must to do after all
+    },
     btnCanelingAgree() {
       console.log("btnCanelingAgree");
       this.$router.go(-1);
     },
-    SavePatient() {
+    async SavePatient() {
       try {
         let patient = this.patient;
         // Check this patient has id which means that the patient was created in database
         // if id is undefined then create object, otherwise edit it
         if (typeof patient.id == "undefined") {
-          Api()
+          await Api()
             .post("/patient_request", {
               patient
             })
@@ -216,7 +223,7 @@ export default {
               this.mBox.showMessage("Error", e, "error");
             });
         } else {
-          Api()
+          await Api()
             .put("/patient_request", {
               patient
             })
@@ -233,7 +240,62 @@ export default {
         this.mBox.showMessage("Error", e, "error");
       }
     },
-    async SaveQuestions() {},
+    async SaveInitialQuestions() {
+      try {
+        // Check this patient has id which means that the patient was created in database
+        // if id is undefined then create object
+        /*if (typeof this.patient.id == "undefined") {
+          await this.SavePatient();
+        }*/
+
+        // Chech the primary diagnose id to be undefined to know ethier create instane or edit
+        //this.initial_question.patient = this.patient.id;
+        // Convert the ids into text
+        this.initial_question.questions = ""
+        this.initial_question_selected.checkbox.map(item => {
+          this.initial_question.questions += item + ","
+        })
+        this.initial_question_selected.radio.map(item => {
+          this.initial_question.questions += item + ","
+        })
+        this.initial_question.questions = this.initial_question.questions.slice(0, -1)
+        // For test Pus 70 id
+        this.initial_question.patient = 70
+        //return 0;
+        
+        let initial_question = this.initial_question;
+
+        if (typeof initial_question.id == "undefined") {
+          await Api()
+            .post("/initial_question_request", {
+              initial_question
+            })
+            .then(function(response) {
+              console.log(response);
+              initial_question.id = response.data;
+            })
+            .catch(e => {
+              console.log(e);
+              this.mBox.showMessage("Error", e, "error");
+            });
+        } else {
+          await Api()
+            .put("/initial_question_request", {
+              initial_question
+            })
+            .then(function(response) {
+              console.log(response);
+            })
+            .catch(e => {
+              console.log(e);
+              this.mBox.showMessage("Error", e, "error");
+            });
+        }
+      } catch (e) {
+        console.log(e);
+        this.mBox.showMessage("Error", e, "error");
+      }
+    },
     async SavePrimaryDiagnose() {
       try {
         // Check this patient has id which means that the patient was created in database
@@ -494,7 +556,7 @@ export default {
           this.SavePatient();
           break;
         case 1:
-          this.SaveQuestions();
+          this.SaveInitialQuestions();
           break;
         case 2:
           this.SavePrimaryDiagnose();

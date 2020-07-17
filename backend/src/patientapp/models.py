@@ -255,6 +255,4 @@ class Question(models.Model):
 
 class InitialQuestion(models.Model):
     patient = models.ForeignKey(Patient, on_delete = models.PROTECT)
-    question_title = models.ForeignKey(QuestionTitle, on_delete = models.PROTECT)
-    questions = models.CharField(default='', max_length=200)
-    row = models.IntegerField(default=0)
+    questions = models.CharField(blank=True, max_length=200)
