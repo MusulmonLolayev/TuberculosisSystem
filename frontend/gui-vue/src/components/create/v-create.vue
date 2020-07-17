@@ -4,13 +4,13 @@
     <v-stepper alt-labels v-model="step_count" :vertical="vertical">
       <template v-if="vertical">
         <template v-for="(item, index) in stepper_data">
-          <v-stepper-step :key="index" step="index" :editable="item.editable">{{item.title}}</v-stepper-step>
+          <v-stepper-step :key="'V' + index" step="index" :editable="item.editable">{{item.title}}</v-stepper-step>
         </template>
       </template>
       <template v-else>
         <v-stepper-header>
           <template v-for="(item, index) in stepper_data">
-            <v-stepper-step :key="index" :step="index" :editable="item.editable">{{ item.title }}</v-stepper-step>
+            <v-stepper-step :key="'H' + index" :step="index" :editable="item.editable">{{ item.title }}</v-stepper-step>
             <v-divider v-if="index != 7" :key="index"></v-divider>
           </template>
         </v-stepper-header>

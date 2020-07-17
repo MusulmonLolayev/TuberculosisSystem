@@ -88,10 +88,14 @@ class OtherSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class QuestionTitleSerializer(serializers.ModelSerializer):
-
+    #questions = serializers.SerializerMethodField()
     class Meta:
         model = QuestionTitle
         fields = '__all__'
+    """def get_questions(self, obj):
+        res = QuestionSerializer(Question.objects.filter(question_title_id=obj.id))
+        print(res)
+        return res"""
 
 class QuestionSerializer(serializers.ModelSerializer):
 

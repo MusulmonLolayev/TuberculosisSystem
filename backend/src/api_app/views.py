@@ -108,11 +108,7 @@ class QuestionTitleListView(ListAPIView):
 
 class QuestionListView(ListAPIView):
     serializer_class = QuestionSerializer
-
-    def get_queryset(self):
-
-        question_title_id = self.kwargs['question_title_id']
-        return Question.objects.filter(question_title_id=question_title_id)
+    queryset = Question.objects.all()
 
 @api_view(['GET'])
 def GetDistrictById(request, districtId):

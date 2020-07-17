@@ -61,7 +61,7 @@ urlpatterns = [
 
     # /Questions
     path('question_request', question_request),
-    path('question_request/<question_title_id>', QuestionListView.as_view()),
+    path('questions', QuestionListView.as_view()),
 
     # /Question title
     path('question_titles', QuestionTitleListView.as_view()),
