@@ -59,12 +59,21 @@ export default {
   },
   methods: {
     ...mapActions(["GET_CHARACTER_STOOL_FROM_API"]),
+    async initialize() {
+      await this.GET_CHARACTER_STOOL_FROM_API();
+      if (typeof this.complaint.id == "undefined"){
+        console.log(this.CHARACTER_STOOLS)
+        this.complaint.from_stool_frequency = 0
+        this.complaint.to_stool_frequency = 0
+        this.complaint.character = this.CHARACTER_STOOLS[0].id
+      }
+    },
     dateChange() {
       this.complaint.date = this.editItem.date.value;
     }
   },
-  mounted: function() {
-    this.GET_CHARACTER_STOOL_FROM_API();
+  created() {
+    this.initialize();
   },
   components: {
     vDateCustom

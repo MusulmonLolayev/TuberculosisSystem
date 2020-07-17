@@ -58,9 +58,28 @@ export default {
     };
   },
   methods: {
+    initialize() {
+      if (typeof this.bloodanalysis.id == "undefined") {
+        this.bloodanalysis.er = 0;
+        this.bloodanalysis.leyk = 0;
+        this.bloodanalysis.hb = 0;
+        this.bloodanalysis.color = 0;
+        this.bloodanalysis.pok = 0;
+        this.bloodanalysis.pya = 0;
+        this.bloodanalysis.sya = 0;
+        this.bloodanalysis.eoz = 0;
+        this.bloodanalysis.lf = 0;
+        this.bloodanalysis.mon = 0;
+        this.bloodanalysis.hb = 0;
+        this.bloodanalysis.coe = 0;
+      }
+    },
     dateChange() {
       this.bloodanalysis.date = this.editItem.date.value;
     }
+  },
+  created() {
+    this.initialize();
   },
   components: {
     vDateCustom

@@ -24,7 +24,7 @@
 
         <v-stepper-content step="1">
           <div style="margin-left: 20px; margin-right: 20px">
-            <v-step2 :selected="initial_question_selected" />
+            <v-initial-question :selected="initial_question_selected" />
           </div>
         </v-stepper-content>
 
@@ -89,7 +89,7 @@
 
 <script>
 import vPatient from "./v-patient";
-import vStep2 from "./v-step2";
+import vInitialQuestion from "./v-initial-question";
 import vPrimaryEdit from "./v-primary-edit";
 import vTakingMedicine from "./v-taking-medicine";
 import vComplaint from "./v-complaint";
@@ -105,7 +105,7 @@ export default {
   name: "v-create",
   components: {
     vPatient,
-    vStep2,
+    vInitialQuestion,
     vPrimaryEdit,
     vTakingMedicine,
     vComplaint,
@@ -244,12 +244,12 @@ export default {
       try {
         // Check this patient has id which means that the patient was created in database
         // if id is undefined then create object
-        /*if (typeof this.patient.id == "undefined") {
+        if (typeof this.patient.id == "undefined") {
           await this.SavePatient();
-        }*/
+        }
 
         // Chech the primary diagnose id to be undefined to know ethier create instane or edit
-        //this.initial_question.patient = this.patient.id;
+        this.initial_question.patient = this.patient.id;
         // Convert the ids into text
         this.initial_question.questions = ""
         this.initial_question_selected.checkbox.map(item => {

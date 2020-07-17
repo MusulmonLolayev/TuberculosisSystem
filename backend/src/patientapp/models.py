@@ -238,6 +238,7 @@ class Other(models.Model):
     date = models.DateField(default=datetime.date.today)
 
 class QuestionTitle(models.Model):
+    name = models.CharField(default='', max_length=100)
     title = models.TextField(max_length=250, default='')
     isMany = models.BooleanField(default=False)
 
@@ -256,3 +257,7 @@ class Question(models.Model):
 class InitialQuestion(models.Model):
     patient = models.ForeignKey(Patient, on_delete = models.PROTECT)
     questions = models.CharField(blank=True, max_length=200)
+
+    # status for taking on computing
+    status = models.BooleanField(default=True)
+    date = models.DateField(default=datetime.date.today)

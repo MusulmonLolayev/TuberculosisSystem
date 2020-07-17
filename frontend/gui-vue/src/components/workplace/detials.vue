@@ -22,6 +22,15 @@
 
       <v-expansion-panel>
         <v-expansion-panel-header>
+          <h2>Initial question</h2>
+        </v-expansion-panel-header>
+        <v-expansion-panel-content>
+          <v-initial-question-table :patient="patient" />
+        </v-expansion-panel-content>
+      </v-expansion-panel>
+
+      <v-expansion-panel>
+        <v-expansion-panel-header>
           <h2>Primary diagonose</h2>
         </v-expansion-panel-header>
         <v-expansion-panel-content>
@@ -88,6 +97,7 @@ import vComplaintTable from "../list/v-complaint-table";
 import vBloodTable from "../list/v-blood-table.vue";
 import vImmunogramTable from "../list/v-immunogram-table";
 import vOtherTable from "../list/v-other-table";
+import vInitialQuestionTable from "../list/v-initial-question-table";
 import vAlertBox from "../commons/v-alert-box.vue";
 import AlertBox from "../commons/alertbox.js";
 
@@ -95,15 +105,13 @@ export default {
   data: function() {
     return {
       patient: this.$route.params.patient,
-      panel: [0],
+      panel: [1],
       mBox: new MessageBox(),
       aBox: new AlertBox()
     };
   },
-  mounted: function() {
-  },
-  computed: {
-  },
+  mounted: function() {},
+  computed: {},
   methods: {
     btnDelete: function() {
       let patient = this.patient;
@@ -136,7 +144,7 @@ export default {
         .catch(function(error) {
           console.log(error);
         });
-    },
+    }
   },
   components: {
     vPatient,
@@ -147,7 +155,8 @@ export default {
     vBloodTable,
     vImmunogramTable,
     vOtherTable,
-    vAlertBox
+    vAlertBox,
+    vInitialQuestionTable
   }
 };
 </script>
