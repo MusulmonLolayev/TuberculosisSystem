@@ -66,6 +66,9 @@ urlpatterns = [
     # /Question title
     path('question_titles', QuestionTitleListView.as_view()),
     path('question_title_request', question_title_request),
+
+    path('initial_questions/<patient_id>', InitialQuestionListView.as_view()),
+    path('initial_question_request', question_title_request),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)

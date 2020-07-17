@@ -102,3 +102,9 @@ class QuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Question
         fields = '__all__'
+
+class InitialQuestionSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = InitialQuestion
+        fields = '__all__'

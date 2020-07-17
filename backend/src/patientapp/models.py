@@ -252,3 +252,9 @@ class Question(models.Model):
     
     def __str__(self):
         return self.text
+
+class InitialQuestion(models.Model):
+    patient = models.ForeignKey(Patient, on_delete = models.PROTECT)
+    question_title = models.ForeignKey(QuestionTitle, on_delete = models.PROTECT)
+    questions = models.CharField(default='', max_length=200)
+    row = models.IntegerField(default=0)

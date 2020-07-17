@@ -110,6 +110,14 @@ class QuestionListView(ListAPIView):
     serializer_class = QuestionSerializer
     queryset = Question.objects.all()
 
+class InitialQuestionListView(ListAPIView):
+    serializer_class = InitialQuestionSerializer
+
+    def get_queryset(self):
+
+        patient_id = self.kwargs['patient_id']
+        return InitialQuestion.objects.filter(patient_id=patient_id)
+
 @api_view(['GET'])
 def GetDistrictById(request, districtId):
     district = District.objects.get(id=districtId)
@@ -158,7 +166,6 @@ def patient_request(request):
 def general_request(request, ins_name, ins_class, ins_ser):
     try:
         # Create object
-        print(request.data)
         if request.method == 'POST':
             serializer = ins_ser(data=request.data.get(ins_name))
             if serializer.is_valid():
@@ -219,3 +226,7 @@ def question_request(request):
 @api_view(['POST', 'PUT', 'DELETE'])
 def question_title_request(request):
     return general_request(request, 'question_title', QuestionTitle, QuestionTitleSerializer)
+
+@api_view(['POST', 'PUT', 'DELETE'])
+def initial_question_request(request):
+    return general_request(request, 'initial_question', InitialQuestion, InitialQuestionSerializer)
