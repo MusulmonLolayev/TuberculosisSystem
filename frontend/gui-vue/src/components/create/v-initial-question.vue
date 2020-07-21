@@ -5,31 +5,55 @@
       <li v-for="(item, index) in question_titles" :key="'Q' + index">
         <h3>{{item.title}}</h3>
         <ul v-if="item.isMany">
-          <li
-            v-for="(option_item, option_index) in get_questions(item.id)"
-            :key="index + '_' + option_index"
-          >
-            <v-checkbox
-              multiple
-              :label="option_item.text"
-              style="margin:0px"
-              v-model="selected.checkbox"
-              :value="option_item.id"
-            />
+          <li style="list-style-type: none;">
+            <v-row style="margin:0px">
+              <v-col
+                v-for="(option_item, option_index) in get_questions(item.id)"
+                :key="index + '_' + option_index"
+                md="3"
+                cols="10"
+                style="margin:0px"
+              >
+                <v-checkbox
+                  multiple
+                  :label="option_item.text"
+                  v-model="selected.checkbox"
+                  :value="option_item.id"
+                />
+              </v-col>
+            </v-row>
           </li>
         </ul>
         <ul v-else>
-          <v-radio-group v-model="selected.radio" multiple style="margin:0px" row>
-            <li
-              v-for="(option_item, option_index) in get_questions(item.id)"
-              :key="index + '_' + option_index"
-            >
-              <v-radio :label="option_item.text" :value="option_item.id" style="margin:0px" />
+          <v-radio-group
+            v-model="selected.radio['r' + item.id]"
+            style="margin-top:0px; margin-bottom:0px"
+          >
+            <li style="list-style-type: none;">
+              <v-row style="margin:0px">
+                <v-col
+                  v-for="(option_item, option_index) in get_questions(item.id)"
+                  :key="index + '_' + option_index"
+                  md="3"
+                  cols="10"
+                  style="margin:0px"
+                >
+                  <v-radio :label="option_item.text" :value="option_item.id" />
+                </v-col>
+              </v-row>
             </li>
           </v-radio-group>
         </ul>
       </li>
     </ol>
+    <v-row>
+      <v-col cols="10" md="3">
+        <v-checkbox v-model="selected.status" label="Status" />
+      </v-col>
+      <v-col cols="10" md="3">
+        <v-date-custom label="Date" :date="editItem.date" :change="dateChange" />
+      </v-col>
+    </v-row>
   </div>
 </template>
 
@@ -37,12 +61,18 @@
 import Api from "@/api/Api";
 import vMessageBox from "../commons/v-message-box";
 import MessgeBox from "../commons/messagebox.js";
+import vDateCustom from "../inputs/v-date-custom";
 
 export default {
   name: "v-step2",
-  props: ['selected'],
+  props: ["selected"],
   data: function() {
     return {
+      editItem: {
+        date: {
+          value: this.selected.date
+        }
+      },
       question_titles: [],
       questions: [],
       mBox: new MessgeBox()
@@ -76,15 +106,16 @@ export default {
       });
       return res;
     },
+    dateChange() {
+      this.selected.date = this.editItem.date.value;
+    }
   },
   components: {
-    vMessageBox
+    vMessageBox,
+    vDateCustom
   }
 };
 </script>
 
 <style scoped>
-li {
-  list-style-type: none;
-}
 </style>

@@ -4,11 +4,11 @@
     <v-data-table :headers="headers" :items="items" sort-by="calories" class="elevation-1">
       <template v-slot:top>
         <v-toolbar flat color="white">
-          <v-toolbar-title>Blood analysis list</v-toolbar-title>
+          <v-toolbar-title>Initial question list</v-toolbar-title>
           <v-divider class="mx-4" inset vertical></v-divider>
           <v-spacer></v-spacer>
           <v-btn color="primary" @click="btnNewItem" dark class="mb-2">New Item</v-btn>
-          <v-dialog v-model="dialog" max-width="500px">
+          <v-dialog v-model="dialog">
             <v-card>
               <v-card-title>
                 <span class="headline">{{ formTitle }}</span>
@@ -62,7 +62,14 @@ export default {
     items: [],
     editedIndex: -1,
     editedItem: {},
-    defaultItem: null,
+    defaultItem: {
+      checkbox: [],
+      radio: {},
+
+      //date: new Date(),
+      status: false,
+      //patient: this.patient.id
+    },
     question_titles: [],
     questions: [],
     mBox: new MessageBox()
@@ -85,21 +92,42 @@ export default {
   },
 
   methods: {
+    toRow(item) {
+      let ids = item.questions.split(",");
+      let row = {};
+      if (ids.length > 1)
+        ids.map(id => {
+          let question = Object.assign(
+            {},
+            this.questions.find(q => q.id == id)
+          );
+          let attribut = "v" + question.question_title;
+          if (typeof row[attribut] == "undefined") {
+            row[attribut] = question;
+          } else {
+            row[attribut].text += "; " + question.text;
+            row[attribut].id += "," + question.id;
+          }
+        });
+      row["id"] = item.id;
+      row["status"] = item.status;
+      row["date"] = item.date;
+      return row;
+    },
     async initialize() {
       try {
         let response = await Api().get("/question_titles");
-        for (let i = 0; i < response.data.length; i++) {
-          let item = response.data[i];
+        let length = response.data.length;
+        for (let i = 0; i < length; i++) {
+          let item = response.data[length - i - 1];
           this.question_titles.push(item);
           this.headers.splice(0, 0, {
             text: item.name,
-            value: "aaa",
+            value: "v" + item.id + ".text",
             align: "start",
             sortable: false
           });
         }
-        console.log(this.headers);
-
 
         response = await Api().get("/questions");
         response.data.map(x => {
@@ -110,20 +138,20 @@ export default {
         this.mBox.showMessage("Error", e, "error");
       }
 
-      /*let mBox = this.mBox;
+      let mBox = this.mBox;
       let patient_id = this.patient.id;
       Api()
         .get("/initial_questions/" + patient_id)
         .then(respone => {
-          //console.log(respone);
           respone.data.map(item => {
-            this.items.push(this.toTemplate(item));
+            let row = this.toRow(item);
+            this.items.push(this.toTemplate(row));
           });
         })
         .catch(e => {
           console.log(e);
           mBox.showMessage("Error", e, "error");
-        });*/
+        });
     },
     ToYesNO(value) {
       return value == true ? "Yes" : "No";
@@ -138,53 +166,51 @@ export default {
       return value == "+";
     },
     toTemplate(obj) {
-      let resOjb = {
-        er: obj.er,
-        leyk: obj.leyk,
-        hb: obj.hb,
-        color: obj.color,
-        pok: obj.pok,
-        pya: obj.pya,
-        sya: obj.sya,
-        eoz: obj.eoz,
-        lf: obj.lf,
-        mon: obj.mon,
-        coe: obj.coe,
+      let resObj = Object.assign({}, obj);
+      resObj.status = this.ToYesNO(obj.status);
 
-        status: this.ToYesNO(obj.status),
-        patient: obj.patient,
-        date: obj.date
-      };
+      if (typeof obj.id != "undefined") resObj.id = obj.id;
 
-      if (typeof obj.id != "undefined") resOjb.id = obj.id;
-
-      return resOjb;
+      return resObj;
     },
     toObject(template) {
-      let resObj = {
-        er: template.er,
-        leyk: template.leyk,
-        hb: template.hb,
-        color: template.color,
-        pok: template.pok,
-        pya: template.pya,
-        sya: template.sya,
-        eoz: template.eoz,
-        lf: template.lf,
-        mon: template.mon,
-        coe: template.coe,
+      let resObj = Object.assign({}, template);
+      resObj.status = this.ToBoolFromYesNo(template.status);
 
-        status: this.ToBoolFromYesNo(template.status),
-        patient: template.patient,
-        date: template.date
-      };
       if (typeof template.id != "undefined") resObj.id = template.id;
       return resObj;
     },
+    toItem(row) {
+      let res = {
+        id: row.id,
+        status: row.status,
+        date: row.date,
+        checkbox: [],
+        radio: {}
+      };
 
+      this.question_titles.map(item => {
+        let attribut = row["v" + item.id];
+        if (typeof attribut != "undefined") {
+          if (item.isMany) {
+            if (typeof attribut.id == "number") res.checkbox.push(attribut.id);
+            else
+              attribut.id.split(",").map(id => {
+                res.checkbox.push(parseInt(id));
+              });
+          } else {
+            res.radio["r" + item.id] = attribut.id;
+          }
+        }
+      });
+
+      return res;
+    },
     editItem(item) {
       this.editedIndex = this.items.indexOf(item);
-      this.editedItem = this.toObject(item);
+      let row = this.toObject(item);
+      this.editedItem = this.toItem(row);
+
       this.dialog = true;
     },
 
@@ -204,54 +230,63 @@ export default {
 
     save() {
       let mBox = this.mBox;
+
+      let initial_question = {
+        patient: this.patient.id,
+        questions: "",
+        status: this.editedItem.status,
+        date: this.editedItem.date
+      };
+
+      // Convert the ids into text
+      this.editedItem.checkbox.map(item => {
+        initial_question.questions += item + ",";
+      });
+      Object.values(this.editedItem.radio).map(item => {
+        initial_question.questions += item + ",";
+      });
+
+      // Clean the last mark (,)
+      initial_question.questions = initial_question.questions.slice(0, -1);
+
+      let _this = this;
       if (this.editedIndex > -1) {
-        let bloodanalysis = this.editedItem;
+        initial_question.id = this.editedItem.id;
         Api()
-          .put("/blood_request", {
-            bloodanalysis
+          .put("/initial_question_request", {
+            initial_question
           })
           .then(() => {
-            console.log("Updated");
-            Object.assign(
-              this.items[this.editedIndex],
-              this.toTemplate(this.editedItem)
-            );
-            this.close();
+            let row = _this.toRow(initial_question);
+            Object.assign(_this.items[this.editedIndex], _this.toTemplate(row));
+            _this.close();
           })
           .catch(e => {
             mBox.showMessage("Error", e, "error");
             console.log(e);
           });
       } else {
-        var bloodanalysis = this.editedItem;
+        // Chech the primary diagnose id to be undefined to know ethier create instane or edit
         Api()
-          .post("/blood_request", {
-            bloodanalysis
+          .post("/initial_question_request", {
+            initial_question
           })
-          .then(respone => {
-            this.editedItem.id = respone.data;
-            this.items.push(this.toTemplate(this.editedItem));
-            this.close();
+          .then(function(response) {
+            let row = _this.toRow(initial_question);
+            row.id = response.data;
+            _this.items.push(_this.toTemplate(row));
+            _this.close();
           })
           .catch(e => {
-            mBox.showMessage("Error", e, "error");
             console.log(e);
+            this.mBox.showMessage("Error", e, "error");
           });
       }
     },
     btnNewItem() {
       this.defaultItem = {
-        er: 0,
-        leyk: 0,
-        hb: 0,
-        color: 0,
-        pok: 0,
-        pya: 0,
-        sya: 0,
-        eoz: 0,
-        lf: 0,
-        mon: 0,
-        coe: 0,
+        checkbox: [],
+        radio: {},
 
         //date: new Date(),
         status: false,

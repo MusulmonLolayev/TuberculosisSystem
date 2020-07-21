@@ -167,7 +167,7 @@ export default {
       patient: {},
       initial_question_selected: {
         checkbox: [],
-        radio: []
+        radio: {}
       },
       initial_question: {},
       primarydiagnose: {},
@@ -241,6 +241,7 @@ export default {
       }
     },
     async SaveInitialQuestions() {
+      //console.log(Object.values(this.initial_question_selected.radio))
       try {
         // Check this patient has id which means that the patient was created in database
         // if id is undefined then create object
@@ -255,14 +256,17 @@ export default {
         this.initial_question_selected.checkbox.map(item => {
           this.initial_question.questions += item + ","
         })
-        this.initial_question_selected.radio.map(item => {
+        Object.values(this.initial_question_selected.radio).map(item => {
           this.initial_question.questions += item + ","
         })
+        // Clean the last mark (,)
         this.initial_question.questions = this.initial_question.questions.slice(0, -1)
         // For test Pus 70 id
-        this.initial_question.patient = 70
+        //this.initial_question.patient = 70
         //return 0;
         
+        //console.log(this.initial_question)
+
         let initial_question = this.initial_question;
 
         if (typeof initial_question.id == "undefined") {
