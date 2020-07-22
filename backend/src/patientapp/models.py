@@ -157,8 +157,6 @@ class BloodAnalysis(models.Model):
     hb = models.FloatField(default=0)
     # Цв.
     color = models.FloatField(default=0)
-    # Пок.
-    pok = models.FloatField(default=0)
     # П/я
     pya = models.FloatField(default=0)
     # С/я
@@ -181,21 +179,21 @@ class Immunogram(models.Model):
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
 
     # CD3
-    cd3 = models.FloatField(default=0)
+    cd3 = models.FloatField(default=0, blank=True, null=True)
     # CD4
-    cd4 = models.FloatField(default=0)
+    cd4 = models.FloatField(default=0, blank=True, null=True)
     # CD8
-    cd8 = models.FloatField(default=0)
+    cd8 = models.FloatField(default=0, blank=True, null=True)
     # CD20
-    cd20 = models.FloatField(default=0)
+    cd20 = models.FloatField(default=0, blank=True, null=True)
     # IgM
-    igm = models.FloatField(default=0)
+    igm = models.FloatField(default=0, blank=True, null=True)
     # IgG
-    igg = models.FloatField(default=0)
+    igg = models.FloatField(default=0, blank=True, null=True)
     # IgA
-    iga = models.FloatField(default=0)
+    iga = models.FloatField(default=0, blank=True, null=True)
     # TgE
-    tge = models.FloatField(default=0)
+    tge = models.FloatField(default=0, blank=True, null=True)
     # ACT
     act = models.FloatField(default=0)
     # ALT

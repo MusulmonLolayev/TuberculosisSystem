@@ -13,9 +13,6 @@
       <v-text-field label="color" v-model="bloodanalysis.color" type="number" />
     </v-col>
     <v-col cols="10" md="2">
-      <v-text-field label="pok" v-model="bloodanalysis.pok" type="number" />
-    </v-col>
-    <v-col cols="10" md="2">
       <v-text-field label="pya" v-model="bloodanalysis.pya" type="number" />
     </v-col>
     <v-col cols="10" md="2">
@@ -64,7 +61,6 @@ export default {
         this.bloodanalysis.leyk = 0;
         this.bloodanalysis.hb = 0;
         this.bloodanalysis.color = 0;
-        this.bloodanalysis.pok = 0;
         this.bloodanalysis.pya = 0;
         this.bloodanalysis.sya = 0;
         this.bloodanalysis.eoz = 0;

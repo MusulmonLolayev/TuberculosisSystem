@@ -105,7 +105,7 @@ export default {
   data: function() {
     return {
       patient: this.$route.params.patient,
-      panel: [1],
+      panel: [0],
       mBox: new MessageBox(),
       aBox: new AlertBox()
     };
@@ -117,7 +117,9 @@ export default {
       let patient = this.patient;
       let router = this.$router;
       let mBox = this.mBox;
-      Api()
+      confirm("Do you want to delete patient " + 
+      this.patient.last_name + " " + this.patient.first_name[0] + "." + 
+      this.patient.middle_name[0] + ".") && Api()
         .delete("/patient_request", {
           data: { patient }
         })

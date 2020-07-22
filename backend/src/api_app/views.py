@@ -167,7 +167,6 @@ def general_request(request, ins_name, ins_class, ins_ser):
     try:
         # Create object
         if request.method == 'POST':
-            print(request.data)
             serializer = ins_ser(data=request.data.get(ins_name))
             if serializer.is_valid():
                 serializer.save()

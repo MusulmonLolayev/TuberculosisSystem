@@ -80,9 +80,10 @@
 
       <v-btn color="primary" @click="stepContinue" :disabled="!(step_count < step_max)">Continue</v-btn>
 
-      <v-btn text @click="btnCancel">Cancel</v-btn>
+      <v-btn text @click="btnCancel" color='red'>Cancel</v-btn>
 
       <v-btn text @click="btnSave" color="primary" v-bind:disabled="!settings.IsUpdated">Save</v-btn>
+      <v-btn text @click="btnNew" color="primary" :disabled="IsNew">New patient</v-btn>
     </div>
   </div>
 </template>
@@ -192,10 +193,13 @@ export default {
     isValidate: function() {
       return false;
       //return this.isValidate_step1 && this.isValidate_step2 && this.isValidate_step3
-    }
+    },
     /*vertical: function() {
       return window.innerWidth < 640;
     }*/
+    IsNew: function(){
+      return this.patient.id != 'undefined'
+    }
   },
   methods: {
     initialize() {
@@ -600,6 +604,9 @@ export default {
         true,
         this.btnCanelingAgree
       );
+    },
+    btnNew(){
+      delete this.patient.id
     }
   },
   updated: function() {
