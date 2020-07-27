@@ -36,6 +36,7 @@
 
 <script>
 import vDateCustom from "../inputs/v-date-custom";
+import Helper from "../commons/functions.js";
 
 export default {
   name: "v-taking-medicine",
@@ -56,13 +57,22 @@ export default {
     };
   },
   methods: {
+    initialize() {
+      if (typeof this.takingmedicine.id == "undefined") {
+        this.takingmedicine_edit.date.value = Helper.GetCurrentDate();
+        this.takingmedicine_edit.fromdate.value = Helper.GetCurrentDate();
+      }
+    },
     fromdateChange() {
       this.takingmedicine.fromdate = this.takingmedicine_edit.fromdate.value;
     },
     dateChange() {
       this.takingmedicine.date = this.takingmedicine_edit.date.value;
     }
-  }
+  },
+  mounted() {
+    this.initialize();
+  },
 };
 </script>
 

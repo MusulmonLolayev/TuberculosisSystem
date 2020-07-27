@@ -69,7 +69,7 @@ let store = new Vuex.Store({
     },
     actions: {
         GET_COUNTRIES_FROM_API({ commit }) {
-            if (typeof this.countries == 'undefined' || this.countries.length == 0)
+            if (this.state.countries.length == 0)
                 return Api().get('/countries')
                     .then((countries) => {
                         commit('SET_COUNTRIES_TO_STATE', countries.data);
@@ -81,31 +81,29 @@ let store = new Vuex.Store({
                     })
         },
         GET_REGIONS_FROM_API({ commit }, url) {
-            if (typeof this.regions == 'undefined' || this.regions.length == 0)
-                return Api().get(url)
-                    .then((regions) => {
-                        commit('SET_REGIONS_TO_STATE', regions.data);
-                        return regions;
-                    })
-                    .catch((error) => {
-                        console.log(error);
-                        return error;
-                    })
+            return Api().get(url)
+                .then((regions) => {
+                    commit('SET_REGIONS_TO_STATE', regions.data);
+                    return regions;
+                })
+                .catch((error) => {
+                    console.log(error);
+                    return error;
+                })
         },
         GET_DISTRICTS_FROM_API({ commit }, url) {
-            if (typeof this.districts == 'undefined' || this.districts.length == 0)
-                return Api().get(url)
-                    .then((districts) => {
-                        commit('SET_DISTRICTS_TO_STATE', districts.data);
-                        return districts;
-                    })
-                    .catch((error) => {
-                        console.log(error);
-                        return error;
-                    })
+            return Api().get(url)
+                .then((districts) => {
+                    commit('SET_DISTRICTS_TO_STATE', districts.data);
+                    return districts;
+                })
+                .catch((error) => {
+                    console.log(error);
+                    return error;
+                })
         },
         GET_OCCUPATIONS_FROM_API({ commit }) {
-            if (typeof this.occupations == 'undefined' || this.occupations.length == 0)
+            if (this.state.occupations.length == 0)
                 return Api().get('/occupations')
                     .then((occupations) => {
                         commit('SET_OCCUPATIONS_TO_STATE', occupations.data);
@@ -165,7 +163,7 @@ let store = new Vuex.Store({
                 })
         },
         GET_CLINICAL_FORMS_FROM_API({ commit }) {
-            if (typeof this.clinical_forms == 'undefined' || this.clinical_forms.length == 0)
+            if (this.state.clinical_forms.length == 0)
                 return Api().get('/clinicalforms')
                     .then((response) => {
                         commit('SET_CLINICAL_FORMS_TO_STATE', response.data)
@@ -177,7 +175,7 @@ let store = new Vuex.Store({
                     })
         },
         GET_LOCALIZATION_FROM_API({ commit }) {
-            if (typeof this.localizations == 'undefined' || this.localizations.length == 0)
+            if (this.state.localizations.length == 0)
                 return Api().get('/localization')
                     .then((response) => {
                         commit('SET_LOCALIZATION_TO_STATE', response.data)
@@ -189,7 +187,7 @@ let store = new Vuex.Store({
                     })
         },
         GET_PREVALENCES_FROM_API({ commit }) {
-            if (typeof this.prevalences == 'undefined' || this.prevalences.length == 0)
+            if (this.state.prevalences.length == 0)
                 return Api().get('/prevalence')
                     .then((response) => {
                         commit('SET_PREVALENCES_TO_STATE', response.data)
@@ -199,7 +197,7 @@ let store = new Vuex.Store({
                     })
         },
         GET_CHARACTER_STOOL_FROM_API({ commit }) {
-            if (typeof this.character_stools == 'undefined' || this.character_stools.length == 0)
+            if (this.state.character_stools.length == 0)
                 return Api().get('/characterofstool')
                     .then((response) => {
                         commit('SET_CHARACTER_STOOLS_TO_STATE', response.data)
@@ -242,7 +240,7 @@ let store = new Vuex.Store({
         PREVALENCES(state) {
             return state.prevalences
         },
-        CHARACTER_STOOLS(state){
+        CHARACTER_STOOLS(state) {
             return state.character_stools
         }
     }

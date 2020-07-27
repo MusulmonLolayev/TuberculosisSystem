@@ -70,6 +70,7 @@
 <script>
 import { mapGetters, mapActions } from "vuex";
 import vDateCustom from "../inputs/v-date-custom";
+import Helper from "../commons/functions.js";
 
 export default {
   name: "v-primary-edit",
@@ -90,25 +91,15 @@ export default {
         this.GET_LOCALIZATION_FROM_API(),
         this.GET_PREVALENCES_FROM_API()
       ]);
-      /*console.log('if ga keldi...')
       if (typeof this.primarydiagnose.id == 'undefined'){
-        console.log('if ishladi...')
+        
         // then default vaules to primary diagnose
         this.primarydiagnose.clinicalform = this.CLINICAL_FORMS[0].id,
         this.primarydiagnose.localization = this.LOCALIZATIONS[0].id,
         this.primarydiagnose.prevalence = this.PREVALENCES[0].id,
-        this.primarydiagnose.infiltration = false
-        this.primarydiagnose.decay = false
-        this.primarydiagnose.seeding = false
-        this.primarydiagnose.resorption = false
-        this.primarydiagnose.compaction = false
-        this.primarydiagnose.scarring = false
-        this.primarydiagnose.calcification = false
-        this.primarydiagnose.bk = false
 
-        //this.primarydiagnose.date: new Date(),
-        this.primarydiagnose.status = false
-      }*/
+        this.editItem.date.value =  Helper.GetCurrentDate()
+      }
     },
     ...mapActions([
       "GET_CLINICAL_FORMS_FROM_API",

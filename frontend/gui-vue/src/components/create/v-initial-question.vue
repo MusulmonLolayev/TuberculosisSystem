@@ -62,6 +62,7 @@ import Api from "@/api/Api";
 import vMessageBox from "../commons/v-message-box";
 import MessgeBox from "../commons/messagebox.js";
 import vDateCustom from "../inputs/v-date-custom";
+import Helper from "../commons/functions.js";
 
 export default {
   name: "v-step2",
@@ -97,6 +98,9 @@ export default {
       } catch (e) {
         console.log(e);
         this.mBox.showMessage("Error", e, "error");
+      }
+      if (typeof this.selected.id == "undefined") {
+        this.editItem.date.value = Helper.GetCurrentDate();
       }
     },
     get_questions(title_id) {

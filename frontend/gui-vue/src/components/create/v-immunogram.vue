@@ -42,6 +42,7 @@
 
 <script>
 import vDateCustom from "../inputs/v-date-custom";
+import Helper from "../commons/functions.js";
 
 export default {
   name: "v-immunogram",
@@ -56,9 +57,27 @@ export default {
     };
   },
   methods: {
+    initialize() {
+      if (typeof this.immunogram.id == "undefined") {
+        this.immunogram.cd3 = 0;
+        this.immunogram.cd4 = 0;
+        this.immunogram.cd8 = 0;
+        this.immunogram.cd20 = 0;
+        this.immunogram.igm = 0;
+        this.immunogram.igg = 0;
+        this.immunogram.iga = 0;
+        this.immunogram.tge = 0;
+        this.immunogram.act = 0;
+        this.immunogram.alt = 0;
+        this.editItem.date.value = Helper.GetCurrentDate();
+      }
+    },
     dateChange() {
       this.immunogram.date = this.editItem.date.value;
     }
+  },
+  mounted() {
+    this.initialize();
   },
   components: {
     vDateCustom

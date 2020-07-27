@@ -43,6 +43,7 @@
 
 <script>
 import vDateCustom from "../inputs/v-date-custom";
+import Helper from "../commons/functions.js";
 
 export default {
   name: "v-other",
@@ -57,9 +58,17 @@ export default {
     };
   },
   methods: {
+    initialize() {
+      if (typeof this.other.id == "undefined") {
+        this.editItem.date.value = Helper.GetCurrentDate();
+      }
+    },
     dateChange() {
       this.other.date = this.editItem.date.value;
     }
+  },
+  mounted() {
+    this.initialize();
   },
   components: {
     vDateCustom

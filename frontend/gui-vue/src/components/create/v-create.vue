@@ -83,7 +83,7 @@
       <v-btn text @click="btnCancel" color='red'>Cancel</v-btn>
 
       <v-btn text @click="btnSave" color="primary" v-bind:disabled="!settings.IsUpdated">Save</v-btn>
-      <v-btn text @click="btnNew" color="primary" :disabled="IsNew">New patient</v-btn>
+      <v-btn text @click="btnNew" color="primary" :disabled="settings.IsNew">New patient</v-btn>
     </div>
   </div>
 </template>
@@ -99,6 +99,8 @@ import vImmunogram from "./v-immunogram";
 import vOther from "./v-other";
 import vMessageBox from "../commons/v-message-box";
 import MessgeBox from "../commons/messagebox.js";
+
+//import Helper from "../commons/functions.js"
 
 import Api from "@/api/Api";
 
@@ -161,7 +163,8 @@ export default {
         }
       ],
       settings: {
-        IsUpdated: false
+        IsUpdated: false,
+        IsNew: true
       },
       step_count: 0,
       step_max: 7,
@@ -559,6 +562,9 @@ export default {
       }
     },
     async btnSave() {
+
+      //console.log(Helper.GetCurrentDate())
+      
       switch (this.step_count) {
         case 0:
           this.SavePatient();
@@ -585,6 +591,7 @@ export default {
           this.SaveOther();
           break;
       }
+      this.settings.IsNew = false
     },
     stepBack() {
       if (this.step_count > 0) {
@@ -606,7 +613,11 @@ export default {
       );
     },
     btnNew(){
+      this.settings.IsNew = true
       delete this.patient.id
+      this.patient.last_name = ''
+      this.patient.first_name = ''
+      this.patient.middle_name = ''
     }
   },
   updated: function() {

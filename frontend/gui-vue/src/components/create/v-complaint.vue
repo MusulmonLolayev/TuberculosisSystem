@@ -41,6 +41,7 @@
 <script>
 import { mapGetters, mapActions } from "vuex";
 import vDateCustom from "../inputs/v-date-custom";
+import Helper from "../commons/functions.js";
 
 export default {
   name: "v-complaint",
@@ -66,6 +67,8 @@ export default {
         this.complaint.from_stool_frequency = 0
         this.complaint.to_stool_frequency = 0
         this.complaint.character = this.CHARACTER_STOOLS[0].id
+
+        this.editItem.date.value = Helper.GetCurrentDate();
       }
     },
     dateChange() {

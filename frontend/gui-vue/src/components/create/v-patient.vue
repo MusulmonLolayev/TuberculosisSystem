@@ -88,6 +88,7 @@
 <script>
 import vDateCustom from "../inputs/v-date-custom";
 import { mapActions, mapGetters } from "vuex";
+import Helper from "../commons/functions.js"
 
 export default {
   name: "v-patient",
@@ -145,6 +146,19 @@ export default {
 
         // set occupation
         this.selectedOccupation = this.patient.occupation;
+      }
+      else {
+        // overwise set defualt values on patient
+        this.patient_edit.birthday.value = Helper.GetCurrentDate()
+        this.patient_edit.fromdate.value = Helper.GetCurrentDate()
+        
+        /*this.selectedCountry = this.COUNTRIES[0].id
+        await this.countryChanged(this.COUNTRIES[0])
+
+        this.selectedReigion = this.REGIONS[0].id;
+        await this.regionChanged(this.REGIONS[0]);
+        
+        this.selectedDistrict = this.DISTRICT.id*/
       }
     },
     ...mapActions([

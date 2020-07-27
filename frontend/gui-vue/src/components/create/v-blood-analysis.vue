@@ -41,6 +41,7 @@
 
 <script>
 import vDateCustom from "../inputs/v-date-custom";
+import Helper from "../commons/functions.js";
 
 export default {
   name: "v-blood-analysis",
@@ -68,13 +69,14 @@ export default {
         this.bloodanalysis.mon = 0;
         this.bloodanalysis.hb = 0;
         this.bloodanalysis.coe = 0;
+        this.editItem.date.value = Helper.GetCurrentDate();
       }
     },
     dateChange() {
       this.bloodanalysis.date = this.editItem.date.value;
     }
   },
-  created() {
+  mounted() {
     this.initialize();
   },
   components: {

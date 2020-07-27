@@ -5,7 +5,7 @@
     :nudge-right="40"
     transition="scale-transition"
     offset-y
-    min-width="290px"
+    min-width="200px"
     >
     <template v-slot:activator="{ on, attrs }">
       <v-text-field
