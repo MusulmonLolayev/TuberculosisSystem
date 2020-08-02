@@ -20,7 +20,6 @@ class RegionListView(ListAPIView):
         for the currently country.
         """
         countryId = self.kwargs['countryId']
-        print('countryId', countryId)
         return Region.objects.filter(country_id=countryId)
 
 class DistrictListView(ListAPIView):

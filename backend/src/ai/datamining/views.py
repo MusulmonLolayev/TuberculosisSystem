@@ -11,25 +11,24 @@ from sklearn.preprocessing import minmax_scale
 
 import os
 
-def AcceptableInterval(x, y, method='mean'):
+from ai.settings import DISCRIPTION_FEATURES
 
-    value_x = None
-    value_y = None
-
-    if method == 'mean':
-        value_x = x.mean()
-        value_y = y.mean()
-    else:
-        value_x = np.median(x)
-        value_y = np.median(y)
-
-    R = x / value_x - y / value_y
-
-    return R.argmin(), R.argmax()
+from ai.common.functions import AcceptableInterval, GetFeatures
 
 @api_view(['GET'])
 def GetAccetableIntervals(request, method):
     
+    def query(item):
+        if item['type'] in ['float', 'str']:
+            return True
+        return False
+
+    not_computing, computing = GetFeatures(query)
+
+    data = np.array(computing)
+    print(not_computing)
+    print(data)
+
     path = staticfiles_storage.path('data/data.txt')
     
     X = np.loadtxt(path)
@@ -42,4 +41,4 @@ def GetAccetableIntervals(request, method):
         for j in range(i + 1, X.shape[1]):
             result.append(AcceptableInterval(X[:, i], X[:, j], method))
 
-    return Response(result, status=status.HTTP_200_OK)
+    return Response(DISCRIPTION_FEATURES, status=status.HTTP_200_OK)
