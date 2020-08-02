@@ -8,6 +8,7 @@ urlpatterns = [
     
     # Get requests
     # GetAccetableIntervals
+    # Some Changes 
     path('getaccetableintervals/<method>', GetAccetableIntervals, name='getaccetableintervals'),
 
 ]
