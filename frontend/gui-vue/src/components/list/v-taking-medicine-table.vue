@@ -201,7 +201,6 @@ export default {
             takingmedicine
           })
           .then(() => {
-            console.log("Updated");
             Object.assign(
               this.items[this.editedIndex],
               this.toTemplate(this.editedItem)
@@ -219,8 +218,7 @@ export default {
             takingmedicine
           })
           .then(respone => {
-            console.log("Created");
-            this.editItem.id = respone.data;
+            this.editedItem.id = respone.data;
             this.items.push(this.toTemplate(this.editedItem));
             this.close();
           })

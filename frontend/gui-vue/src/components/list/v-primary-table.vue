@@ -168,10 +168,9 @@ export default {
         bk: this.ToPlusMinus(obj.bk),
         status: this.ToYesNO(obj.status),
         patient: obj.patient,
-        date: obj.date
+        date: obj.date,
+        id: obj.id,
       };
-
-      if (typeof obj.id != "undefined") resOjb.id = obj.id;
 
       return resOjb;
     },
@@ -190,10 +189,11 @@ export default {
         bk: this.ToBoolFromPlusMinus(template.bk),
         status: this.ToBoolFromYesNo(template.status),
         patient: template.patient,
-        date: template.date
+        date: template.date,
+        id: template.id,
       };
-      if (typeof template.id != "undefined") resObj.id = template.id;
-      return resObj;
+ 
+ return resObj;
     },
 
     editItem(item) {
@@ -218,8 +218,8 @@ export default {
 
     save() {
       let mBox = this.mBox;
+      let primarydiagnose = this.editedItem;
       if (this.editedIndex > -1) {
-        let primarydiagnose = this.editedItem;
         Api()
           .put("/primary_request", {
             primarydiagnose
@@ -238,13 +238,12 @@ export default {
             mBox.showMessage("Error", e, "error");
           });
       } else {
-        let primarydiagnose = this.editedItem;
         Api()
           .post("/primary_request", {
             primarydiagnose
           })
           .then(respone => {
-            this.editItem.id = respone.data;
+            this.editedItem.id = respone.data;
             this.items.push(this.toTemplate(this.editedItem));
             this.close();
           })
