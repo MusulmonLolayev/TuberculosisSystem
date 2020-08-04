@@ -2,6 +2,16 @@
     The global varabiles
 """
 
+MODELS_NAMES = [
+    'Patient',
+    'PrimaryDiagnose',
+    'TakingMedicine',
+    'Complaint',
+    'BloodAnalysis',
+    'Immunogram',
+    'Other'
+]
+
 # The DISCRIPTION_FEATURES is that taking the featureas when is computing from all features
 # It is alsa array with in nested dictionary
 """
@@ -581,14 +591,14 @@ DISCRIPTION_FEATURES = {
         {
             'feature': 'from_weight_loss',
             'type': 'float',
-            'is_computing': True,
+            'is_computing': False,
             'is_display': False,
             'is_id': False,
         },
         {
             'feature': 'to_weight_loss',
             'type': 'float',
-            'is_computing': True,
+            'is_computing': False,
             'is_display': False,
             'is_id': False,
         },

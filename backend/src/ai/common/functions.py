@@ -5,7 +5,23 @@ from patientapp.models import Patient, PrimaryDiagnose, TakingMedicine, Complain
 from api_app.serializer import PatientSerializer, PrimaryDiagnoseSerializer, TakingMedicineSerializer, ComplaintSerializer, BloodAnalysisSerializer, ImmunogramSerializer, OtherSerializer
 
 
-from ai.settings import DISCRIPTION_FEATURES
+from ai.settings import DISCRIPTION_FEATURES, MODELS_NAMES
+
+def GetAttributes_Names(discription_name, query):
+    f_nc = []
+    f_c = []
+
+    discriptions = DISCRIPTION_FEATURES[discription_name]
+
+    for item in discriptions:
+        if query(item):
+            if item['is_computing'] == True:
+                f_c.append(item)
+            else: 
+                if item['is_display'] == True:
+                    f_nc.append(item)
+
+    return f_nc, f_c
 
 def GetAttributes(serializer, item, discription_name, query):
     nc = []
