@@ -1,0 +1,99 @@
+{% extends "home/base.html" %}
+
+{% block title %}Create New Patient{% endblock %}
+
+{% block content %}
+
+<script>
+	var tabitem = 1
+	function nextTab(){
+		if (tabitem < 3){
+			$('#tab' + tabitem).hide()
+			tabitem++;
+			$('#tab' + tabitem).show()
+		}
+		
+		if (tabitem == 3)
+			$('#btnNext').prop('disabled', true)
+		if (tabitem > 1)
+			$('#btnBack').prop('disabled', false)
+	}
+	
+	function nextBack(){
+		if (tabitem > 1){
+			$('#tab' + tabitem).hide()
+			tabitem--;
+			$('#tab' + tabitem).show()
+		}
+		if (tabitem == 1)
+			$('#btnBack').prop('disabled', true)
+		if (tabitem < 3)
+			$('#btnNext').prop('disabled', false)
+	}
+</script>
+
+<div>
+	<form method='POST' action=''>
+	  <div id="tab1" class="container">
+		<div class="container">
+		  <div class="row">
+			<div class="col-md-4">
+			  {{patient.last_name.label}} : {{patient.last_name}}
+			</div>
+			<div class="col-md-4">
+			  {{patient.first_name.label}} : {{patient.first_name}}
+			</div>
+			<div class="col-md-4">
+			  {{patient.middle_name.label}} : {{patient.middle_name}}
+			</div>
+			<div class="col-md-4">
+				<div class="row">{{patient.birthday.label}} : {{patient.birthday}}</div>
+			</div>
+			<div class="col-md-4">
+				<div class="row">{{patient.fromdate.label}} : {{patient.fromdate}}</div>
+			</div>
+						
+			<div class="col-md-4">
+			  {{patient.district.label}} : {{patient.district}}
+			</div>
+			<div class="col-md-4">
+			  {{patient.address.label}} : {{patient.address}}
+			</div>
+			<div class="col-md-4">
+			  {{patient.gender.label}} : {{patient.gender}}
+			</div>
+			<div class="col-md-4">
+			  {{patient.occupation.label}} : {{patient.occupation}}
+			</div>
+		  </div>
+		</div>
+	  </div>
+	  
+	  
+	  <div  id="tab2" class="form-group" style="display: none">
+		<table class='table table-bordered table-light'>
+			{% for field in primary %}
+				<div class="form-group">
+					{{field.label_tag}}
+					<div>{{field}}</div>
+					<div class="error">{{field.errors}}</div>
+				</div>
+			{% endfor %}
+		</table>
+	  </div>
+	  
+	  
+	  <div  id="tab3" class="form-check" style="display: none">
+		
+	  </div>
+	  
+	  <div class="container">
+		<button type="button" id="btnBack" class="btn btn-primary" onclick="nextBack()">Back</button>
+		<button type="button" id="btnNext" class="btn btn-primary" onclick="nextTab()">Next</button>
+		{% csrf_token %}
+		<button type="submit" class="btn btn-primary">Save</button>
+	  </div>
+	</form>
+</div>
+
+{% endblock %}
