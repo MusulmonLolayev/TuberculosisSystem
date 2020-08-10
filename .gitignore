@@ -2,3 +2,8 @@ frontend/gui-react
 
 *.pyc
 *.cpy
+backend/src/ai/common/__pycache__/functions.cpython-38.pyc
+backend/src/ai/datamining/__pycache__/views.cpython-38.pyc
+backend/src/ai/__pycache__/models.cpython-38.pyc
+backend/src/ai/__pycache__/models.cpython-38.pyc
+backend/src/ai/common/__pycache__/functions.cpython-38.pyc

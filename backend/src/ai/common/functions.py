@@ -6,6 +6,8 @@ from api_app.serializer import PatientSerializer, PrimaryDiagnoseSerializer, Tak
 
 from ai.settings import DISCRIPTION_FEATURES, MODELS_NAMES
 
+from ai.models import Range
+
 def GetAttributes_Names(discription_name, query):
     f_nc = []
     f_c = []
@@ -96,12 +98,16 @@ def AcceptableInterval(x, y, method='mean'):
         value_x = np.median(x)
         value_y = np.median(y)
 
+    # if value some of them is zero, then must just send zeros as return values
+    # That means, it is not neccessary on entry data.
+    if value_x == 0 or value_y == 0:
+        return 0, 0, 0, 0
     R = x / value_x - y / value_y
 
-    return R.argmin(), R.argmax()
+    return R.min(), R.max(), value_x, value_y
 
-def UpdateAcceptableIntevals():
-    """# Getting names and values of features by calling GetFeatures
+def UpdateAcceptableIntevals(method='mean'):
+    # Getting names and values of features by calling GetFeatures
     def query(item):
             if item['type'] in ['float']:
                 return True
@@ -118,5 +124,15 @@ def UpdateAcceptableIntevals():
     not_computing, computing = GetFeatures(query)
     X = np.array(computing)
 
-    print(X)"""
+    update_number = Range.objects.last().udapte_number + 1
+
+    for i in range(X.shape[0]):
+        for j in range(i + 1, X.shape[0]):
+            rng = Range()
+            rng.udapte_number = update_number
+            rng.feature_name1 = f_c[i]['feature']
+            rng.feature_name2 = f_c[j]['feature']
+            rng.l_R, rng.r_R, rng.sub_value1, rng.sub_value2 = AcceptableInterval(X[:, i], X[:, j], method=method)
+
+            rng.save()
     pass
