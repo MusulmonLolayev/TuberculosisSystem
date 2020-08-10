@@ -32,6 +32,7 @@ ALLOWED_HOSTS = ['192.168.137.1:8000', '127.0.0.1', '192.168.137.1']
 
 INSTALLED_APPS = [
     'home.apps.HomeConfig',
+    'ai.apps.AIConfig',
     'patientapp.apps.PatientappConfig',
     'django.contrib.admin',
     'django.contrib.auth',

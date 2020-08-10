@@ -2,6 +2,9 @@
     The global varabiles
 """
 
+"""
+The list of models names
+"""
 MODELS_NAMES = [
     'Patient',
     'PrimaryDiagnose',
@@ -15,7 +18,7 @@ MODELS_NAMES = [
 # The DISCRIPTION_FEATURES is that taking the featureas when is computing from all features
 # It is alsa array with in nested dictionary
 """
-# Keys discription
+Keys discription
 'feature' : 'birthday', # That key must be the same with features in the models
 'display' : 'Birthday', # That key must be title of the feature, it is filled by localization function
 'type' : 'date', # that key must be type of the feature
@@ -24,6 +27,7 @@ MODELS_NAMES = [
         then it is not nessecary to set on it True
 'is_id': False, # # label of the feature to make the feature is id of some nested feature
 Comment: we must to refactor type by python coding
+And it is filled with other initial attributs in AIConfig class.
 """
 DISCRIPTION_FEATURES = {
     # The features in Patient model
@@ -625,3 +629,24 @@ DISCRIPTION_FEATURES = {
         }
     ]
 }
+
+"""
+It saves the ranges and settings of each pair of numerical features by developing theory. 
+It is filled in AIConfig class when the server starts or other time is that when clien-side commands to make
+update the array.
+Structure of each item in it is created as python dictionary as follow:
+
+{
+    'pair1': 'code1', # the code1 is of first-pair-feature code (number)
+    'pair2': 'code2', # the code2 is of second-pair-feature code (number)
+    'begin': 'begin', # the begin is the first number of ordered R (see the docs to find more inf.)
+    'end': 'end', # the end is the latest number of ordered R (see the docs to find more inf.)
+    'mean1': 'mean1', # the mean value of the first feature (see the docs to find more inf.)
+    'mean2': 'mean2', # the mean value of the second feature (see the docs to find more inf.)
+}
+
+Comment: must see when the median method is used instead of mean method.
+"""
+RANGES_NUMERICAL_FEATURES = [
+
+]

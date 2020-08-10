@@ -4,7 +4,6 @@ from patientapp.models import Patient, PrimaryDiagnose, TakingMedicine, Complain
 
 from api_app.serializer import PatientSerializer, PrimaryDiagnoseSerializer, TakingMedicineSerializer, ComplaintSerializer, BloodAnalysisSerializer, ImmunogramSerializer, OtherSerializer
 
-
 from ai.settings import DISCRIPTION_FEATURES, MODELS_NAMES
 
 def GetAttributes_Names(discription_name, query):
@@ -100,3 +99,24 @@ def AcceptableInterval(x, y, method='mean'):
     R = x / value_x - y / value_y
 
     return R.argmin(), R.argmax()
+
+def UpdateAcceptableIntevals():
+    """# Getting names and values of features by calling GetFeatures
+    def query(item):
+            if item['type'] in ['float']:
+                return True
+            return False
+
+    f_nc = [] 
+    f_c = []
+
+    for model_item in MODELS_NAMES:
+        item_nc, item_c = GetAttributes_Names(model_item, query)
+        f_nc += item_nc
+        f_c += item_c
+            
+    not_computing, computing = GetFeatures(query)
+    X = np.array(computing)
+
+    print(X)"""
+    pass
