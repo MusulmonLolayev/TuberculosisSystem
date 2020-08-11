@@ -33,54 +33,39 @@
       <v-checkbox v-model="complaint.status" label="Status" />
     </v-col>
     <v-col cols="10" md="3">
-      <v-date-custom :date="editItem.date" :change="dateChange" label="Date" />
+      <v-text-field
+        label="Date of application"
+        v-model="complaint.date"
+        type='date'
+      />
     </v-col>
   </v-row>
 </template>
 
 <script>
 import { mapGetters, mapActions } from "vuex";
-import vDateCustom from "../inputs/v-date-custom";
 import Helper from "../commons/functions.js";
 
 export default {
   name: "v-complaint",
   props: ["complaint"],
-  data: function() {
-    return {
-      editItem: {
-        date: {
-          value: this.complaint.date
-        }
-      }
-    };
-  },
   computed: {
     ...mapGetters(["CHARACTER_STOOLS"])
   },
   methods: {
     ...mapActions(["GET_CHARACTER_STOOL_FROM_API"]),
-    async initialize() {
-      await this.GET_CHARACTER_STOOL_FROM_API();
+    initialize() {
       if (typeof this.complaint.id == "undefined"){
-        //console.log(this.CHARACTER_STOOLS)
+        this.complaint.date = Helper.GetCurrentDate();
         this.complaint.from_stool_frequency = 0
         this.complaint.to_stool_frequency = 0
-        this.complaint.character = this.CHARACTER_STOOLS[0].id
-
-        this.editItem.date.value = Helper.GetCurrentDate();
       }
     },
-    dateChange() {
-      this.complaint.date = this.editItem.date.value;
-    }
   },
-  created() {
+  beforeMount() {
+    this.GET_CHARACTER_STOOL_FROM_API();
     this.initialize();
   },
-  components: {
-    vDateCustom
-  }
 };
 </script>
 

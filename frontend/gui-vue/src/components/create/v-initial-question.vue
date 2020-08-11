@@ -51,7 +51,11 @@
         <v-checkbox v-model="selected.status" label="Status" />
       </v-col>
       <v-col cols="10" md="3">
-        <v-date-custom label="Date" :date="editItem.date" :change="dateChange" />
+        <v-text-field
+        label="Date"
+        v-model="selected.date"
+        type='date'
+      />
       </v-col>
     </v-row>
   </div>
@@ -61,7 +65,6 @@
 import Api from "@/api/Api";
 import vMessageBox from "../commons/v-message-box";
 import MessgeBox from "../commons/messagebox.js";
-import vDateCustom from "../inputs/v-date-custom";
 import Helper from "../commons/functions.js";
 
 export default {
@@ -69,11 +72,6 @@ export default {
   props: ["selected"],
   data: function() {
     return {
-      editItem: {
-        date: {
-          value: this.selected.date
-        }
-      },
       question_titles: [],
       questions: [],
       mBox: new MessgeBox()
@@ -84,6 +82,9 @@ export default {
   },
   methods: {
     async initialize() {
+      if (typeof this.selected.id == "undefined") {
+        this.selected.date = Helper.GetCurrentDate();
+      }
       try {
         let response = await Api().get("/question_titles");
         for (let i = 0; i < response.data.length; i++) {
@@ -99,9 +100,6 @@ export default {
         console.log(e);
         this.mBox.showMessage("Error", e, "error");
       }
-      if (typeof this.selected.id == "undefined") {
-        this.editItem.date.value = Helper.GetCurrentDate();
-      }
     },
     get_questions(title_id) {
       let res = [];
@@ -110,13 +108,9 @@ export default {
       });
       return res;
     },
-    dateChange() {
-      this.selected.date = this.editItem.date.value;
-    }
   },
   components: {
     vMessageBox,
-    vDateCustom
   }
 };
 </script>

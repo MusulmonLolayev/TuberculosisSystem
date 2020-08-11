@@ -31,30 +31,30 @@
       <v-text-field label="coe" v-model="bloodanalysis.coe" type="number" />
     </v-col>
     <v-col cols="10" md="2">
+      <v-text-field label="act" v-model="bloodanalysis.act" type="number" />
+    </v-col>
+    <v-col cols="10" md="2">
+      <v-text-field label="alt" v-model="bloodanalysis.alt" type="number" />
+    </v-col>
+    <v-col cols="10" md="2">
       <v-checkbox v-model="bloodanalysis.status" label="Status" />
     </v-col>
     <v-col cols="10" md="2">
-      <v-date-custom :date="editItem.date" :change="dateChange" label="Date" />
+      <v-text-field
+        label="Date"
+        v-model="bloodanalysis.date"
+        type='date'
+      />
     </v-col>
   </v-row>
 </template>
 
 <script>
-import vDateCustom from "../inputs/v-date-custom";
 import Helper from "../commons/functions.js";
 
 export default {
   name: "v-blood-analysis",
   props: ["bloodanalysis"],
-  data: function() {
-    return {
-      editItem: {
-        date: {
-          value: this.bloodanalysis.date
-        }
-      }
-    };
-  },
   methods: {
     initialize() {
       if (typeof this.bloodanalysis.id == "undefined") {
@@ -69,19 +69,15 @@ export default {
         this.bloodanalysis.mon = 0;
         this.bloodanalysis.hb = 0;
         this.bloodanalysis.coe = 0;
-        this.editItem.date.value = Helper.GetCurrentDate();
+        this.bloodanalysis.act = 0;
+        this.bloodanalysis.alt = 0;
+        this.bloodanalysis.date = Helper.GetCurrentDate();
       }
     },
-    dateChange() {
-      this.bloodanalysis.date = this.editItem.date.value;
-    }
   },
-  mounted() {
+  beforeMount() {
     this.initialize();
   },
-  components: {
-    vDateCustom
-  }
 };
 </script>
 

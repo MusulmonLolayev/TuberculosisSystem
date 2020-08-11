@@ -36,43 +36,33 @@
       <v-checkbox v-model="other.status" label="Status" />
     </v-col>
     <v-col cols="10" md="2">
-      <v-date-custom label="Date" :date="editItem.date" :change="dateChange" />
+      <v-text-field
+        label="Date"
+        v-model="other.date"
+        type='date'
+      />
     </v-col>
   </v-row>
 </template>
 
 <script>
-import vDateCustom from "../inputs/v-date-custom";
 import Helper from "../commons/functions.js";
 
 export default {
   name: "v-other",
   props: ["other"],
-  data: function() {
-    return {
-      editItem: {
-        date: {
-          value: this.other.date
-        }
-      }
-    };
-  },
   methods: {
     initialize() {
       if (typeof this.other.id == "undefined") {
-        this.editItem.date.value = Helper.GetCurrentDate();
+        this.other.date = Helper.GetCurrentDate();
+        this.other.from_weight_loss = 0
+        this.other.to_weight_loss = 0
       }
     },
-    dateChange() {
-      this.other.date = this.editItem.date.value;
-    }
   },
-  mounted() {
+  beforeMount() {
     this.initialize();
   },
-  components: {
-    vDateCustom
-  }
 };
 </script>
 

@@ -61,7 +61,11 @@
       </v-col>
 
       <v-col cols="10" md="3">
-        <v-date-custom :date="editItem.date" :change="dateChange" label="Date" />
+        <v-text-field
+        label="Date"
+        v-model="primarydiagnose.date"
+        type='date'
+      />
       </v-col>
     </v-row>
   </div>
@@ -69,36 +73,26 @@
 
 <script>
 import { mapGetters, mapActions } from "vuex";
-import vDateCustom from "../inputs/v-date-custom";
 import Helper from "../commons/functions.js";
 
 export default {
-  name: "v-primary-edit",
+  name: "v-primary-diagnose",
   props: ["primarydiagnose"],
-  data: function() {
-    return {
-      editItem: {
-        date: {
-          value: this.primarydiagnose.date
-        }
-      }
-    };
-  },
   methods: {
     async initialize() {
-      await Promise.all([
+      Promise.all([
         this.GET_CLINICAL_FORMS_FROM_API(),
         this.GET_LOCALIZATION_FROM_API(),
         this.GET_PREVALENCES_FROM_API()
       ]);
       if (typeof this.primarydiagnose.id == 'undefined'){
         
-        // then default vaules to primary diagnose
-        this.primarydiagnose.clinicalform = this.CLINICAL_FORMS[0].id,
-        this.primarydiagnose.localization = this.LOCALIZATIONS[0].id,
-        this.primarydiagnose.prevalence = this.PREVALENCES[0].id,
+        this.primarydiagnose.date =  Helper.GetCurrentDate()
 
-        this.editItem.date.value =  Helper.GetCurrentDate()
+        /*// then default vaules to primary diagnose
+        this.primarydiagnose.clinicalform = this.CLINICAL_FORMS[0].id
+        this.primarydiagnose.localization = this.LOCALIZATIONS[0].id
+        this.primarydiagnose.prevalence = this.PREVALENCES[0].id*/
       }
     },
     ...mapActions([
@@ -106,19 +100,13 @@ export default {
       "GET_LOCALIZATION_FROM_API",
       "GET_PREVALENCES_FROM_API"
     ]),
-    dateChange() {
-      this.primarydiagnose.date = this.editItem.date.value;
-    }
   },
   computed: {
     ...mapGetters(["CLINICAL_FORMS", "LOCALIZATIONS", "PREVALENCES"])
   },
-  created: function() {
+  beforeMount: function() {
     this.initialize();
   },
-  components: {
-    vDateCustom
-  }
 };
 </script>
 

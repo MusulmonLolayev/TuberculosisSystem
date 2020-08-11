@@ -1,21 +1,30 @@
 <template>
   <v-row>
     <v-col cols="10" md="3">
-      <v-text-field label="Last name" v-model="patient.last_name" required />
+      <v-text-field label="Last name" 
+      v-model="patient.last_name" 
+      required clearable
+      :rules="rules.last_name"
+      :error-messages="errors"
+      />
     </v-col>
 
     <v-col cols="10" md="3">
-      <v-text-field label="First name" v-model="patient.first_name" required />
+      <v-text-field label="First name" 
+        v-model="patient.first_name" 
+        required clearable
+        :rules="rules.last_name"
+        :error-messages="errors"
+        />
     </v-col>
-
     <v-col cols="10" md="3">
-      <v-text-field label="Middle name" v-model="patient.middle_name" required />
+      <v-text-field label="Middle name" v-model="patient.middle_name" required clearable/>
     </v-col>
     <v-col cols="10" md="3">
-      <v-date-custom
+      <v-text-field
         label="Date of birthday"
-        :date="patient_edit.birthday"
-        :change="birthdayChange"
+        v-model="patient.birthday"
+        type='date'
       />
     </v-col>
 
@@ -61,10 +70,14 @@
     </v-col>
 
     <v-col cols="10" md="6">
-      <v-text-field label="Address line" required v-model="patient.address" />
+      <v-text-field label="Address line" required v-model="patient.address" clearable/>
     </v-col>
     <v-col cols="10" md="3">
-      <v-date-custom label="From date" :date="patient_edit.fromdate" :change="fromdateChange" />
+      <v-text-field
+        label="Date of application"
+        v-model="patient.fromdate"
+        type='date'
+      />
     </v-col>
 
     <v-col cols="10" md="3">
@@ -80,31 +93,27 @@
     </v-col>
 
     <v-col cols="10" md="3">
-      <v-text-field label="Number" required v-model="patient.number" type='number'/>
+      <v-text-field label="Number" required v-model="patient.number" type='number' />
     </v-col>
   </v-row>
 </template>
 
 <script>
-import vDateCustom from "../inputs/v-date-custom";
 import { mapActions, mapGetters } from "vuex";
 import Helper from "../commons/functions.js"
 
 export default {
   name: "v-patient",
-  components: {
-    vDateCustom
-  },
-  props: ["patient"],
+  props: ["patient", "errors"],
   data: function() {
     return {
-      patient_edit: {
-        birthday: {
-          value: this.patient.birthday
-        },
-        fromdate: {
-          value: this.patient.fromdate
-        }
+      rules: {
+        last_name : [
+          value => !!value || 'Required.',
+          value => (value && value.length >= 3) || 'Min 3 characters',
+          value => /^[\w'][^0-9_!¡?÷?¿/\\+=@#$%ˆ&*,.(){}|~<>;:[\]]{2,}$/.test(value) || 'Must be characters',
+          
+        ]
       },
       selectedCountry: {},
       selectedReigion: {},
@@ -124,20 +133,20 @@ export default {
   },
   methods: {
     async initialize() {
-      await this.GET_COUNTRIES_FROM_API();
-      await this.GET_OCCUPATIONS_FROM_API();
+      this.GET_COUNTRIES_FROM_API();
+      this.GET_OCCUPATIONS_FROM_API();
 
       if (typeof this.patient.id != "undefined") {
-        await this.GET_DISTRICT_FROM_API(this.patient.district);
+        this.GET_DISTRICT_FROM_API(this.patient.district);
 
         // select region, country and district by patient for editing
         this.selectedCountry = this.DISTRICT.region.country.id;
         // when the country changes then must notice about it by calling the method.
-        await this.countryChanged(this.DISTRICT.region.country);
+        this.countryChanged(this.DISTRICT.region.country);
 
         this.selectedReigion = this.DISTRICT.region.id;
         // it is as same as the country selection
-        await this.regionChanged(this.DISTRICT.region);
+        this.regionChanged(this.DISTRICT.region);
 
         this.selectedDistrict = this.DISTRICT.id;
 
@@ -148,15 +157,15 @@ export default {
         this.selectedOccupation = this.patient.occupation;
       }
       else {
-        // overwise set defualt values on patient
-        this.patient_edit.birthday.value = Helper.GetCurrentDate()
-        this.patient_edit.fromdate.value = Helper.GetCurrentDate()
-        
+
+        this.patient.birthday = Helper.GetCurrentDate()
+        this.patient.fromdate = Helper.GetCurrentDate()
+
         /*this.selectedCountry = this.COUNTRIES[0].id
-        await this.countryChanged(this.COUNTRIES[0])
+        this.countryChanged(this.COUNTRIES[0])
 
         this.selectedReigion = this.REGIONS[0].id;
-        await this.regionChanged(this.REGIONS[0]);
+        this.regionChanged(this.REGIONS[0]);
         
         this.selectedDistrict = this.DISTRICT.id*/
       }
@@ -183,17 +192,11 @@ export default {
     occupationChanged(e) {
       this.patient.occupation = e.id;
     },
-    birthdayChange() {
-      this.patient.birthday = this.patient_edit.birthday.value;
-    },
-    fromdateChange() {
-      this.patient.fromdate = this.patient_edit.fromdate.value;
-    },
     rbChange(e) {
       this.patient.gender = e == 0 ? true : false;
     }
   },
-  mounted() {
+  beforeMount: function() {
     this.initialize();
   }
 };

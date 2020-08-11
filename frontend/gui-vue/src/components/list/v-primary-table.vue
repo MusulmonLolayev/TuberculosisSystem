@@ -16,7 +16,7 @@
               </v-card-title>
 
               <v-card-text>
-                <v-primary-edit :primarydiagnose="editedItem" />
+                <v-primary-diagnose :primarydiagnose="editedItem" />
               </v-card-text>
 
               <v-card-actions>
@@ -40,7 +40,7 @@
 </template>
 
 <script>
-import vPrimaryEdit from "../create/v-primary-edit";
+import vPrimaryDiagnose from "../create/v-primary-diagnose";
 import Api from "@/api/Api";
 import { mapGetters, mapActions } from "vuex";
 import vMessageBox from "../commons/v-message-box";
@@ -276,7 +276,7 @@ export default {
     }
   },
   components: {
-    vPrimaryEdit,
+    vPrimaryDiagnose,
     vMessageBox,
     vAlertBox
   },

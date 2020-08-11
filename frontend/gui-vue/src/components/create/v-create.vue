@@ -11,14 +11,14 @@
         <v-stepper-header>
           <template v-for="(item, index) in stepper_data">
             <v-stepper-step :key="'H' + index" :step="index" :editable="item.editable">{{ item.title }}</v-stepper-step>
-            <v-divider v-if="index != 7" :key="index"></v-divider>
+            <v-divider v-if="index != 6" :key="index"></v-divider>
           </template>
         </v-stepper-header>
       </template>
       <v-stepper-items>
         <v-stepper-content step="0">
           <div style="margin-left: 20px; margin-right: 20px">
-            <v-patient :patient="patient" />
+            <v-patient :patient="patient" :errors="errors"/>
           </div>
         </v-stepper-content>
 
@@ -30,7 +30,7 @@
 
         <v-stepper-content step="2">
           <div style="margin-left: 20px; margin-right: 20px">
-            <v-primary-edit :primarydiagnose="primarydiagnose" />
+            <v-primary-diagnose :primarydiagnose="primarydiagnose" />
           </div>
         </v-stepper-content>
 
@@ -53,14 +53,6 @@
         </v-stepper-content>
 
         <v-stepper-content step="6">
-          <div style="margin-left: 20px; margin-right: 20px">
-            <div>
-              <v-immunogram :immunogram="immunogram" />
-            </div>
-          </div>
-        </v-stepper-content>
-
-        <v-stepper-content step="7">
           <div style="margin-left: 20px; margin-right: 20px">
             <div>
               <v-other :other="other" />
@@ -91,16 +83,13 @@
 <script>
 import vPatient from "./v-patient";
 import vInitialQuestion from "./v-initial-question";
-import vPrimaryEdit from "./v-primary-edit";
+import vPrimaryDiagnose from "./v-primary-diagnose";
 import vTakingMedicine from "./v-taking-medicine";
 import vComplaint from "./v-complaint";
 import vBloodAnalysis from "./v-blood-analysis";
-import vImmunogram from "./v-immunogram";
 import vOther from "./v-other";
 import vMessageBox from "../commons/v-message-box";
 import MessgeBox from "../commons/messagebox.js";
-
-//import Helper from "../commons/functions.js"
 
 import Api from "@/api/Api";
 
@@ -109,13 +98,12 @@ export default {
   components: {
     vPatient,
     vInitialQuestion,
-    vPrimaryEdit,
+    vPrimaryDiagnose,
     vTakingMedicine,
     vComplaint,
     vBloodAnalysis,
-    vImmunogram,
     vOther,
-    vMessageBox
+    vMessageBox,
   },
   data: function() {
     return {
@@ -152,11 +140,6 @@ export default {
           title: "Blood analysis"
         },
         {
-          step: 7,
-          editable: true,
-          title: "Immunogram analysis"
-        },
-        {
           step: 8,
           editable: true,
           title: "Others"
@@ -167,8 +150,9 @@ export default {
         IsNew: true
       },
       step_count: 0,
-      step_max: 7,
-      patient: {},
+      step_max: 6,
+      patient: {
+      },
       initial_question_selected: {
         checkbox: [],
         radio: {}
@@ -178,9 +162,9 @@ export default {
       takingmedicine: {},
       complaint: {},
       bloodanalysis: {},
-      immunogram: {},
       other: {},
-      mBox: new MessgeBox()
+      mBox: new MessgeBox(),
+      errors: [],
     };
   },
   computed: {
@@ -561,11 +545,9 @@ export default {
         this.mBox.showMessage("Error", e, "error");
       }
     },
-    async btnSave() {
-
+    btnSave() {
       //console.log(Helper.GetCurrentDate())
-      
-      switch (this.step_count) {
+      /*switch (this.step_count) {
         case 0:
           this.SavePatient();
           break;
@@ -591,7 +573,7 @@ export default {
           this.SaveOther();
           break;
       }
-      this.settings.IsNew = false
+      this.settings.IsNew = false*/
     },
     stepBack() {
       if (this.step_count > 0) {
@@ -622,7 +604,7 @@ export default {
   },
   updated: function() {
     this.settings.IsUpdated = true;
-  }
+  },
 };
 </script>
 

@@ -196,15 +196,23 @@ let store = new Vuex.Store({
                         console.log(error)
                     })
         },
-        GET_CHARACTER_STOOL_FROM_API({ commit }) {
+        async GET_CHARACTER_STOOL_FROM_API({ commit }) {
             if (this.state.character_stools.length == 0)
-                return Api().get('/characterofstool')
+                try{
+                    let response = await Api().get('/characterofstool')
+                    commit('SET_CHARACTER_STOOLS_TO_STATE', response.data)
+                    return response
+                }   
+                catch(error){
+                    console.log(error)
+                }
+            /*return await Api().get('/characterofstool')
                     .then((response) => {
                         commit('SET_CHARACTER_STOOLS_TO_STATE', response.data)
                     })
                     .catch((error) => {
                         console.log(error)
-                    })
+                    })*/
         }
     },
     getters: {

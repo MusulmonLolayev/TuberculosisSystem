@@ -2,10 +2,10 @@
 <div >
   <v-row>
     <v-col cols="10" md="3">
-      <v-date-custom
+      <v-text-field
         label="From date of taking medicine"
-        :date="takingmedicine_edit.fromdate"
-        :change="fromdateChange"
+        v-model="takingmedicine.fromdate"
+        type='date'
       />
     </v-col>
     <v-col cols="10" md="3">
@@ -28,47 +28,29 @@
       <v-checkbox v-model="takingmedicine.status" label="Status" />
     </v-col>
     <v-col cols="10" md="3">
-      <v-date-custom label="Date" :date="takingmedicine_edit.date" :change="dateChange" />
+      <v-text-field
+        label="Date"
+        v-model="takingmedicine.date"
+        type='date'
+      />
     </v-col>
   </v-row>
   </div>
 </template>
 
 <script>
-import vDateCustom from "../inputs/v-date-custom";
 import Helper from "../commons/functions.js";
 
 export default {
   name: "v-taking-medicine",
-  components: {
-    vDateCustom
-  },
   props: ["takingmedicine"],
-  data: function() {
-    return {
-      takingmedicine_edit: {
-        fromdate: {
-          value: this.takingmedicine.fromdate
-        },
-        date: {
-          value: this.takingmedicine.date
-        }
-      }
-    };
-  },
   methods: {
     initialize() {
       if (typeof this.takingmedicine.id == "undefined") {
-        this.takingmedicine_edit.date.value = Helper.GetCurrentDate();
-        this.takingmedicine_edit.fromdate.value = Helper.GetCurrentDate();
+        this.takingmedicine.date = Helper.GetCurrentDate();
+        this.takingmedicine.fromdate = Helper.GetCurrentDate();
       }
     },
-    fromdateChange() {
-      this.takingmedicine.fromdate = this.takingmedicine_edit.fromdate.value;
-    },
-    dateChange() {
-      this.takingmedicine.date = this.takingmedicine_edit.date.value;
-    }
   },
   mounted() {
     this.initialize();
