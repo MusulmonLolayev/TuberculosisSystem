@@ -148,7 +148,6 @@ class Complaint(models.Model):
 
 class BloodAnalysis(models.Model):
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
-
     # эр
     er = models.FloatField(default=0)
     # лейк
@@ -169,6 +168,10 @@ class BloodAnalysis(models.Model):
     mon = models.FloatField(default=0)
     # СОЭ
     coe = models.FloatField(default=0)
+
+    act = models.FloatField(default=0)
+    # ALT
+    alt = models.FloatField(default=0)
 
     # status for taking on computing
     status = models.BooleanField(default=True)
