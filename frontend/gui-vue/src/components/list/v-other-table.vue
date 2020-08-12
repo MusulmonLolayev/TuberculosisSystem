@@ -1,6 +1,7 @@
 <template>
   <div>
     <v-message-box :message="mBox" />
+    <v-alert-box ref="alert" />
     <v-data-table :headers="headers" :items="items" sort-by="calories" class="elevation-1">
       <template v-slot:top>
         <v-toolbar flat color="white">
@@ -43,6 +44,8 @@ import vOther from "../create/v-other";
 import Api from "@/api/Api";
 import vMessageBox from "../commons/v-message-box";
 import MessageBox from "../commons/messagebox.js";
+import Helper from '../commons/functions'
+import vAlertBox from "../commons/v-alert-box"
 
 export default {
   name: "v-other-table",
@@ -224,8 +227,21 @@ export default {
 
     deleteItem(item) {
       const index = this.items.indexOf(item);
+      let other = item;
       confirm("Are you sure you want to delete this item?") &&
-        this.items.splice(index, 1);
+        Api()
+        .delete("/other_request", {
+          data: {other}
+        })
+        .then(() => {
+          this.$refs['alert'].showMessage('Deleted successfully', 
+          Helper.message_types.success)
+          this.items.splice(index, 1);
+        })
+        .catch((error) => {
+          this.$refs['alert'].showMessage('Deleting action was unsuccessful: ' + error, 
+          Helper.message_types.error, 5000)
+        })
     },
 
     close() {
@@ -296,7 +312,8 @@ export default {
   },
   components: {
     vOther,
-    vMessageBox
+    vMessageBox,
+    vAlertBox,
   },
   mounted: function() {}
 };

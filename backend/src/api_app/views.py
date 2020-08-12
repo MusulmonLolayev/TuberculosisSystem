@@ -171,7 +171,7 @@ def general_request(request, ins_name, ins_class, ins_ser):
             instance = ins_class.objects.get(id=request.data.get(ins_name).get('id'))
         except ins_class.DoesNotExist:
             return Response(status=404)
-
+        
         # Update object
         if request.method == 'PUT':
             serializer = ins_ser(instance, data=request.data.get(ins_name))

@@ -1,6 +1,7 @@
 <template>
   <div>
     <v-message-box :message="mBox" />
+    <v-alert-box ref="alert" />
     <v-data-table :headers="headers" :items="items" sort-by="calories" class="elevation-1">
       <template v-slot:top>
         <v-toolbar flat color="white">
@@ -43,6 +44,9 @@ import vTakingMedicine from "../create/v-taking-medicine";
 import Api from "@/api/Api";
 import vMessageBox from "../commons/v-message-box";
 import MessageBox from "../commons/messagebox.js";
+import vAlertBox from "../commons/v-alert-box"
+
+import Helper from "../commons/functions.js"
 
 export default {
   name: "v-taking-medicine-table",
@@ -180,8 +184,21 @@ export default {
 
     deleteItem(item) {
       const index = this.items.indexOf(item);
+      let takingmedicine = item;
       confirm("Are you sure you want to delete this item?") &&
-        this.items.splice(index, 1);
+        Api()
+        .delete("/taking_request", {
+          data: {takingmedicine}
+        })
+        .then(() => {
+          this.$refs['alert'].showMessage('Deleted successfully', 
+          Helper.message_types.success)
+          this.items.splice(index, 1);
+        })
+        .catch((error) => {
+          this.$refs['alert'].showMessage('Deleting action was unsuccessful: ' + error, 
+          Helper.message_types.error, 5000)
+        })
     },
 
     close() {
@@ -247,7 +264,8 @@ export default {
   },
   components: {
     vTakingMedicine,
-    vMessageBox
+    vMessageBox,
+    vAlertBox,
   },
   mounted: function() {}
 };

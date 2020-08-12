@@ -1,6 +1,7 @@
 <template>
   <div>
     <v-message-box :message="mBox" />
+    <v-alert-box ref="alert" />
     <v-data-table :headers="headers" :items="items" sort-by="calories" class="elevation-1">
       <template v-slot:top>
         <v-toolbar flat color="white">
@@ -43,6 +44,9 @@ import vInitialQuestion from "../create/v-initial-question";
 import Api from "@/api/Api";
 import vMessageBox from "../commons/v-message-box";
 import MessageBox from "../commons/messagebox.js";
+import vAlertBox from '../commons/v-alert-box'
+
+import Helper from "../commons/functions.js"
 
 export default {
   name: "v-intial-question-table",
@@ -216,8 +220,41 @@ export default {
 
     deleteItem(item) {
       const index = this.items.indexOf(item);
+      
+      let initial_question = {
+        patient: this.patient.id,
+        questions: "",
+        status: this.editedItem.status,
+        date: this.editedItem.date
+      };
+
+      // Convert the ids into text
+      this.editedItem.checkbox.map(item => {
+        initial_question.questions += item + ",";
+      });
+      Object.values(this.editedItem.radio).map(item => {
+        initial_question.questions += item + ",";
+      });
+
+      // Clean the last mark (,)
+      initial_question.questions = initial_question.questions.slice(0, -1);
+
+      initial_question.id = item.id
+
       confirm("Are you sure you want to delete this item?") &&
-        this.items.splice(index, 1);
+        Api()
+        .delete("/initial_question_request", {
+          data: {initial_question}
+        })
+        .then(() => {
+          this.$refs['alert'].showMessage('Deleted successfully', 
+          Helper.message_types.success)
+          this.items.splice(index, 1);
+        })
+        .catch((error) => {
+          this.$refs['alert'].showMessage('Deleting action was unsuccessful: ' + error, 
+          Helper.message_types.error, 5000)
+        })
     },
 
     close() {
@@ -298,7 +335,8 @@ export default {
   },
   components: {
     vInitialQuestion,
-    vMessageBox
+    vMessageBox,
+    vAlertBox,
   },
   mounted: function() {}
 };

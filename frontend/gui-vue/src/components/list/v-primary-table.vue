@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-message-box :message="mBox" />
-    <v-alert-box :alert='aBox' />
+    <v-alert-box ref='alert' />
     <v-data-table :headers="headers" :items="items" sort-by="calories" class="elevation-1">
       <template v-slot:top>
         <v-toolbar flat color="white">
@@ -45,8 +45,8 @@ import Api from "@/api/Api";
 import { mapGetters, mapActions } from "vuex";
 import vMessageBox from "../commons/v-message-box";
 import MessageBox from "../commons/messagebox.js";
-import vAlertBox from "../commons/v-alert-box.vue";
-import AlertBox from "../commons/alertbox.js";
+import vAlertBox from "../commons/v-alert-box";
+import Helper from "../commons/functions";
 
 export default {
   data: () => ({
@@ -92,7 +92,7 @@ export default {
     editedItem: {},
     defaultItem: null,
     mBox: new MessageBox(),
-    aBox: new AlertBox(),
+    aBox: '',
   }),
   props: ["patient"],
   computed: {
@@ -204,8 +204,21 @@ export default {
 
     deleteItem(item) {
       const index = this.items.indexOf(item);
+      let primarydiagnose = item;
       confirm("Are you sure you want to delete this item?") &&
-        this.items.splice(index, 1);
+        Api()
+        .delete("/primary_request", {
+          data: {primarydiagnose}
+        })
+        .then(() => {
+          this.$refs['alert'].showMessage('Deleted successfully', 
+          Helper.message_types.success)
+          this.items.splice(index, 1);
+        })
+        .catch((error) => {
+          this.$refs['alert'].showMessage('Deleting action was unsuccessful: ' + error, 
+          Helper.message_types.error, 5000)
+        })
     },
 
     close() {

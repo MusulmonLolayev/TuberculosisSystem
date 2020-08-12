@@ -1,6 +1,5 @@
 <template>
   <v-app>
-
     <v-navigation-drawer
       v-model="drawer"
       app
@@ -108,7 +107,7 @@ export default {
     gotodatamining: function(){
       this.$router.push('/datamining')
     },
-  }
+  },
 };
 </script>
 

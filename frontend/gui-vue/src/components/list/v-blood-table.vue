@@ -1,6 +1,7 @@
 <template>
   <div>
     <v-message-box :message="mBox" />
+    <v-alert-box ref="alert" />
     <v-data-table :headers="headers" :items="items" sort-by="calories" class="elevation-1">
       <template v-slot:top>
         <v-toolbar flat color="white">
@@ -43,6 +44,9 @@ import vBloodAnalysis from "../create/v-blood-analysis";
 import Api from "@/api/Api";
 import vMessageBox from "../commons/v-message-box";
 import MessageBox from "../commons/messagebox.js";
+import vAlertBox from "../commons/v-alert-box"
+
+import Helper from "../commons/functions.js"
 
 export default {
   name: "v-blood-table",
@@ -115,6 +119,18 @@ export default {
         align: "start",
         sortable: false
       },
+      {
+        text: "act",
+        value: "act",
+        align: "start",
+        sortable: false
+      },
+      {
+        text: "alt",
+        value: "alt",
+        align: "start",
+        sortable: false
+      },
       { text: "Status", value: "status", sortable: false },
       { text: "Date", value: "date", sortable: false },
       { text: "Actions", value: "actions", sortable: false }
@@ -184,6 +200,8 @@ export default {
         lf: obj.lf,
         mon: obj.mon,
         coe: obj.coe,
+        act: obj.act,
+        alt: obj.alt,
 
         status: this.ToYesNO(obj.status),
         patient: obj.patient,
@@ -207,6 +225,8 @@ export default {
         lf: template.lf,
         mon: template.mon,
         coe: template.coe,
+        act: template.act,
+        alt: template.alt,
 
         status: this.ToBoolFromYesNo(template.status),
         patient: template.patient,
@@ -224,8 +244,21 @@ export default {
 
     deleteItem(item) {
       const index = this.items.indexOf(item);
+      let bloodanalysis = item;
       confirm("Are you sure you want to delete this item?") &&
-        this.items.splice(index, 1);
+        Api()
+        .delete("/blood_request", {
+          data: {bloodanalysis}
+        })
+        .then(() => {
+          this.$refs['alert'].showMessage('Deleted successfully', 
+          Helper.message_types.success)
+          this.items.splice(index, 1);
+        })
+        .catch((error) => {
+          this.$refs['alert'].showMessage('Deleting action was unsuccessful: ' + error, 
+          Helper.message_types.error, 5000)
+        })
     },
 
     close() {
@@ -297,8 +330,11 @@ export default {
   },
   components: {
     vBloodAnalysis,
-    vMessageBox
+    vMessageBox,
+    vAlertBox
   },
-  mounted: function() {}
+  mounted: function() {
+
+  }
 };
 </script>
