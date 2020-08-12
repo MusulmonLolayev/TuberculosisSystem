@@ -178,33 +178,6 @@ class BloodAnalysis(models.Model):
 
     date = models.DateField(default=datetime.date.today)
 
-class Immunogram(models.Model):
-    patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
-
-    # CD3
-    cd3 = models.FloatField(default=0, blank=True, null=True)
-    # CD4
-    cd4 = models.FloatField(default=0, blank=True, null=True)
-    # CD8
-    cd8 = models.FloatField(default=0, blank=True, null=True)
-    # CD20
-    cd20 = models.FloatField(default=0, blank=True, null=True)
-    # IgM
-    igm = models.FloatField(default=0, blank=True, null=True)
-    # IgG
-    igg = models.FloatField(default=0, blank=True, null=True)
-    # IgA
-    iga = models.FloatField(default=0, blank=True, null=True)
-    # TgE
-    tge = models.FloatField(default=0, blank=True, null=True)
-    # ACT
-    act = models.FloatField(default=0)
-    # ALT
-    alt = models.FloatField(default=0)
-
-    # status for taking on computing
-    status = models.BooleanField(default=True)
-    date = models.DateField(default=datetime.date.today)
 
 class Other(models.Model):
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
