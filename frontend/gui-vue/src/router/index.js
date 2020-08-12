@@ -7,9 +7,9 @@ import News from '../components/News'
 import vCreate from '../components/create/v-create'
 import Login from '../components/Login'
 import store from '../vuex/store'
-import Data from '../components/workplace/data'
-import Detials from '../components/workplace/detials'
-import DataMining from '../components/workplace/datamining'
+import vData from '../components/workplace/v-data'
+import vDetials from '../components/workplace/v-detials'
+import vDataMining from '../components/workplace/v-data-mining'
 
 Vue.use(Router)
 
@@ -50,17 +50,17 @@ var router = new Router({
         {
             path: '/data',
             name: 'data',
-            component: Data
+            component: vData
         },
         {
             path: '/detials/:patient',
             name: 'detials',
-            component: Detials
+            component: vDetials
         },
         {
             path: '/datamining',
             name: 'datamining',
-            component: DataMining
+            component: vDataMining
         },
     ]
 })
