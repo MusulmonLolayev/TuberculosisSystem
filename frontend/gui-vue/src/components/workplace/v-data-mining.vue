@@ -5,12 +5,12 @@
         <v-btn text @click="btnMean">Mean</v-btn>
         <v-btn text @click="btnMedian">Median</v-btn>
     </div>
-      <h2 v-if="isLoading">Loading.....</h2>
+      <!--<h2 v-if="isLoading">Loading.....</h2>
       <v-row>
           <v-col v-for="(item, index) in data" v-bind:key="index" cols='15' md='3'>
               ({{combination[index][0]}}, {{combination[index][1]}})-[{{item[0]}}, {{item[1]}}]
           </v-col>
-      </v-row>
+      </v-row> -->
   </div>
 </template>
 
@@ -21,7 +21,7 @@ import vAlertBox from '../commons/v-alert-box'
 import Helper from '../commons/functions'
 
 export default {
-    name: 'DataMining',
+    name: 'v-data-mining',
     data: function(){
         return {
             data: {
@@ -32,15 +32,15 @@ export default {
         }
     },
     methods: {
-        GER_DATA_FROM_API(method){
-            let self = this
-
-            Api().get('/getaccetableintervals/' + method)
-            .then((response) => {
-                self.data = response.data
+        UPDATE_BY_API(method){
+            Api().get('/updateaccetableintervals/' + method)
+            .then(() => {
+                this.$refs['alert'].showMessage('Updated successfully', 
+          Helper.message_types.success)
             })
             .catch((error) => {
-                console.error(error)
+                this.$refs['alert'].showMessage('Updating was unsuccessful' + error, 
+          Helper.message_types.error)
             })
         },
         makeFeatures(){
@@ -51,16 +51,19 @@ export default {
             }
         },
         btnMean(){
-            this.GER_DATA_FROM_API('mean')    
+            this.UPDATE_BY_API('mean')    
         },
         btnMedian(){
-            this.GER_DATA_FROM_API('median')    
+            this.UPDATE_BY_API('median')    
         },
     },
     mounted: function(){
-        this.GER_DATA_FROM_API('mean')
+        /*this.GER_DATA_FROM_API('mean')
         this.makeFeatures()
-        this.isLoading = false
+        this.isLoading = false*/
+    },
+    components: {
+        vAlertBox,
     }
 }
 </script>
