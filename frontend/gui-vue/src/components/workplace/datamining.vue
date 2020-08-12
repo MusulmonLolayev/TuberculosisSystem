@@ -1,5 +1,6 @@
 <template>
   <div>
+      <v-alert-box ref="alert"/>
     <div>
         <v-btn text @click="btnMean">Mean</v-btn>
         <v-btn text @click="btnMedian">Median</v-btn>
@@ -16,6 +17,8 @@
 <script>
 
 import Api from '@/api/Api'
+import vAlertBox from '../commons/v-alert-box'
+import Helper from '../commons/functions'
 
 export default {
     name: 'DataMining',
