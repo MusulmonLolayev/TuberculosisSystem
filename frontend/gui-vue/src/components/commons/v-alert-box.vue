@@ -1,16 +1,36 @@
 <template>
-  <v-snackbar :timeout="alert.timeout" :value="alert.show" :color='alert.type' top right>
+  <v-snackbar :timeout="timeout" :value="show" :color='type' top right>
     <template v-slot:action="{ attrs }">
-      <v-btn color="blue" text v-bind="attrs" @click="alert.show = false">Close</v-btn>
+      <v-btn color="blue" text v-bind="attrs" @click="close">Close</v-btn>
     </template>
-    {{alert.message}}
+    {{message}}
   </v-snackbar>
 </template>
 
 <script>
 export default {
   name: "v-alert-box",
-  props: ["alert"],
+  data: function(){
+    return {
+      timeout: 4000,
+      show: false,
+      type: '',
+      message: '',
+    }
+  },
+  methods: {
+    showMessage(message='', type='success', timeout=2000){
+      this.show = true
+      this.message = message
+      this.type = type
+      this.timeout = timeout
+
+      setTimeout(this.close, timeout)
+    },
+    close(){
+      this.show = false
+    }
+  }
 };
 </script>
 

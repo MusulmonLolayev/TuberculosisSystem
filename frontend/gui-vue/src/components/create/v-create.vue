@@ -1,6 +1,7 @@
 <template>
   <div>
     <v-message-box :message="mBox" />
+    <v-alert-box ref='alert'/>
     <v-stepper alt-labels v-model="step_count" :vertical="vertical">
       <template v-if="vertical">
         <template v-for="(item, index) in stepper_data">
@@ -18,7 +19,7 @@
       <v-stepper-items>
         <v-stepper-content step="0">
           <div style="margin-left: 20px; margin-right: 20px">
-            <v-patient :patient="patient" :errors="errors"/>
+            <v-patient ref="PatientForm" :patient="patient"/>
           </div>
         </v-stepper-content>
 
@@ -90,6 +91,9 @@ import vBloodAnalysis from "./v-blood-analysis";
 import vOther from "./v-other";
 import vMessageBox from "../commons/v-message-box";
 import MessgeBox from "../commons/messagebox.js";
+import vAlertBox from "../commons/v-alert-box"
+
+import Helper from "../commons/functions.js"
 
 import Api from "@/api/Api";
 
@@ -104,6 +108,7 @@ export default {
     vBloodAnalysis,
     vOther,
     vMessageBox,
+    vAlertBox,
   },
   data: function() {
     return {
@@ -164,7 +169,9 @@ export default {
       bloodanalysis: {},
       other: {},
       mBox: new MessgeBox(),
-      errors: [],
+      error: {
+        patient: null,
+      },
     };
   },
   computed: {
@@ -546,7 +553,11 @@ export default {
       }
     },
     btnSave() {
-      //console.log(Helper.GetCurrentDate())
+      if (this.$refs['PatientForm'].hasError()){
+        this.$refs['alert'].showMessage('Error, please fill all empty fields in initial information', 
+        Helper.message_types.error)
+        return 0
+      }
       /*switch (this.step_count) {
         case 0:
           this.SavePatient();

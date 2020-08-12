@@ -2,7 +2,7 @@
   <div>
     <v-message-box :message="mBox" />
     <v-expansion-panels v-model="panel" focusable multiple hover popout>
-      <v-alert-box :alert="aBox" />
+      <v-alert-box ref='alert' />
       <v-expansion-panel>
         <v-expansion-panel-header>
           <h2>General information</h2>
@@ -65,14 +65,14 @@
         </v-expansion-panel-content>
       </v-expansion-panel>
 
-      <v-expansion-panel>
+      <!--<v-expansion-panel>
         <v-expansion-panel-header>
           <h2>Immunogram</h2>
         </v-expansion-panel-header>
         <v-expansion-panel-content>
           <v-immunogram-table :patient="patient" />
         </v-expansion-panel-content>
-      </v-expansion-panel>
+      </v-expansion-panel> -->
 
       <v-expansion-panel>
         <v-expansion-panel-header>
@@ -95,11 +95,10 @@ import vPrimaryTable from "../list/v-primary-table";
 import vTakingMedicineTable from "../list/v-taking-medicine-table";
 import vComplaintTable from "../list/v-complaint-table";
 import vBloodTable from "../list/v-blood-table.vue";
-import vImmunogramTable from "../list/v-immunogram-table";
+//import vImmunogramTable from "../list/v-immunogram-table";
 import vOtherTable from "../list/v-other-table";
 import vInitialQuestionTable from "../list/v-initial-question-table";
-import vAlertBox from "../commons/v-alert-box.vue";
-import AlertBox from "../commons/alertbox.js";
+import vAlertBox from "../commons/v-alert-box"
 
 export default {
   data: function() {
@@ -107,7 +106,6 @@ export default {
       patient: this.$route.params.patient,
       panel: [0],
       mBox: new MessageBox(),
-      aBox: new AlertBox()
     };
   },
   mounted: function() {},
@@ -133,7 +131,7 @@ export default {
     },
     btnSave: function() {
       let patient = this.patient;
-      let self = this;
+      //let self = this;
 
       Api()
         .put("/patient_request", {
@@ -141,7 +139,7 @@ export default {
         })
         .then(function(response) {
           console.log(response);
-          self.aBox.showMessage("Saved");
+          //self.aBox.showMessage("Saved");
         })
         .catch(function(error) {
           console.log(error);
@@ -155,7 +153,7 @@ export default {
     vTakingMedicineTable,
     vComplaintTable,
     vBloodTable,
-    vImmunogramTable,
+//    vImmunogramTable,
     vOtherTable,
     vAlertBox,
     vInitialQuestionTable

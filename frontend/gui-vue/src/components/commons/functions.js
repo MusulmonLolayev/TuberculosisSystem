@@ -1,4 +1,10 @@
 export default {
+
+    message_types: {
+        success: 'success',
+        error: 'error'
+    },
+
     ToYesNO(value) {
         return value == true ? "Yes" : "No";
     },

@@ -1,24 +1,32 @@
 <template>
-  <v-row>
+  <v-row ref="form">
     <v-col cols="10" md="3">
-      <v-text-field label="Last name" 
+      <v-text-field
+      ref="last_name" 
+      label="Last name" 
       v-model="patient.last_name" 
       required clearable
-      :rules="rules.last_name"
-      :error-messages="errors"
+      :rules="rules.name"
       />
     </v-col>
 
     <v-col cols="10" md="3">
-      <v-text-field label="First name" 
+      <v-text-field 
+        ref="first_name" 
+        label="First name" 
         v-model="patient.first_name" 
         required clearable
-        :rules="rules.last_name"
-        :error-messages="errors"
+        :rules="rules.name"
         />
     </v-col>
     <v-col cols="10" md="3">
-      <v-text-field label="Middle name" v-model="patient.middle_name" required clearable/>
+      <v-text-field
+      ref="middle_name"  
+      label="Middle name" 
+      v-model="patient.middle_name" 
+      required clearable
+      :rules="rules.name"
+      />
     </v-col>
     <v-col cols="10" md="3">
       <v-text-field
@@ -55,6 +63,7 @@
         return-object
         item-value="id"
         v-model="selectedReigion"
+        :rules="rules.select"
       />
     </v-col>
     <v-col cols="10" md="3">
@@ -70,7 +79,13 @@
     </v-col>
 
     <v-col cols="10" md="6">
-      <v-text-field label="Address line" required v-model="patient.address" clearable/>
+      <v-text-field
+      ref="address"  
+      label="Address line" 
+      required clearable
+      v-model="patient.address" 
+      :rules="rules.address"
+      />
     </v-col>
     <v-col cols="10" md="3">
       <v-text-field
@@ -93,7 +108,14 @@
     </v-col>
 
     <v-col cols="10" md="3">
-      <v-text-field label="Number" required v-model="patient.number" type='number' />
+      <v-text-field 
+      label="Number" 
+      required 
+      v-model="patient.number" 
+      type='number'
+      ref="number"
+      :rules="rules.number" 
+      />
     </v-col>
   </v-row>
 </template>
@@ -104,22 +126,28 @@ import Helper from "../commons/functions.js"
 
 export default {
   name: "v-patient",
-  props: ["patient", "errors"],
+  props: ["patient"],
   data: function() {
     return {
       rules: {
-        last_name : [
+        name : [
           value => !!value || 'Required.',
           value => (value && value.length >= 3) || 'Min 3 characters',
           value => /^[\w'][^0-9_!¡?÷?¿/\\+=@#$%ˆ&*,.(){}|~<>;:[\]]{2,}$/.test(value) || 'Must be characters',
-          
+        ],
+        address: [
+          value => !!value || 'Required.',
+          value => (value && value.length >= 3) || 'Min 3 characters',
+        ],
+        select: [
+          value => !!value || 'Required.',
         ]
       },
       selectedCountry: {},
       selectedReigion: {},
       selectedDistrict: {},
       selectedOccupation: {},
-      gender: 0
+      gender: 0,
     };
   },
   computed: {
@@ -133,8 +161,8 @@ export default {
   },
   methods: {
     async initialize() {
-      this.GET_COUNTRIES_FROM_API();
-      this.GET_OCCUPATIONS_FROM_API();
+      await this.GET_COUNTRIES_FROM_API();
+      await this.GET_OCCUPATIONS_FROM_API();
 
       if (typeof this.patient.id != "undefined") {
         this.GET_DISTRICT_FROM_API(this.patient.district);
@@ -160,11 +188,12 @@ export default {
 
         this.patient.birthday = Helper.GetCurrentDate()
         this.patient.fromdate = Helper.GetCurrentDate()
-
-        /*this.selectedCountry = this.COUNTRIES[0].id
+        this.patient.number = 1
+        this.selectedOccupation = this.OCCUPATIONS[0].id
+        this.selectedCountry = this.COUNTRIES[0].id
         this.countryChanged(this.COUNTRIES[0])
 
-        this.selectedReigion = this.REGIONS[0].id;
+        /*this.selectedReigion = this.REGIONS[0].id;
         this.regionChanged(this.REGIONS[0]);
         
         this.selectedDistrict = this.DISTRICT.id*/
@@ -176,8 +205,7 @@ export default {
       "GET_DISTRICTS_FROM_API",
       "GET_OCCUPATIONS_FROM_API",
       "GET_DISTRICT_FROM_API"
-    ]),
-
+    ]),   
     countryChanged(e) {
       var url = "/regions_by_country/" + e.id;
       this.GET_REGIONS_FROM_API(url);
@@ -194,10 +222,27 @@ export default {
     },
     rbChange(e) {
       this.patient.gender = e == 0 ? true : false;
+    },
+    hasError(){
+      let res = false;
+      ['last_name', 'first_name', 
+      'middle_name', 'address'].forEach(f => {
+        if (typeof this.$refs[f] != 'undefined'){
+          if (this.$refs[f].hasError){
+            this.$refs[f].validate(true)
+            res = true
+          }
+        }
+          
+      }) 
+      return res
     }
   },
   beforeMount: function() {
     this.initialize();
+  },
+  watch: {
+
   }
 };
 </script>

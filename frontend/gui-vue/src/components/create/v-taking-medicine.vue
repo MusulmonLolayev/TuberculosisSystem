@@ -52,7 +52,7 @@ export default {
       }
     },
   },
-  mounted() {
+  beforeMount() {
     this.initialize();
   },
 };
