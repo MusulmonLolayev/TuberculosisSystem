@@ -76,11 +76,6 @@ class BloodAnalysisSerializer(serializers.ModelSerializer):
         model = BloodAnalysis
         fields = '__all__'
 
-class ImmunogramSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Immunogram
-        fields = '__all__'
-
 class OtherSerializer(serializers.ModelSerializer):
 
     class Meta:

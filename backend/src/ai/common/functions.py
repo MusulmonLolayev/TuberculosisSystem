@@ -1,8 +1,8 @@
 import numpy as np
 
-from patientapp.models import Patient, PrimaryDiagnose, TakingMedicine, Complaint, BloodAnalysis, Immunogram, Other
+from patientapp.models import Patient, PrimaryDiagnose, TakingMedicine, Complaint, BloodAnalysis, Other
 
-from api_app.serializer import PatientSerializer, PrimaryDiagnoseSerializer, TakingMedicineSerializer, ComplaintSerializer, BloodAnalysisSerializer, ImmunogramSerializer, OtherSerializer
+from api_app.serializer import PatientSerializer, PrimaryDiagnoseSerializer, TakingMedicineSerializer, ComplaintSerializer, BloodAnalysisSerializer, OtherSerializer
 
 from ai.settings import DISCRIPTION_FEATURES, MODELS_NAMES
 
@@ -68,11 +68,6 @@ def GetFeatures(query):
 
         blood = BloodAnalysis.objects.filter(patient=item.id, status=True).last()
         nc, c = GetAttributes(BloodAnalysisSerializer, blood, 'BloodAnalysis', query)
-        row_nc = row_nc + nc
-        row_c = row_c + c
-
-        immunogram = Immunogram.objects.filter(patient=item.id, status=True).last()
-        nc, c = GetAttributes(ImmunogramSerializer, immunogram, 'Immunogram', query)
         row_nc = row_nc + nc
         row_c = row_c + c
 

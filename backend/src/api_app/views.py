@@ -85,14 +85,6 @@ class BloodListView(ListAPIView):
         patient_id = self.kwargs['patient_id']
         return BloodAnalysis.objects.filter(patient_id=patient_id)
 
-class ImmunogramListView(ListAPIView):
-    serializer_class = ImmunogramSerializer
-
-    def get_queryset(self):
-
-        patient_id = self.kwargs['patient_id']
-        return Immunogram.objects.filter(patient_id=patient_id)
-
 class OtherListView(ListAPIView):
     serializer_class = OtherSerializer
 
@@ -209,10 +201,6 @@ def complaint_request(request):
 @api_view(['POST', 'DELETE', 'PUT'])
 def blood_request(request):
     return general_request(request, 'bloodanalysis', BloodAnalysis, BloodAnalysisSerializer)
-
-@api_view(['POST', 'DELETE', 'PUT'])
-def immunogram_request(request):
-    return general_request(request, 'immunogram', Immunogram, ImmunogramSerializer)
 
 @api_view(['POST', 'DELETE', 'PUT'])
 def other_request(request):

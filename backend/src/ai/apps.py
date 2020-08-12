@@ -1,7 +1,6 @@
 from django.apps import AppConfig
 
-from ai.settings import DISCRIPTION_FEATURES, MODELS_NAMES, RANGES_NUMERICAL_FEATURES
-
+from ai.settings import DISCRIPTION_FEATURES, MODELS_NAMES
 #from ai.common.functions import UpdateAcceptableIntevals
 
 class AIConfig(AppConfig):

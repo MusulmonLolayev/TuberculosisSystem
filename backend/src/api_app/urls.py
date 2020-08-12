@@ -51,10 +51,6 @@ urlpatterns = [
     path('blood_request', blood_request),
     path('blood_request/<patient_id>', BloodListView.as_view()),
 
-    # /Immunogram
-    path('immunogram_request', immunogram_request),
-    path('immunogram_request/<patient_id>', ImmunogramListView.as_view()),
-
     # /other
     path('other_request', other_request),
     path('other_request/<patient_id>', OtherListView.as_view()),
