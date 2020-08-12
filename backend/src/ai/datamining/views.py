@@ -19,7 +19,7 @@ class RangeListView(ListAPIView):
 @api_view(['GET'])
 def UpdateAcceptableIntevals_as_View(request, method):
     try:
-        UpdateAcceptableIntevals()
+        UpdateAcceptableIntevals(method=method)
     except:
         return Response(status=500)
     return Response('Udated', status=200)
