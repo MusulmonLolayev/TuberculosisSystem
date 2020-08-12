@@ -11,7 +11,6 @@ MODELS_NAMES = [
     'TakingMedicine',
     'Complaint',
     'BloodAnalysis',
-    'Immunogram',
     'Other'
 ]
 
@@ -419,86 +418,6 @@ DISCRIPTION_FEATURES = {
             'is_id': False,
         },
         {
-            'feature': 'status',
-            'type': 'bool',
-            'is_computing': False,
-            'is_display': False,
-            'is_id': False,
-        },
-        {
-            'feature': 'date',
-            'type': 'date',
-            'is_computing': False,
-            'is_display': False,
-            'is_id': False,
-        }
-    ],
-    # The next features in Immunogram model
-    'Immunogram': [
-        {
-            'feature': 'patient',
-            'type': 'int',
-            'is_computing': False,
-            'is_display': True,
-            'is_id': True,
-        },
-        {
-            'feature': 'cd3',
-            'type': 'float',
-            'is_computing': True,
-            'is_display': False,
-            'is_id': False,
-        },
-        {
-            'feature': 'cd4',
-            'type': 'float',
-            'is_computing': True,
-            'is_display': False,
-            'is_id': False,
-        },
-        {
-            'feature': 'cd8',
-            'type': 'float',
-            'is_computing': True,
-            'is_display': False,
-            'is_id': False,
-        },
-        {
-            'feature': 'cd20',
-            'type': 'float',
-            'is_computing': True,
-            'is_display': False,
-            'is_id': False,
-        },
-        {
-            'feature': 'igm',
-            'type': 'float',
-            'is_computing': True,
-            'is_display': False,
-            'is_id': False,
-        },
-        {
-            'feature': 'igg',
-            'type': 'float',
-            'is_computing': True,
-            'is_display': False,
-            'is_id': False,
-        },
-        {
-            'feature': 'iga',
-            'type': 'float',
-            'is_computing': True,
-            'is_display': False,
-            'is_id': False,
-        },
-        {
-            'feature': 'tge',
-            'type': 'float',
-            'is_computing': True,
-            'is_display': False,
-            'is_id': False,
-        },
-        {
             'feature': 'act',
             'type': 'float',
             'is_computing': True,
@@ -629,24 +548,3 @@ DISCRIPTION_FEATURES = {
         }
     ]
 }
-
-"""
-It saves the ranges and settings of each pair of numerical features by developing theory. 
-It is filled in AIConfig class when the server starts or other time is that when clien-side commands to make
-update the array.
-Structure of each item in it is created as python dictionary as follow:
-
-{
-    'pair1': 'code1', # the code1 is of first-pair-feature code (number)
-    'pair2': 'code2', # the code2 is of second-pair-feature code (number)
-    'begin': 'begin', # the begin is the first number of ordered R (see the docs to find more inf.)
-    'end': 'end', # the end is the latest number of ordered R (see the docs to find more inf.)
-    'mean1': 'mean1', # the mean value of the first feature (see the docs to find more inf.)
-    'mean2': 'mean2', # the mean value of the second feature (see the docs to find more inf.)
-}
-
-Comment: must see when the median method is used instead of mean method.
-"""
-RANGES_NUMERICAL_FEATURES = [
-
-]
