@@ -19,7 +19,7 @@
       <v-stepper-items>
         <v-stepper-content step="0">
           <div style="margin-left: 20px; margin-right: 20px">
-            <v-patient ref="PatientForm" :patient="patient"/>
+            <v-patient ref="PatientForm" :patient="patient" :check_acceptability="check_acceptability"/>
           </div>
         </v-stepper-content>
 
@@ -49,7 +49,7 @@
 
         <v-stepper-content step="5">
           <div style="margin-left: 20px; margin-right: 20px">
-            <v-blood-analysis :bloodanalysis="bloodanalysis" />
+            <v-blood-analysis :bloodanalysis="bloodanalysis" :check_acceptability="check_acceptability"/>
           </div>
         </v-stepper-content>
 
@@ -169,9 +169,7 @@ export default {
       bloodanalysis: {},
       other: {},
       mBox: new MessgeBox(),
-      error: {
-        patient: null,
-      },
+      ranges: ''
     };
   },
   computed: {
@@ -196,8 +194,9 @@ export default {
     }
   },
   methods: {
-    initialize() {
+    async initialize() {
       // Must to do after all
+      this.ranges = (await Api().get("/getaccetableintervals")).data
     },
     btnCanelingAgree() {
       console.log("btnCanelingAgree");
@@ -611,11 +610,62 @@ export default {
       this.patient.last_name = ''
       this.patient.first_name = ''
       this.patient.middle_name = ''
+    },
+    check_acceptability: function(name, instance){
+      let res = [
+
+      ]
+      let names = Object.keys(instance)
+      for (let i = 0; i < names.length; i++){
+        
+        let val1 = instance[name]
+        let val2 = instance[names[1]]
+
+        if (val2 && names[i] != name){
+          this.ranges.forEach(item => {
+            
+            let f1 = item['feature_name1']
+            let f2 = item['feature_name2'] 
+            
+            if (name == f1 && names[i] == f2 || name == f2 && names[i] == f1){
+              
+              let sub_val1 = item['sub_value1']
+              let sub_val2 = item['sub_value2']
+
+              let r_val = 0
+
+              if (name == f1 && names[i] == f2){
+                r_val = val1 / sub_val1 - val2 / sub_val2
+              }
+              else{
+                r_val = val2 / sub_val2 - val1 / sub_val1
+              }
+
+              let l_R = item['l_R']
+              let r_R = item['r_R']
+
+              if (r_val < l_R || r_R < r_val){
+                res.push({
+                  feature_name1: name,
+                  feature_name2: names[i],
+                  error: `It can not be logically possible when ${name} has ${val1} and ${names[i]} has ${val2}`
+                })
+              }
+            }            
+          });
+        }
+      }
+      if (res.length > 0)
+        return res
+      return true
     }
   },
   updated: function() {
     this.settings.IsUpdated = true;
   },
+  mounted: function(){
+    this.initialize()
+  }
 };
 </script>
 

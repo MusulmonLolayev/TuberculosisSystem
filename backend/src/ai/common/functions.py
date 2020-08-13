@@ -115,19 +115,18 @@ def UpdateAcceptableIntevals(method='mean'):
         item_nc, item_c = GetAttributes_Names(model_item, query)
         f_nc += item_nc
         f_c += item_c
-            
+
     not_computing, computing = GetFeatures(query)
     X = np.array(computing)
 
     update_number = Range.objects.last().udapte_number + 1
 
-    for i in range(X.shape[0]):
-        for j in range(i + 1, X.shape[0]):
+    for i in range(X.shape[1]):
+        for j in range(i + 1, X.shape[1]):
             rng = Range()
             rng.udapte_number = update_number
             rng.feature_name1 = f_c[i]['feature']
             rng.feature_name2 = f_c[j]['feature']
             rng.l_R, rng.r_R, rng.sub_value1, rng.sub_value2 = AcceptableInterval(X[:, i], X[:, j], method=method)
-
             rng.save()
     pass
