@@ -7,7 +7,9 @@
         v-model="bloodanalysis.er" 
         type="number" 
         :rules="rules.er"
-        required/>
+        required
+        min="0"
+        />
       </v-col>
       <v-col cols="10" md="2">
         <v-text-field 

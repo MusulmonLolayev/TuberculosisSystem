@@ -619,9 +619,9 @@ export default {
       for (let i = 0; i < names.length; i++){
         
         let val1 = instance[name]
-        let val2 = instance[names[1]]
-
-        if (val2 && names[i] != name){
+        let val2 = instance[names[i]]
+        if (val2 && names[i] != name && !isNaN(val2)){
+          console.log(name, names[i])
           this.ranges.forEach(item => {
             
             let f1 = item['feature_name1']
