@@ -41,7 +41,7 @@
 
 <script>
 import vBloodAnalysis from "../create/v-blood-analysis";
-import Api from "@/api/Api";
+import {Api} from "@/api/Api";
 import vMessageBox from "../commons/v-message-box";
 import MessageBox from "../commons/messagebox.js";
 import vAlertBox from "../commons/v-alert-box"
@@ -162,7 +162,7 @@ export default {
     initialize() {
       let mBox = this.mBox;
       let patient_id = this.patient.id;
-      Api()
+      Api
         .get("/blood_request/" + patient_id)
         .then(respone => {
           //console.log(respone);
@@ -246,7 +246,7 @@ export default {
       const index = this.items.indexOf(item);
       let bloodanalysis = item;
       confirm("Are you sure you want to delete this item?") &&
-        Api()
+        Api
         .delete("/blood_request", {
           data: {bloodanalysis}
         })
@@ -273,7 +273,7 @@ export default {
       let mBox = this.mBox;
       if (this.editedIndex > -1) {
         let bloodanalysis = this.editedItem;
-        Api()
+        Api
           .put("/blood_request", {
             bloodanalysis
           })
@@ -291,7 +291,7 @@ export default {
           });
       } else {
         var bloodanalysis = this.editedItem;
-        Api()
+        Api
           .post("/blood_request", {
             bloodanalysis
           })

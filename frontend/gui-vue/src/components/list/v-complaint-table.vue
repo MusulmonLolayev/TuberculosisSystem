@@ -41,7 +41,7 @@
 
 <script>
 import vComplaint from "../create/v-complaint";
-import Api from "@/api/Api";
+import {Api} from "@/api/Api";
 import vMessageBox from "../commons/v-message-box";
 import MessageBox from "../commons/messagebox.js";
 import { mapGetters, mapActions } from "vuex";
@@ -134,11 +134,11 @@ export default {
 
   methods: {
     async initialize() {
-      await this.GET_CHARACTER_STOOL_FROM_API();
+      await this.GET_CHARACTER_STOOL_FROM_Api;
 
       let mBox = this.mBox;
       let patient_id = this.patient.id;
-      await Api()
+      await Api
         .get("/complaint_request/" + patient_id)
         .then(respone => {
           //console.log(respone);
@@ -213,7 +213,7 @@ export default {
       const index = this.items.indexOf(item);
       let complaint = item;
       confirm("Are you sure you want to delete this item?") &&
-        Api()
+        Api
         .delete("/complaint_request", {
           data: {complaint}
         })
@@ -240,7 +240,7 @@ export default {
       let mBox = this.mBox;
       if (this.editedIndex > -1) {
         let complaint = this.editedItem;
-        Api()
+        Api
           .put("/complaint_request", {
             complaint
           })
@@ -258,7 +258,7 @@ export default {
           });
       } else {
         var complaint = this.editedItem;
-        Api()
+        Api
           .post("/complaint_request", {
             complaint
           })

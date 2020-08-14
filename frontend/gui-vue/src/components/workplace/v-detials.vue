@@ -79,7 +79,7 @@
 
 <script>
 import vPatient from "../create/v-patient";
-import Api from "@/api/Api";
+import {Api} from "@/api/Api";
 import vMessageBox from "../commons/v-message-box";
 import MessageBox from "../commons/messagebox.js";
 import vPrimaryTable from "../list/v-primary-table";
@@ -106,7 +106,7 @@ export default {
   },
   methods: {
     async initialize() {
-      this.ranges = (await Api().get("/getaccetableintervals")).data
+      this.ranges = (await Api.get("/getaccetableintervals")).data
     },
     btnDelete: function() {
       let patient = this.patient;
@@ -114,7 +114,7 @@ export default {
       let mBox = this.mBox;
       confirm("Do you want to delete patient " + 
       this.patient.last_name + " " + this.patient.first_name[0] + "." + 
-      this.patient.middle_name[0] + ".") && Api()
+      this.patient.middle_name[0] + ".") && Api
         .delete("/patient_request", {
           data: { patient }
         })
@@ -130,7 +130,7 @@ export default {
       let patient = this.patient;
       //let self = this;
 
-      Api()
+      Api
         .put("/patient_request", {
           patient
         })

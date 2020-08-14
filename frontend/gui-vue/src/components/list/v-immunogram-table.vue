@@ -40,7 +40,7 @@
 
 <script>
 import vImmunogramAnalysis from "../create/v-immunogram";
-import Api from "@/api/Api";
+import {Api} from "@/api/Api";
 import vMessageBox from "../commons/v-message-box";
 import MessageBox from "../commons/messagebox.js";
 
@@ -140,7 +140,7 @@ export default {
     initialize() {
       let mBox = this.mBox;
       let patient_id = this.patient.id;
-      Api()
+      Api
         .get("/immunogram_request/" + patient_id)
         .then(respone => {
           //console.log(respone);
@@ -232,7 +232,7 @@ export default {
       let mBox = this.mBox;
       if (this.editedIndex > -1) {
         let immunogram = this.editedItem;
-        Api()
+        Api
           .put("/immunogram_request", {
             immunogram
           })
@@ -250,7 +250,7 @@ export default {
           });
       } else {
         var immunogram = this.editedItem;
-        Api()
+        Api
           .post("/immunogram_request", {
             immunogram
           })

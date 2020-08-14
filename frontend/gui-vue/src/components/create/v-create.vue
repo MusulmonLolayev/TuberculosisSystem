@@ -95,7 +95,7 @@ import vAlertBox from "../commons/v-alert-box"
 
 import Helper from "../commons/functions.js"
 
-import Api from "@/api/Api";
+import {Api} from "@/api/Api";
 
 export default {
   name: "v-create",
@@ -196,7 +196,7 @@ export default {
   methods: {
     async initialize() {
       // Must to do after all
-      this.ranges = (await Api().get("/getaccetableintervals")).data
+      this.ranges = (await Api.get("/getaccetableintervals")).data
     },
     btnCanelingAgree() {
       console.log("btnCanelingAgree");

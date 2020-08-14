@@ -1,11 +1,8 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import Api from '../api/Api'
-
-import http from './'
+import {Api} from '../api/Api'
 
 Vue.use(Vuex)
-
 
 let store = new Vuex.Store({
     state: {
@@ -72,7 +69,7 @@ let store = new Vuex.Store({
     actions: {
         GET_COUNTRIES_FROM_API({ commit }) {
             if (this.state.countries.length == 0)
-                return Api().get('/countries')
+                return Api.get('/countries')
                     .then((countries) => {
                         commit('SET_COUNTRIES_TO_STATE', countries.data);
                         return countries;
@@ -83,7 +80,7 @@ let store = new Vuex.Store({
                     })
         },
         GET_REGIONS_FROM_API({ commit }, url) {
-            return Api().get(url)
+            return Api.get(url)
                 .then((regions) => {
                     commit('SET_REGIONS_TO_STATE', regions.data);
                     return regions;
@@ -94,7 +91,7 @@ let store = new Vuex.Store({
                 })
         },
         GET_DISTRICTS_FROM_API({ commit }, url) {
-            return Api().get(url)
+            return Api.get(url)
                 .then((districts) => {
                     commit('SET_DISTRICTS_TO_STATE', districts.data);
                     return districts;
@@ -106,7 +103,7 @@ let store = new Vuex.Store({
         },
         GET_OCCUPATIONS_FROM_API({ commit }) {
             if (this.state.occupations.length == 0)
-                return Api().get('/occupations')
+                return Api.get('/occupations')
                     .then((occupations) => {
                         commit('SET_OCCUPATIONS_TO_STATE', occupations.data);
                         return occupations;
@@ -143,7 +140,7 @@ let store = new Vuex.Store({
             })
         },
         GET_PATIETNS_FROM_API({ commit }) {
-            return Api().get('/patient_request')
+            return Api.get('/patient_request')
                 .then((patients) => {
                     commit('SET_PATIETNS_TO_STATE', patients.data);
                     return patients;
@@ -154,7 +151,7 @@ let store = new Vuex.Store({
                 })
         },
         GET_DISTRICT_FROM_API({ commit }, id) {
-            return Api().get('/districts/' + id)
+            return Api.get('/districts/' + id)
                 .then((response) => {
                     commit('SET_DISTRICT_TO_STATE', response.data)
                     return response;
@@ -166,7 +163,7 @@ let store = new Vuex.Store({
         },
         GET_CLINICAL_FORMS_FROM_API({ commit }) {
             if (this.state.clinical_forms.length == 0)
-                return Api().get('/clinicalforms')
+                return Api.get('/clinicalforms')
                     .then((response) => {
                         commit('SET_CLINICAL_FORMS_TO_STATE', response.data)
                         return response
@@ -178,7 +175,7 @@ let store = new Vuex.Store({
         },
         GET_LOCALIZATION_FROM_API({ commit }) {
             if (this.state.localizations.length == 0)
-                return Api().get('/localization')
+                return Api.get('/localization')
                     .then((response) => {
                         commit('SET_LOCALIZATION_TO_STATE', response.data)
                         return response
@@ -190,7 +187,7 @@ let store = new Vuex.Store({
         },
         GET_PREVALENCES_FROM_API({ commit }) {
             if (this.state.prevalences.length == 0)
-                return Api().get('/prevalence')
+                return Api.get('/prevalence')
                     .then((response) => {
                         commit('SET_PREVALENCES_TO_STATE', response.data)
                     })
@@ -199,22 +196,13 @@ let store = new Vuex.Store({
                     })
         },
         async GET_CHARACTER_STOOL_FROM_API({ commit }) {
-            if (this.state.character_stools.length == 0)
-                try{
-                    let response = await Api().get('/characterofstool')
-                    commit('SET_CHARACTER_STOOLS_TO_STATE', response.data)
-                    return response
-                }   
-                catch(error){
-                    console.log(error)
-                }
-            /*return await Api().get('/characterofstool')
+            return await Api.get('/characterofstool')
                     .then((response) => {
                         commit('SET_CHARACTER_STOOLS_TO_STATE', response.data)
                     })
                     .catch((error) => {
                         console.log(error)
-                    })*/
+                    })
         }
     },
     getters: {

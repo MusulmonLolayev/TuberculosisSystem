@@ -41,7 +41,7 @@
 
 <script>
 import vPrimaryDiagnose from "../create/v-primary-diagnose";
-import Api from "@/api/Api";
+import {Api} from "@/api/Api";
 import { mapGetters, mapActions } from "vuex";
 import vMessageBox from "../commons/v-message-box";
 import MessageBox from "../commons/messagebox.js";
@@ -115,11 +115,11 @@ export default {
   methods: {
     async initialize() {
 
-      await Promise.all([this.GET_CLINICAL_FORMS_FROM_API(), this.GET_LOCALIZATION_FROM_API(), this.GET_PREVALENCES_FROM_API()])
+      await Promise.all([this.GET_CLINICAL_FORMS_FROM_Api, this.GET_LOCALIZATION_FROM_Api, this.GET_PREVALENCES_FROM_Api])
 
       let patient_id = this.patient.id;
       let mBox = this.mBox;
-      await Api()
+      await Api
         .get("/primary_request/" + patient_id)
         .then(respone => {
           //console.log(respone);
@@ -206,7 +206,7 @@ export default {
       const index = this.items.indexOf(item);
       let primarydiagnose = item;
       confirm("Are you sure you want to delete this item?") &&
-        Api()
+        Api
         .delete("/primary_request", {
           data: {primarydiagnose}
         })
@@ -233,7 +233,7 @@ export default {
       let mBox = this.mBox;
       let primarydiagnose = this.editedItem;
       if (this.editedIndex > -1) {
-        Api()
+        Api
           .put("/primary_request", {
             primarydiagnose
           })
@@ -251,7 +251,7 @@ export default {
             mBox.showMessage("Error", e, "error");
           });
       } else {
-        Api()
+        Api
           .post("/primary_request", {
             primarydiagnose
           })

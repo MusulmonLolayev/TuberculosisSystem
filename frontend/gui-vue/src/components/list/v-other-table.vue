@@ -41,7 +41,7 @@
 
 <script>
 import vOther from "../create/v-other";
-import Api from "@/api/Api";
+import {Api} from "@/api/Api";
 import vMessageBox from "../commons/v-message-box";
 import MessageBox from "../commons/messagebox.js";
 import Helper from '../commons/functions'
@@ -149,7 +149,7 @@ export default {
     initialize() {
       let mBox = this.mBox;
       let patient_id = this.patient.id;
-      Api()
+      Api
         .get("/other_request/" + patient_id)
         .then(respone => {
           //console.log(respone);
@@ -229,7 +229,7 @@ export default {
       const index = this.items.indexOf(item);
       let other = item;
       confirm("Are you sure you want to delete this item?") &&
-        Api()
+        Api
         .delete("/other_request", {
           data: {other}
         })
@@ -256,7 +256,7 @@ export default {
       let mBox = this.mBox;
       if (this.editedIndex > -1) {
         let other = this.editedItem;
-        Api()
+        Api
           .put("/other_request", {
             other
           })
@@ -274,7 +274,7 @@ export default {
           });
       } else {
         var other = this.editedItem;
-        Api()
+        Api
           .post("/other_request", {
             other
           })

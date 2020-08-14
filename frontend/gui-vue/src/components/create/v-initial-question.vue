@@ -62,7 +62,7 @@
 </template>
 
 <script>
-import Api from "@/api/Api";
+import {Api} from "@/api/Api";
 import vMessageBox from "../commons/v-message-box";
 import MessgeBox from "../commons/messagebox.js";
 import Helper from "../commons/functions.js";
@@ -86,13 +86,13 @@ export default {
         this.selected.date = Helper.GetCurrentDate();
       }
       try {
-        let response = await Api().get("/question_titles");
+        let response = await Api.get("/question_titles");
         for (let i = 0; i < response.data.length; i++) {
           let item = response.data[i];
           this.question_titles.push(item);
         }
 
-        response = await Api().get("/questions");
+        response = await Api.get("/questions");
         response.data.map(x => {
           this.questions.push(x);
         });

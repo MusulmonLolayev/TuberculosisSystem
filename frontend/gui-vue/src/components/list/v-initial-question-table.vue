@@ -41,7 +41,7 @@
 
 <script>
 import vInitialQuestion from "../create/v-initial-question";
-import Api from "@/api/Api";
+import {Api} from "@/api/Api";
 import vMessageBox from "../commons/v-message-box";
 import MessageBox from "../commons/messagebox.js";
 import vAlertBox from '../commons/v-alert-box'
@@ -120,7 +120,7 @@ export default {
     },
     async initialize() {
       try {
-        let response = await Api().get("/question_titles");
+        let response = await Api.get("/question_titles");
         let length = response.data.length;
         for (let i = 0; i < length; i++) {
           let item = response.data[length - i - 1];
@@ -133,7 +133,7 @@ export default {
           });
         }
 
-        response = await Api().get("/questions");
+        response = await Api.get("/questions");
         response.data.map(x => {
           this.questions.push(x);
         });
@@ -144,7 +144,7 @@ export default {
 
       let mBox = this.mBox;
       let patient_id = this.patient.id;
-      Api()
+      Api
         .get("/initial_questions/" + patient_id)
         .then(respone => {
           respone.data.map(item => {
@@ -242,7 +242,7 @@ export default {
       initial_question.id = item.id
 
       confirm("Are you sure you want to delete this item?") &&
-        Api()
+        Api
         .delete("/initial_question_request", {
           data: {initial_question}
         })
@@ -289,7 +289,7 @@ export default {
       let _this = this;
       if (this.editedIndex > -1) {
         initial_question.id = this.editedItem.id;
-        Api()
+        Api
           .put("/initial_question_request", {
             initial_question
           })
@@ -304,7 +304,7 @@ export default {
           });
       } else {
         // Chech the primary diagnose id to be undefined to know ethier create instane or edit
-        Api()
+        Api
           .post("/initial_question_request", {
             initial_question
           })

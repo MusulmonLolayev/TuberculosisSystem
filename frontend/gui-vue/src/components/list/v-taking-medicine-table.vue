@@ -41,7 +41,7 @@
 
 <script>
 import vTakingMedicine from "../create/v-taking-medicine";
-import Api from "@/api/Api";
+import {Api} from "@/api/Api";
 import vMessageBox from "../commons/v-message-box";
 import MessageBox from "../commons/messagebox.js";
 import vAlertBox from "../commons/v-alert-box"
@@ -116,7 +116,7 @@ export default {
     async initialize() {
       let mBox = this.mBox;
       let patient_id = this.patient.id;
-      await Api()
+      await Api
         .get("/taking_request/" + patient_id)
         .then(respone => {
           //console.log(respone);
@@ -186,7 +186,7 @@ export default {
       const index = this.items.indexOf(item);
       let takingmedicine = item;
       confirm("Are you sure you want to delete this item?") &&
-        Api()
+        Api
         .delete("/taking_request", {
           data: {takingmedicine}
         })
@@ -213,7 +213,7 @@ export default {
       let mBox = this.mBox;
       if (this.editedIndex > -1) {
         let takingmedicine = this.editedItem;
-        Api()
+        Api
           .put("/taking_request", {
             takingmedicine
           })
@@ -230,7 +230,7 @@ export default {
           });
       } else {
         let takingmedicine = this.editedItem;
-        Api()
+        Api
           .post("/taking_request", {
             takingmedicine
           })
