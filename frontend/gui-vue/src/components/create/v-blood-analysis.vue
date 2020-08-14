@@ -62,20 +62,6 @@ export default {
       */
       logicalErrors: [],
       labels: ['er', 'leyk', 'hb', 'color', 'pya', 'sya', 'eoz', 'lf', 'mon', 'coe', 'act', 'alt'],
-      rules: {
-        er: [() => {return this.required('er')}],
-        leyk: [() => {return this.required('leyk')}],
-        hb: [() => {return this.required('hb')}],
-        color: [() => {return this.required('color')}],
-        pya: [() => {return this.required('pya')}],
-        sya: [() => {return this.required('sya')}],
-        eoz: [() => {return this.required('eoz')}],
-        lf: [() => {return this.required('lf')}],
-        mon: [() => {return this.required('mon')}],
-        coe: [() => {return this.required('coe')}],
-        act: [() => {return this.required('act')}],
-        alt: [() => {return this.required('alt')}],
-      }
     }
   },
   computed: {
@@ -86,6 +72,7 @@ export default {
   methods: {
     initialize() {
       if (typeof this.bloodanalysis.id == "undefined") {
+        this.bloodanalysis.date = Helper.GetCurrentDate();
         this.bloodanalysis.er = 0;
         this.bloodanalysis.leyk = 0;
         this.bloodanalysis.hb = 0;
@@ -99,7 +86,6 @@ export default {
         this.bloodanalysis.coe = 0;
         this.bloodanalysis.act = 0;
         this.bloodanalysis.alt = 0;
-        this.bloodanalysis.date = Helper.GetCurrentDate();
       }
     },
     required(name){
