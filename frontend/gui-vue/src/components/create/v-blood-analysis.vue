@@ -106,6 +106,9 @@ export default {
       let value = this.bloodanalysis[name]
       if (!value)
         return 'Required.'
+      
+      this.logicalErrors = this.logicalErrors.filter(item => item['feature_name1'] != name && item['feature_name2'] != name)
+
       if (typeof this.check_acceptability != "undefined"){
         let res = this.check_acceptability(name, this.bloodanalysis)
         if (typeof res == 'boolean')

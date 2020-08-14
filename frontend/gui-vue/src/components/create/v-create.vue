@@ -641,11 +641,15 @@ export default {
               let r_val = 0
 
               if (name == f1 && names[i] == f2){
+                //console.log(1)
                 r_val = val1 / sub_val1 - val2 / sub_val2
               }
               else{
-                r_val = val2 / sub_val2 - val1 / sub_val1
+                //console.log(2)
+                r_val = val2 / sub_val1 - val1 / sub_val2
               }
+
+              //r_val = val1 / sub_val1 - val2 / sub_val2
 
               let l_R = item['l_R']
               let r_R = item['r_R']
