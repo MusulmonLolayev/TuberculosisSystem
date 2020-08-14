@@ -165,16 +165,16 @@ export default {
       await this.GET_OCCUPATIONS_FROM_API();
 
       if (typeof this.patient.id != "undefined") {
-        this.GET_DISTRICT_FROM_API(this.patient.district);
+        await this.GET_DISTRICT_FROM_API(this.patient.district);
 
         // select region, country and district by patient for editing
         this.selectedCountry = this.DISTRICT.region.country.id;
         // when the country changes then must notice about it by calling the method.
-        this.countryChanged(this.DISTRICT.region.country);
+        await this.countryChanged(this.DISTRICT.region.country);
 
         this.selectedReigion = this.DISTRICT.region.id;
         // it is as same as the country selection
-        this.regionChanged(this.DISTRICT.region);
+        await this.regionChanged(this.DISTRICT.region);
 
         this.selectedDistrict = this.DISTRICT.id;
 
@@ -189,14 +189,15 @@ export default {
         this.patient.birthday = Helper.GetCurrentDate()
         this.patient.fromdate = Helper.GetCurrentDate()
         this.patient.number = 1
+
         this.selectedOccupation = this.OCCUPATIONS[0].id
         this.selectedCountry = this.COUNTRIES[0].id
-        this.countryChanged(this.COUNTRIES[0])
+        await this.countryChanged(this.COUNTRIES[0])
 
-        /*this.selectedReigion = this.REGIONS[0].id;
-        this.regionChanged(this.REGIONS[0]);
+        this.selectedReigion = this.REGIONS[0].id;
+        await this.regionChanged(this.REGIONS[0]);
         
-        this.selectedDistrict = this.DISTRICT.id*/
+        this.selectedDistrict = this.DISTRICTS[0].id
       }
     },
     ...mapActions([
@@ -206,13 +207,13 @@ export default {
       "GET_OCCUPATIONS_FROM_API",
       "GET_DISTRICT_FROM_API"
     ]),   
-    countryChanged(e) {
+    async countryChanged(e) {
       var url = "/regions_by_country/" + e.id;
-      this.GET_REGIONS_FROM_API(url);
+      await this.GET_REGIONS_FROM_API(url);
     },
-    regionChanged(e) {
+    async regionChanged(e) {
       var url = "/districts_by_region/" + e.id;
-      this.GET_DISTRICTS_FROM_API(url);
+      await this.GET_DISTRICTS_FROM_API(url);
     },
     districtChanged(e) {
       this.patient.district = e.id;
