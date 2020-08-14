@@ -16,7 +16,7 @@
               </v-card-title>
 
               <v-card-text>
-                <v-blood-analysis :bloodanalysis="editedItem" />
+                <v-blood-analysis :bloodanalysis="editedItem" :check_acceptability="check_acceptability"/>
               </v-card-text>
 
               <v-card-actions>
@@ -141,7 +141,7 @@ export default {
     defaultItem: null,
     mBox: new MessageBox()
   }),
-  props: ["patient"],
+  props: ["patient", "check_acceptability"],
   computed: {
     formTitle() {
       return this.editedIndex === -1 ? "New Item" : "Edit Item";
@@ -326,7 +326,7 @@ export default {
       };
       this.editedItem = Object.assign({}, this.defaultItem);
       this.dialog = true;
-    }
+    },
   },
   components: {
     vBloodAnalysis,

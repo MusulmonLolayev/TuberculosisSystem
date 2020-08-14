@@ -61,18 +61,9 @@
           <h2>Blood</h2>
         </v-expansion-panel-header>
         <v-expansion-panel-content>
-          <v-blood-table :patient="patient" />
+          <v-blood-table :patient="patient" :check_acceptability='check_acceptability'/>
         </v-expansion-panel-content>
       </v-expansion-panel>
-
-      <!--<v-expansion-panel>
-        <v-expansion-panel-header>
-          <h2>Immunogram</h2>
-        </v-expansion-panel-header>
-        <v-expansion-panel-content>
-          <v-immunogram-table :patient="patient" />
-        </v-expansion-panel-content>
-      </v-expansion-panel> -->
 
       <v-expansion-panel>
         <v-expansion-panel-header>
@@ -95,10 +86,11 @@ import vPrimaryTable from "../list/v-primary-table";
 import vTakingMedicineTable from "../list/v-taking-medicine-table";
 import vComplaintTable from "../list/v-complaint-table";
 import vBloodTable from "../list/v-blood-table.vue";
-//import vImmunogramTable from "../list/v-immunogram-table";
 import vOtherTable from "../list/v-other-table";
 import vInitialQuestionTable from "../list/v-initial-question-table";
 import vAlertBox from "../commons/v-alert-box"
+
+import Helper from "../commons/functions.js"
 
 export default {
   data: function() {
@@ -106,11 +98,16 @@ export default {
       patient: this.$route.params.patient,
       panel: [0],
       mBox: new MessageBox(),
+      ranges: '',
     };
   },
-  mounted: function() {},
-  computed: {},
+  mounted: function(){
+    this.initialize()
+  },
   methods: {
+    async initialize() {
+      this.ranges = (await Api().get("/getaccetableintervals")).data
+    },
     btnDelete: function() {
       let patient = this.patient;
       let router = this.$router;
@@ -144,6 +141,9 @@ export default {
         .catch(function(error) {
           console.log(error);
         });
+    },
+    check_acceptability: function(name, instance){
+      return Helper.check_acceptability(name, instance, this.ranges)
     }
   },
   components: {
@@ -153,7 +153,6 @@ export default {
     vTakingMedicineTable,
     vComplaintTable,
     vBloodTable,
-//    vImmunogramTable,
     vOtherTable,
     vAlertBox,
     vInitialQuestionTable
