@@ -2,6 +2,8 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import Api from '../api/Api'
 
+import http from './'
+
 Vue.use(Vuex)
 
 
