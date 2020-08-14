@@ -227,13 +227,10 @@ export default {
       let res = false;
       ['last_name', 'first_name', 
       'middle_name', 'address'].forEach(f => {
-        if (typeof this.$refs[f] != 'undefined'){
-          if (this.$refs[f].hasError){
+        if (typeof this.$refs[f] != 'undefined' && this.$refs[f].hasError){
             this.$refs[f].validate(true)
             res = true
-          }
-        }
-          
+        }          
       }) 
       return res
     }

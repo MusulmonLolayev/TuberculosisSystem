@@ -1,115 +1,24 @@
 <template>
   <div>
     <v-row>
-      <v-col cols="10" md="2">
-        <v-text-field 
-        label="er" 
-        v-model="bloodanalysis.er" 
+      <v-col 
+      cols="10" 
+      md="2" 
+      v-for="(item, index) in labels"
+      :key="index" >
+        <v-text-field
+        :label="item" 
+        v-model="bloodanalysis[item]" 
         type="number" 
-        :rules="rules.er"
+        :rules="[() => required(item)]"
         required
         min="0"
+        :ref="item"
+        dense
+        validate-on-blur
         />
       </v-col>
-      <v-col cols="10" md="2">
-        <v-text-field 
-        label="leyk" 
-        v-model="bloodanalysis.leyk" 
-        type="number" 
-        :rules="rules.leyk"
-        required
-        />
-      </v-col>
-      <v-col cols="10" md="2">
-        <v-text-field 
-        label="hb" 
-        v-model="bloodanalysis.hb" 
-        type="number" 
-        :rules="rules.hb"
-        required
-        />
-      </v-col>
-      <v-col cols="10" md="2">
-        <v-text-field 
-        label="color" 
-        v-model="bloodanalysis.color" 
-        type="number" 
-        :rules="rules.color"
-        required
-        />
-      </v-col>
-      <v-col cols="10" md="2">
-        <v-text-field 
-        label="pya" 
-        v-model="bloodanalysis.pya" 
-        type="number" 
-        :rules="rules.pya"
-        required
-        />
-      </v-col>
-      <v-col cols="10" md="2">
-        <v-text-field 
-        label="sya" 
-        v-model="bloodanalysis.sya" 
-        type="number" 
-        :rules="rules.sya"
-        required
-        />
-      </v-col>
-      <v-col cols="10" md="2">
-        <v-text-field 
-        label="eoz" 
-        v-model="bloodanalysis.eoz" 
-        type="number" 
-        :rules="rules.eoz"
-        required
-        />
-      </v-col>
-      <v-col cols="10" md="2">
-        <v-text-field 
-        label="lf" 
-        v-model="bloodanalysis.lf" 
-        type="number" 
-        :rules="rules.lf"
-        required
-        />
-      </v-col>
-      <v-col cols="10" md="2">
-        <v-text-field 
-        label="mon" 
-        v-model="bloodanalysis.mon" 
-        type="number" 
-        :rules="rules.mon"
-        required
-        />
-      </v-col>
-      <v-col cols="10" md="2">
-        <v-text-field 
-        label="coe" 
-        v-model="bloodanalysis.coe" 
-        type="number" 
-        :rules="rules.coe"
-        required
-        />
-      </v-col>
-      <v-col cols="10" md="2">
-        <v-text-field 
-        label="act" 
-        v-model="bloodanalysis.act" 
-        type="number" 
-        :rules="rules.act"
-        required
-        />
-      </v-col>
-      <v-col cols="10" md="2">
-        <v-text-field 
-        label="alt" 
-        v-model="bloodanalysis.alt" 
-        type="number" 
-        :rules="rules.alt"
-        required
-        />
-      </v-col>
+      
       <v-col cols="10" md="2">
         <v-checkbox v-model="bloodanalysis.status" label="Status" />
       </v-col>
@@ -121,15 +30,19 @@
         />
       </v-col>
     </v-row>
-    <div>
-      <h2>Logical errors:</h2>
-      <div class="error-container">
-        <p v-for="(item, index) in logicalErrors" :key='index'>
-          {{item}}
-        </p>
+    <div v-show="isError">
+      <span class="red--text">Logical errors: {{logicalErrors.length}}</span>
+        <v-simple-table height="100" dense>
+          <template v-slot:default>
+            <tbody>
+              <tr v-for="(item, index) in logicalErrors" :key="index">
+                <td>{{item.error}}</td>
+              </tr>
+            </tbody>
+          </template>
+        </v-simple-table>
       </div>
     </div>
-  </div>
 </template>
 
 <script>
@@ -148,20 +61,26 @@ export default {
       }
       */
       logicalErrors: [],
+      labels: ['er', 'leyk', 'hb', 'color', 'pya', 'sya', 'eoz', 'lf', 'mon', 'coe', 'act', 'alt'],
       rules: {
-        er: [(value) => {return this.required(value, 'er')}],
-        leyk: [(value) => {return this.required(value, 'leyk')}],
-        hb: [(value) => {return this.required(value, 'hb')}],
-        color: [(value) => {return this.required(value, 'color')}],
-        pya: [(value) => {return this.required(value, 'pya')}],
-        sya: [(value) => {return this.required(value, 'sya')}],
-        eoz: [(value) => {return this.required(value, 'eoz')}],
-        lf: [(value) => {return this.required(value, 'lf')}],
-        mon: [(value) => {return this.required(value, 'mon')}],
-        coe: [(value) => {return this.required(value, 'coe')}],
-        act: [(value) => {return this.required(value, 'act')}],
-        alt: [(value) => {return this.required(value, 'alt')}],
+        er: [() => {return this.required('er')}],
+        leyk: [() => {return this.required('leyk')}],
+        hb: [() => {return this.required('hb')}],
+        color: [() => {return this.required('color')}],
+        pya: [() => {return this.required('pya')}],
+        sya: [() => {return this.required('sya')}],
+        eoz: [() => {return this.required('eoz')}],
+        lf: [() => {return this.required('lf')}],
+        mon: [() => {return this.required('mon')}],
+        coe: [() => {return this.required('coe')}],
+        act: [() => {return this.required('act')}],
+        alt: [() => {return this.required('alt')}],
       }
+    }
+  },
+  computed: {
+    isError: function(){
+      return this.logicalErrors.length
     }
   },
   methods: {
@@ -183,18 +102,50 @@ export default {
         this.bloodanalysis.date = Helper.GetCurrentDate();
       }
     },
-    required(value, name){
+    required(name){
+      let value = this.bloodanalysis[name]
       if (!value)
         return 'Required.'
       if (typeof this.check_acceptability != "undefined"){
         let res = this.check_acceptability(name, this.bloodanalysis)
         if (typeof res == 'boolean')
           return res
-        this.logicalErrors.concat(res)
+        Object.keys(res).forEach(item => {
+            let t = -1
+            for (let i = 0; i < this.logicalErrors.length; i++){
+              let e = this.logicalErrors[i]
+              if (
+                e['feature_name1'] == name && e['feature_name2'] == res[item]['feature_name2']
+                ||
+                e['feature_name2'] == name && e['feature_name1'] == res[item]['feature_name2']
+                ){
+                t = i
+                break
+              }
+            }
+            if (t > -1){
+              this.logicalErrors[t].error = res[item].error
+            }
+            else{
+              this.logicalErrors.push(res[item])
+            }
+        })
         return res.length + " logical errors."  
       }
       return true
-    }
+    },
+    hasError(){
+      let error = false
+      this.labels.forEach(item => {
+        let res = this.required(item)
+        if (typeof res == 'string'){
+          error = true
+          if (this.$refs[item].hasError)
+            this.$refs[item].validate(true)
+        }
+      })
+      return error
+    },
   },
   beforeMount() {
     this.initialize();
@@ -203,9 +154,4 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.error-container {
-    height: 100px;
-    overflow-y: scroll;
-    overflow-x:hidden;
-}
 </style>>

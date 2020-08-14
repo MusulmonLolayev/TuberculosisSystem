@@ -49,7 +49,7 @@
 
         <v-stepper-content step="5">
           <div style="margin-left: 20px; margin-right: 20px">
-            <v-blood-analysis :bloodanalysis="bloodanalysis" :check_acceptability="check_acceptability"/>
+            <v-blood-analysis :bloodanalysis="bloodanalysis" ref="BloodAnalysis" :check_acceptability="check_acceptability"/>
           </div>
         </v-stepper-content>
 
@@ -553,11 +553,18 @@ export default {
     },
     btnSave() {
       if (this.$refs['PatientForm'].hasError()){
-        this.$refs['alert'].showMessage('Error, please fill all empty fields in initial information', 
+        this.$refs['alert'].showMessage('Error, please fill all the required fields in initial information', 
         Helper.message_types.error)
+        this.step_count = 0
         return 0
       }
-      /*switch (this.step_count) {
+      if (this.$refs['BloodAnalysis'].hasError()){
+        this.$refs['alert'].showMessage('Error, please fill all the required fields in initial information', 
+        Helper.message_types.error)
+        this.step_count = 5
+        return 0
+      }
+      switch (this.step_count) {
         case 0:
           this.SavePatient();
           break;
@@ -583,7 +590,7 @@ export default {
           this.SaveOther();
           break;
       }
-      this.settings.IsNew = false*/
+      this.settings.IsNew = false
     },
     stepBack() {
       if (this.step_count > 0) {
@@ -621,7 +628,6 @@ export default {
         let val1 = instance[name]
         let val2 = instance[names[i]]
         if (val2 && names[i] != name && !isNaN(val2)){
-          console.log(name, names[i])
           this.ranges.forEach(item => {
             
             let f1 = item['feature_name1']
