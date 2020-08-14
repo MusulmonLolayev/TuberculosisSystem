@@ -26,7 +26,9 @@
         :items="CHARACTER_STOOLS"
         item-text="name"
         item-value="id"
-        v-model="complaint.character"
+        return-object
+        v-model="selectedcharacter_stool"
+        @change="changedCharacet_stool"
       />
     </v-col>
     <v-col cols="10" md="3">
@@ -49,21 +51,34 @@ import Helper from "../commons/functions.js";
 export default {
   name: "v-complaint",
   props: ["complaint"],
+  data: function(){
+    return {
+      selectedcharacter_stool: 0
+    }
+  },
   computed: {
     ...mapGetters(["CHARACTER_STOOLS"])
   },
   methods: {
     ...mapActions(["GET_CHARACTER_STOOL_FROM_API"]),
-    initialize() {
+    async initialize() {
+      await this.GET_CHARACTER_STOOL_FROM_API()
+
       if (typeof this.complaint.id == "undefined"){
         this.complaint.date = Helper.GetCurrentDate();
         this.complaint.from_stool_frequency = 0
         this.complaint.to_stool_frequency = 0
+        this.selectedcharacter_stool  = this.CHARACTER_STOOLS[0].id
+      }
+      else{
+        this.selectedcharacter_stool = this.complaint.id
       }
     },
+    changedCharacet_stool(id){
+      this.complaint.changedCharacet_stool = id
+    }
   },
   beforeMount() {
-    this.GET_CHARACTER_STOOL_FROM_API();
     this.initialize();
   },
 };
