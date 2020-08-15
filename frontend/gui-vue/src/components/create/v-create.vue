@@ -200,6 +200,9 @@ export default {
       console.log("btnCanelingAgree");
       this.$router.go(-1);
     },
+    DealSavingRespone(response){
+      
+    },
     async SavePatient() {
       if (this.$refs['PatientForm'].hasError()){
         this.$refs['alert'].showMessage('Error, please fill all the required fields in initial information', 
@@ -207,42 +210,8 @@ export default {
         this.step_count = 0
         return 0
       }
-
-      await Helper.saveInstance(this.patient, '/patient_request')
-      console.log(this.patient)
-      /*try {
-        let patient = this.patient;
-        // Check this patient has id which means that the patient was created in database
-        // if id is undefined then create object, otherwise edit it
-        if (typeof patient.id == "undefined") {
-          await Api()
-            .post("/patient_request", {
-              patient
-            })
-            .then(function(response) {
-              patient.id = response.data;
-            })
-            .catch(e => {
-              console.log(e);
-              this.$ref['message'].showMessage("Error", e, "error");
-            });
-        } else {
-          await Api()
-            .put("/patient_request", {
-              patient
-            })
-            .then(function(response) {
-              console.log(response);
-            })
-            .catch(e => {
-              console.log(e);
-              this.$ref['message'].showMessage("Error", e, "error");
-            });
-        }
-      } catch (e) {
-        console.log(e);
-        this.$ref['message'].showMessage("Error", e, "error");
-      }*/
+      response = await Helper.saveInstance(this.patient, '/patient_request')
+      this.DealSavingRespone(response)
     },
     async SaveInitialQuestions() {
       //console.log(Object.values(this.initial_question_selected.radio))
