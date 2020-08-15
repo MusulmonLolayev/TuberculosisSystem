@@ -43,7 +43,6 @@
 import vOther from "../create/v-other";
 import {Api} from "@/api/Api";
 import vMessageBox from "../commons/v-message-box";
-import MessageBox from "../commons/messagebox.js";
 import Helper from '../commons/functions'
 import vAlertBox from "../commons/v-alert-box"
 
@@ -126,7 +125,6 @@ export default {
     editedIndex: -1,
     editedItem: {},
     defaultItem: null,
-    mBox: new MessageBox()
   }),
   props: ["patient"],
   computed: {

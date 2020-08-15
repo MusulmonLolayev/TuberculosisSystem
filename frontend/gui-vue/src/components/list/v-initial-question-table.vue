@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-message-box :message="mBox" />
+    <v-message-box ref="message" />
     <v-alert-box ref="alert" />
     <v-data-table :headers="headers" :items="items" sort-by="calories" class="elevation-1">
       <template v-slot:top>
@@ -43,7 +43,6 @@
 import vInitialQuestion from "../create/v-initial-question";
 import {Api} from "@/api/Api";
 import vMessageBox from "../commons/v-message-box";
-import MessageBox from "../commons/messagebox.js";
 import vAlertBox from '../commons/v-alert-box'
 
 import Helper from "../commons/functions.js"
@@ -76,7 +75,6 @@ export default {
     },
     question_titles: [],
     questions: [],
-    mBox: new MessageBox()
   }),
   props: ["patient"],
   computed: {

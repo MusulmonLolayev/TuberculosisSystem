@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-message-box :message="mBox" />
+    <v-message-box ref="message" />
     <v-expansion-panels v-model="panel" focusable multiple hover popout>
       <v-alert-box ref='alert' />
       <v-expansion-panel>
@@ -81,7 +81,6 @@
 import vPatient from "../create/v-patient";
 import {Api} from "@/api/Api";
 import vMessageBox from "../commons/v-message-box";
-import MessageBox from "../commons/messagebox.js";
 import vPrimaryTable from "../list/v-primary-table";
 import vTakingMedicineTable from "../list/v-taking-medicine-table";
 import vComplaintTable from "../list/v-complaint-table";
@@ -97,7 +96,6 @@ export default {
     return {
       patient: this.$route.params.patient,
       panel: [0],
-      mBox: new MessageBox(),
       ranges: '',
     };
   },
@@ -111,7 +109,7 @@ export default {
     btnDelete: function() {
       let patient = this.patient;
       let router = this.$router;
-      let mBox = this.mBox;
+      let mBox = this.$refs['message'];
       confirm("Do you want to delete patient " + 
       this.patient.last_name + " " + this.patient.first_name[0] + "." + 
       this.patient.middle_name[0] + ".") && Api

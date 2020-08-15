@@ -1,3 +1,4 @@
+import {Api} from '@/api/Api.js'
 export default {
 
     message_types: {
@@ -76,5 +77,34 @@ export default {
         if (res.length > 0)
           return res
         return true
-      }
+    },
+
+    async saveInstance(instance, url){  
+        if (typeof instance.id == "undefined") {
+          await Api
+            .post(url, {
+              instance
+            })
+            .then((response) => {
+              instance.id = response.data;
+            })
+            .catch(e => {
+              return e
+            })
+            .finally(() => {
+              return true
+            })
+        } else {
+          await Api
+            .post(url, {
+              instance
+            })
+            .then(() => {
+              return true
+            })
+            .catch(e => {
+              return e
+            })
+        }
+    },
 }

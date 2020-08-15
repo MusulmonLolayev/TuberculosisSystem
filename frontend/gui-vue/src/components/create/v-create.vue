@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-message-box :message="mBox" />
+    <v-message-box ref="message" />
     <v-alert-box ref='alert'/>
     <v-stepper alt-labels v-model="step_count" :vertical="vertical">
       <template v-if="vertical">
@@ -90,7 +90,6 @@ import vComplaint from "./v-complaint";
 import vBloodAnalysis from "./v-blood-analysis";
 import vOther from "./v-other";
 import vMessageBox from "../commons/v-message-box";
-import MessgeBox from "../commons/messagebox.js";
 import vAlertBox from "../commons/v-alert-box"
 
 import Helper from "../commons/functions.js"
@@ -168,7 +167,6 @@ export default {
       complaint: {},
       bloodanalysis: {},
       other: {},
-      mBox: new MessgeBox(),
       ranges: ''
     };
   },
@@ -203,7 +201,16 @@ export default {
       this.$router.go(-1);
     },
     async SavePatient() {
-      try {
+      if (this.$refs['PatientForm'].hasError()){
+        this.$refs['alert'].showMessage('Error, please fill all the required fields in initial information', 
+        Helper.message_types.error)
+        this.step_count = 0
+        return 0
+      }
+
+      await Helper.saveInstance(this.patient, '/patient_request')
+      console.log(this.patient)
+      /*try {
         let patient = this.patient;
         // Check this patient has id which means that the patient was created in database
         // if id is undefined then create object, otherwise edit it
@@ -217,7 +224,7 @@ export default {
             })
             .catch(e => {
               console.log(e);
-              this.mBox.showMessage("Error", e, "error");
+              this.$ref['message'].showMessage("Error", e, "error");
             });
         } else {
           await Api()
@@ -229,13 +236,13 @@ export default {
             })
             .catch(e => {
               console.log(e);
-              this.mBox.showMessage("Error", e, "error");
+              this.$ref['message'].showMessage("Error", e, "error");
             });
         }
       } catch (e) {
         console.log(e);
-        this.mBox.showMessage("Error", e, "error");
-      }
+        this.$ref['message'].showMessage("Error", e, "error");
+      }*/
     },
     async SaveInitialQuestions() {
       //console.log(Object.values(this.initial_question_selected.radio))
@@ -277,7 +284,7 @@ export default {
             })
             .catch(e => {
               console.log(e);
-              this.mBox.showMessage("Error", e, "error");
+              this.$ref['message'].showMessage("Error", e, "error");
             });
         } else {
           await Api()
@@ -289,12 +296,12 @@ export default {
             })
             .catch(e => {
               console.log(e);
-              this.mBox.showMessage("Error", e, "error");
+              this.$ref['message'].showMessage("Error", e, "error");
             });
         }
       } catch (e) {
         console.log(e);
-        this.mBox.showMessage("Error", e, "error");
+        this.$ref['message'].showMessage("Error", e, "error");
       }
     },
     async SavePrimaryDiagnose() {
@@ -320,7 +327,7 @@ export default {
             })
             .catch(e => {
               console.log(e);
-              this.mBox.showMessage("Error", e, "error");
+              this.$ref['message'].showMessage("Error", e, "error");
             });
         } else {
           await Api()
@@ -332,12 +339,12 @@ export default {
             })
             .catch(e => {
               console.log(e);
-              this.mBox.showMessage("Error", e, "error");
+              this.$ref['message'].showMessage("Error", e, "error");
             });
         }
       } catch (e) {
         console.log(e);
-        this.mBox.showMessage("Error", e, "error");
+        this.$ref['message'].showMessage("Error", e, "error");
       }
     },
     async SaveTakingMedicine() {
@@ -363,7 +370,7 @@ export default {
             })
             .catch(e => {
               console.log(e);
-              this.mBox.showMessage("Error", e, "error");
+              this.$ref['message'].showMessage("Error", e, "error");
             });
         } else {
           await Api()
@@ -375,12 +382,12 @@ export default {
             })
             .catch(e => {
               console.log(e);
-              this.message.showMessage("Error", e, "error");
+              this.$ref['message'].showMessage("Error", e, "error");
             });
         }
       } catch (e) {
         console.log(e);
-        this.mBox.showMessage("Error", e, "error");
+        this.$ref['message'].showMessage("Error", e, "error");
       }
     },
     async SaveComplaint() {
@@ -404,7 +411,7 @@ export default {
             })
             .catch(e => {
               console.log(e);
-              this.mBox.showMessage("Error", e, "error");
+              this.$ref['message'].showMessage("Error", e, "error");
             });
         } else {
           await Api()
@@ -416,15 +423,21 @@ export default {
             })
             .catch(e => {
               console.log(e);
-              this.mBox.showMessage("Error", e, "error");
+              this.$ref['message'].showMessage("Error", e, "error");
             });
         }
       } catch (e) {
         console.log(e);
-        this.mBox.showMessage("Error", e, "error");
+        this.$ref['message'].showMessage("Error", e, "error");
       }
     },
     async SaveBlood() {
+      if (this.$refs['BloodAnalysis'].hasError()){
+        this.$refs['alert'].showMessage('Error, please fill all the required fields in initial information', 
+        Helper.message_types.error)
+        this.step_count = 5
+        return 0
+      }
       try {
         // Check this patient has id which means that the patient was created in database
         // if id is undefined then create object
@@ -447,7 +460,7 @@ export default {
             })
             .catch(e => {
               console.log(e);
-              this.mBox.showMessage("Error", e, "error");
+              this.$ref['message'].showMessage("Error", e, "error");
             });
         } else {
           await Api()
@@ -459,54 +472,12 @@ export default {
             })
             .catch(e => {
               console.log(e);
-              this.mBox.showMessage("Error", e, "error");
+              this.$ref['message'].showMessage("Error", e, "error");
             });
         }
       } catch (e) {
         console.log(e);
-        this.mBox.showMessage("Error", e, "error");
-      }
-    },
-    async SaveImmunogram() {
-      try {
-        // Check this patient has id which means that the patient was created in database
-        // if id is undefined then create object
-        if (typeof this.patient.id == "undefined") {
-          await this.SavePatient();
-        }
-
-        // immunogram
-        this.immunogram.patient = this.patient.id;
-        let immunogram = this.immunogram;
-        if (typeof immunogram.id == "undefined") {
-          await Api()
-            .post("/immunogram_request", {
-              immunogram
-            })
-            .then(function(response) {
-              console.log(response);
-              immunogram.id = response.data;
-            })
-            .catch(e => {
-              console.log(e);
-              this.mBox.showMessage("Error", e, "error");
-            });
-        } else {
-          await Api()
-            .put("/immunogram_request", {
-              immunogram
-            })
-            .then(function(response) {
-              console.log(response);
-            })
-            .catch(e => {
-              console.log(e);
-              this.mBox.showMessage("Error", e, "error");
-            });
-        }
-      } catch (e) {
-        console.log(e);
-        this.mBox.showMessage("Error", e, "error");
+        this.$ref['message'].showMessage("Error", e, "error");
       }
     },
     async SaveOther() {
@@ -531,7 +502,7 @@ export default {
             })
             .catch(e => {
               console.log(e);
-              this.mBox.showMessage("Error", e, "error");
+              this.$ref['message'].showMessage("Error", e, "error");
             });
         } else {
           await Api()
@@ -543,27 +514,15 @@ export default {
             })
             .catch(e => {
               console.log(e);
-              this.mBox.showMessage("Error", e, "error");
+              this.$ref['message'].showMessage("Error", e, "error");
             });
         }
       } catch (e) {
         console.log(e);
-        this.mBox.showMessage("Error", e, "error");
+        this.$ref['message'].showMessage("Error", e, "error");
       }
     },
     btnSave() {
-      if (this.$refs['PatientForm'].hasError()){
-        this.$refs['alert'].showMessage('Error, please fill all the required fields in initial information', 
-        Helper.message_types.error)
-        this.step_count = 0
-        return 0
-      }
-      if (this.$refs['BloodAnalysis'].hasError()){
-        this.$refs['alert'].showMessage('Error, please fill all the required fields in initial information', 
-        Helper.message_types.error)
-        this.step_count = 5
-        return 0
-      }
       switch (this.step_count) {
         case 0:
           this.SavePatient();
@@ -584,9 +543,6 @@ export default {
           this.SaveBlood();
           break;
         case 6:
-          this.SaveImmunogram();
-          break;
-        case 7:
           this.SaveOther();
           break;
       }
@@ -603,9 +559,9 @@ export default {
       }
     },
     btnCancel() {
-      this.mBox.showMessage(
+      this.$refs['message'].showMessage(
         "Canceling",
-        "Do you want to cancel creating? You have some creating data.",
+        "Do you want to cancel creating? You have some created data.",
         "warning",
         true,
         this.btnCanelingAgree

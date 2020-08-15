@@ -42,7 +42,6 @@
 import vImmunogramAnalysis from "../create/v-immunogram";
 import {Api} from "@/api/Api";
 import vMessageBox from "../commons/v-message-box";
-import MessageBox from "../commons/messagebox.js";
 
 export default {
   name: "v-immunogram-table",
@@ -117,7 +116,6 @@ export default {
     editedIndex: -1,
     editedItem: {},
     defaultItem: null,
-    mBox: new MessageBox()
   }),
   props: ["patient"],
   computed: {

@@ -43,7 +43,6 @@
 import vComplaint from "../create/v-complaint";
 import {Api} from "@/api/Api";
 import vMessageBox from "../commons/v-message-box";
-import MessageBox from "../commons/messagebox.js";
 import { mapGetters, mapActions } from "vuex";
 
 import vAlertBox from "../commons/v-alert-box"
@@ -112,7 +111,6 @@ export default {
     editedIndex: -1,
     editedItem: {},
     defaultItem: null,
-    mBox: new MessageBox()
   }),
   props: ["patient"],
   computed: {

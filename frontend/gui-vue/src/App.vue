@@ -1,4 +1,5 @@
 <template>
+<div>
   <v-app>
     <v-navigation-drawer
       v-model="drawer"
@@ -74,17 +75,13 @@
       <!-- -->
     </v-footer>
   </v-app>
+</div>
 </template>
 
 <script>
 
 export default {
   name: 'App',
-  computed: {
-    isLoggedIn: function() {
-      return this.$store.getters.isLoggedIn
-    }
-  },
   data: () => ({
     drawer: null,
   }),

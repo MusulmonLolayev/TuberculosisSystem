@@ -44,7 +44,6 @@ import vPrimaryDiagnose from "../create/v-primary-diagnose";
 import {Api} from "@/api/Api";
 import { mapGetters, mapActions } from "vuex";
 import vMessageBox from "../commons/v-message-box";
-import MessageBox from "../commons/messagebox.js";
 import vAlertBox from "../commons/v-alert-box";
 import Helper from "../commons/functions";
 
@@ -91,7 +90,6 @@ export default {
     editedIndex: -1,
     editedItem: {},
     defaultItem: null,
-    mBox: new MessageBox(),
     aBox: '',
   }),
   props: ["patient"],
