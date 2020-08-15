@@ -69,13 +69,14 @@ export default {
         this.complaint.from_stool_frequency = 0
         this.complaint.to_stool_frequency = 0
         this.selectedcharacter_stool  = this.CHARACTER_STOOLS[0].id
+        this.complaint.character = this.selectedcharacter_stool
       }
       else{
-        this.selectedcharacter_stool = this.complaint.id
+        this.selectedcharacter_stool = this.complaint.character
       }
     },
     changedCharacet_stool(id){
-      this.complaint.changedCharacet_stool = id
+      this.complaint.character = id
     }
   },
   beforeMount() {
