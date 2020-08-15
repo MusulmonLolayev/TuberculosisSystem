@@ -1,20 +1,20 @@
 <template>
   <v-dialog
-      v-model="message.dialog"
+      v-model="dialog"
       max-width="300"
-      :persistent='message.persistent'
+      :persistent='persistent'
     >
       <v-card>
         <v-card-title class="headline">
-            {{message.title}}
+            {{title}}
         </v-card-title>
         <v-divider />
         <v-spacer></v-spacer>
         <v-card-text>
           <v-alert
-            :type='message.alert_type'
+            :type='alert_type'
           >
-            {{message.message}}
+            {{message}}
           </v-alert>
         </v-card-text>
         <v-divider />
@@ -24,8 +24,17 @@
           <v-btn
             color="green darken-1"
             text
-            @click="btnDisagree"
-            v-if='this.message.btnDisAgree != null'
+            @click="dialog = false"
+            v-if='persistent'
+          >
+            Close
+          </v-btn>
+
+          <v-btn
+            color="green darken-1"
+            text
+            @click="self_btnDisAgree"
+            v-if='showDisAgree'
           >
             Disagree
           </v-btn>
@@ -33,8 +42,8 @@
           <v-btn
             color="green darken-1"
             text
-            @click="btnAgree"
-            v-if='this.message.btnAgree != null'
+            @click="self_btnAgree"
+            v-if='showAgree'
           >
             Agree
           </v-btn>
@@ -44,22 +53,51 @@
 </template>
 
 <script>
+import Helper from './functions'
 
 export default {
     name: 'v-message-box',
-    props: ['message'],
+    data: function(){
+      return {
+        dialog: false,
+        title: '',
+        message: '',
+        alert_type: Helper.message_types.success,
+        persistent: '',
+        btnAgree: null,
+        btnDisAgree: null,
+      }
+    },
+    computed: {
+      showAgree: function(){
+        return this.btnAgree
+      },
+      showDisAgree: function(){
+        return this.btnDisAgree
+      },
+    },
     methods: {
-        btnAgree: function() {
-            this.message.dialog = false
-            if (this.message.btnAgree != null){
-              this.message.btnAgree()
-            }
+        self_btnAgree: function() {
+            this.dialog = false
+            this.btnAgree()
         },
-        btnDisagree: function() {
-            this.message.dialog = false
-            if (this.message.btnDisAgree != null){
-              this.message.btnDisAgree()
-            }
+        self_btnDisAgree: function() {
+            this.dialog = false
+            this.btnDisAgree()
+        },
+        showMessage(title, message, alert_type='success', persistent=false, btnAgree = null, btnDisAgree = null){
+          this.dialog = true
+          this.title = title
+          this.message = message
+          this.alert_type = alert_type
+          this.persistent = persistent
+          
+          this.btnAgree = btnAgree
+          this.btnDisAgree = btnDisAgree
+        },
+
+        closeMessage(){
+          this.dialog = false
         }
     },
 }
