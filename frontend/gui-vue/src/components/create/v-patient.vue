@@ -191,6 +191,8 @@ export default {
         this.patient.number = 1
 
         this.selectedOccupation = this.OCCUPATIONS[0].id
+        this.patient.occupation = this.selectedOccupation
+
         this.selectedCountry = this.COUNTRIES[0].id
         await this.countryChanged(this.COUNTRIES[0])
 
@@ -198,6 +200,8 @@ export default {
         await this.regionChanged(this.REGIONS[0]);
         
         this.selectedDistrict = this.DISTRICTS[0].id
+        this.patient.district = this.selectedDistrict
+
       }
     },
     ...mapActions([
