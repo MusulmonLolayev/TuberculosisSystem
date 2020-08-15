@@ -80,31 +80,24 @@ export default {
     },
 
     async saveInstance(instance, url){  
+      try{
         if (typeof instance.id == "undefined") {
-          await Api
+          let respone = await Api
             .post(url, {
               instance
             })
-            .then((response) => {
-              instance.id = response.data;
-            })
-            .catch(e => {
-              return e
-            })
-            .finally(() => {
-              return true
-            })
+          instance.id = respone.date
+          return true
         } else {
           await Api
-            .post(url, {
+            .put(url, {
               instance
             })
-            .then(() => {
-              return true
-            })
-            .catch(e => {
-              return e
-            })
+          return true
         }
+      }
+      catch (e){
+        return e
+      }
     },
 }
