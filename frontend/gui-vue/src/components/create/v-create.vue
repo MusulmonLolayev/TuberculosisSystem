@@ -197,11 +197,16 @@ export default {
       this.ranges = (await Api.get("/getaccetableintervals")).data
     },
     btnCanelingAgree() {
-      console.log("btnCanelingAgree");
       this.$router.go(-1);
     },
     DealSavingRespone(response){
-      
+      if (response == true){
+        this.$refs['alert'].showMessage('Action was successfully', Helper.message_types.success)
+      }
+      else{
+        this.$refs['alert'].showMessage('Action was unsuccessfully\n' + response, 
+        Helper.message_types.error, 10000)
+      }
     },
     async SavePatient() {
       if (this.$refs['PatientForm'].hasError()){
@@ -210,7 +215,7 @@ export default {
         this.step_count = 0
         return 0
       }
-      response = await Helper.saveInstance(this.patient, '/patient_request')
+      let response = await Helper.saveInstance(this.patient, '/patient_request')
       this.DealSavingRespone(response)
     },
     async SaveInitialQuestions() {
@@ -234,42 +239,13 @@ export default {
         })
         // Clean the last mark (,)
         this.initial_question.questions = this.initial_question.questions.slice(0, -1)
-        // For test Pus 70 id
+        // For test Patient 70 id
         //this.initial_question.patient = 70
         //return 0;
         
-        //console.log(this.initial_question)
-
-        let initial_question = this.initial_question;
-
-        if (typeof initial_question.id == "undefined") {
-          await Api()
-            .post("/initial_question_request", {
-              initial_question
-            })
-            .then(function(response) {
-              console.log(response);
-              initial_question.id = response.data;
-            })
-            .catch(e => {
-              console.log(e);
-              this.$ref['message'].showMessage("Error", e, "error");
-            });
-        } else {
-          await Api()
-            .put("/initial_question_request", {
-              initial_question
-            })
-            .then(function(response) {
-              console.log(response);
-            })
-            .catch(e => {
-              console.log(e);
-              this.$ref['message'].showMessage("Error", e, "error");
-            });
-        }
+        let response = await Helper.saveInstance(this.initial_question, '/initial_question_request')
+        this.DealSavingRespone(response)
       } catch (e) {
-        console.log(e);
         this.$ref['message'].showMessage("Error", e, "error");
       }
     },
@@ -283,34 +259,12 @@ export default {
 
         // Chech the primary diagnose id to be undefined to know ethier create instane or edit
         this.primarydiagnose.patient = this.patient.id;
-        let primarydiagnose = this.primarydiagnose;
+        // For test Patient 70 id
+        //this.primarydiagnose.patient = 70;
 
-        if (typeof primarydiagnose.id == "undefined") {
-          await Api()
-            .post("/primary_request", {
-              primarydiagnose
-            })
-            .then(function(response) {
-              console.log(response);
-              primarydiagnose.id = response.data;
-            })
-            .catch(e => {
-              console.log(e);
-              this.$ref['message'].showMessage("Error", e, "error");
-            });
-        } else {
-          await Api()
-            .put("/primary_request", {
-              primarydiagnose
-            })
-            .then(function(response) {
-              console.log(response);
-            })
-            .catch(e => {
-              console.log(e);
-              this.$ref['message'].showMessage("Error", e, "error");
-            });
-        }
+        let response = await Helper.saveInstance(this.primarydiagnose, '/primary_request')
+        this.DealSavingRespone(response)        
+
       } catch (e) {
         console.log(e);
         this.$ref['message'].showMessage("Error", e, "error");
@@ -326,34 +280,11 @@ export default {
 
         // Check the primary diagnose id to be undefined to know ethier create instane or edit
         this.takingmedicine.patient = this.patient.id;
-        let takingmedicine = this.takingmedicine;
+        // For test patient id = 70
+        // this.takingmedicine.patient = 70;
 
-        if (typeof takingmedicine.id == "undefined") {
-          await Api()
-            .post("/taking_request", {
-              takingmedicine
-            })
-            .then(function(response) {
-              console.log(response);
-              takingmedicine.id = response.data;
-            })
-            .catch(e => {
-              console.log(e);
-              this.$ref['message'].showMessage("Error", e, "error");
-            });
-        } else {
-          await Api()
-            .put("/taking_request", {
-              takingmedicine
-            })
-            .then(function(response) {
-              console.log(response);
-            })
-            .catch(e => {
-              console.log(e);
-              this.$ref['message'].showMessage("Error", e, "error");
-            });
-        }
+        let response = await Helper.saveInstance(this.takingmedicine, '/taking_request')
+        this.DealSavingRespone(response)
       } catch (e) {
         console.log(e);
         this.$ref['message'].showMessage("Error", e, "error");
@@ -368,46 +299,27 @@ export default {
         }
         // Complaint
         this.complaint.patient = this.patient.id;
-        let complaint = this.complaint;
-        if (typeof complaint.id == "undefined") {
-          await Api()
-            .post("/complaint_request", {
-              complaint
-            })
-            .then(function(response) {
-              console.log(response);
-              complaint.id = response.data;
-            })
-            .catch(e => {
-              console.log(e);
-              this.$ref['message'].showMessage("Error", e, "error");
-            });
-        } else {
-          await Api()
-            .put("/complaint_request", {
-              complaint
-            })
-            .then(function(response) {
-              console.log(response);
-            })
-            .catch(e => {
-              console.log(e);
-              this.$ref['message'].showMessage("Error", e, "error");
-            });
-        }
+        // For test Patient id = 70
+        //this.complaint.patient = 70;
+        
+        let response = await Helper.saveInstance(this.complaint, '/complaint_request')
+        this.DealSavingRespone(response)
+
       } catch (e) {
         console.log(e);
         this.$ref['message'].showMessage("Error", e, "error");
       }
     },
     async SaveBlood() {
-      if (this.$refs['BloodAnalysis'].hasError()){
-        this.$refs['alert'].showMessage('Error, please fill all the required fields in initial information', 
-        Helper.message_types.error)
-        this.step_count = 5
-        return 0
-      }
       try {
+
+        if (this.$refs['BloodAnalysis'].hasError()){
+          this.$refs['alert'].showMessage('Error, please fill all the required fields in initial information', 
+          Helper.message_types.error)
+          this.step_count = 5
+          return 0
+        }
+
         // Check this patient has id which means that the patient was created in database
         // if id is undefined then create object
         if (typeof this.patient.id == "undefined") {
@@ -416,34 +328,12 @@ export default {
 
         // Check the blood id to be undefined to know ethier create instane or edit
         this.bloodanalysis.patient = this.patient.id;
-        let bloodanalysis = this.bloodanalysis;
+        // For test pateint id = 70
+        //this.bloodanalysis.patient = 70
 
-        if (typeof bloodanalysis.id == "undefined") {
-          await Api()
-            .post("/blood_request", {
-              bloodanalysis
-            })
-            .then(function(response) {
-              console.log(response);
-              bloodanalysis.id = response.data;
-            })
-            .catch(e => {
-              console.log(e);
-              this.$ref['message'].showMessage("Error", e, "error");
-            });
-        } else {
-          await Api()
-            .put("/blood_request", {
-              bloodanalysis
-            })
-            .then(function(response) {
-              console.log(response);
-            })
-            .catch(e => {
-              console.log(e);
-              this.$ref['message'].showMessage("Error", e, "error");
-            });
-        }
+        let response = await Helper.saveInstance(this.bloodanalysis, '/blood_request')
+        this.DealSavingRespone(response)
+
       } catch (e) {
         console.log(e);
         this.$ref['message'].showMessage("Error", e, "error");
@@ -459,33 +349,12 @@ export default {
 
         // other
         this.other.patient = this.patient.id;
-        let other = this.other;
-        if (typeof other.id == "undefined") {
-          await Api()
-            .post("/other_request", {
-              other
-            })
-            .then(function(response) {
-              console.log(response);
-              other.id = response.data;
-            })
-            .catch(e => {
-              console.log(e);
-              this.$ref['message'].showMessage("Error", e, "error");
-            });
-        } else {
-          await Api()
-            .put("/other_request", {
-              other
-            })
-            .then(function(response) {
-              console.log(response);
-            })
-            .catch(e => {
-              console.log(e);
-              this.$ref['message'].showMessage("Error", e, "error");
-            });
-        }
+        // For test Patient id = 70
+        this.other.patient = 70;
+        
+        let response = await Helper.saveInstance(this.other, '/other_request')
+        this.DealSavingRespone(response)
+        
       } catch (e) {
         console.log(e);
         this.$ref['message'].showMessage("Error", e, "error");
