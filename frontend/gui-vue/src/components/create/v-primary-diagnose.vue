@@ -104,6 +104,10 @@ export default {
         this.selectedClinicalform = this.CLINICAL_FORMS[0].id
         this.selectedLocalization = this.LOCALIZATIONS[0].id
         this.selectedPrevalence = this.PREVALENCES[0].id
+
+        this.primarydiagnose.clinicalform = this.selectedClinicalform
+        this.primarydiagnose.localization = this.selectedLocalization
+        this.primarydiagnose.prevalence = this.selectedPrevalence
       }
       else{
         // then default vaules to primary diagnose
