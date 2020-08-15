@@ -119,13 +119,14 @@ def GetDistrictById(request, districtId):
 @api_view(['GET', 'POST', 'PUT', 'DELETE'])
 def patient_request(request):
     try:
+        ins_name = 'instance'
         # Get list of data
         if request.method == 'GET':
             return Response(PatientSerializer(Patient.objects.filter(status=True).order_by('-id', ), many=True).data, status=200)
         
         # Create object
         if request.method == 'POST':
-            serializer = PatientSerializer(data=request.data.get('patient'))
+            serializer = PatientSerializer(data=request.data.get(ins_name))
             if serializer.is_valid():
                 serializer.save()
                 return Response(serializer.data.get('id'), status=201)
@@ -135,13 +136,13 @@ def patient_request(request):
         
         # find suitable instance
         try:
-            patient = Patient.objects.get(id=request.data.get('patient').get('id'))
+            patient = Patient.objects.get(id=request.data.get(ins_name).get('id'))
         except Patient.DoesNotExist:
             return Response(status=404)
 
         # Update object
         if request.method == 'PUT':
-            serializer = PatientSerializer(patient, data=request.data.get('patient'))
+            serializer = PatientSerializer(patient, data=request.data.get(ins_name))
             if serializer.is_valid():
                 serializer.save()
                 return Response(status=200)
@@ -154,8 +155,9 @@ def patient_request(request):
     except:
         Response(status=500)
 
-def general_request(request, ins_name, ins_class, ins_ser):
+def general_request(request, ins_class, ins_ser):
     try:
+        ins_name = 'instance'
         # Create object
         if request.method == 'POST':
             serializer = ins_ser(data=request.data.get(ins_name))
@@ -188,32 +190,32 @@ def general_request(request, ins_name, ins_class, ins_ser):
 
 @api_view(['POST', 'DELETE', 'PUT'])
 def primary_request(request):
-    return general_request(request, 'primarydiagnose', PrimaryDiagnose, PrimaryDiagnoseSerializer)
+    return general_request(request, PrimaryDiagnose, PrimaryDiagnoseSerializer)
 
 @api_view(['POST', 'DELETE', 'PUT'])
 def taking_request(request):
-    return general_request(request, 'takingmedicine', TakingMedicine, TakingMedicineSerializer)
+    return general_request(request, TakingMedicine, TakingMedicineSerializer)
 
 @api_view(['POST', 'DELETE', 'PUT'])
 def complaint_request(request):
-    return general_request(request, 'complaint', Complaint, ComplaintSerializer)
+    return general_request(request, Complaint, ComplaintSerializer)
 
 @api_view(['POST', 'DELETE', 'PUT'])
 def blood_request(request):
-    return general_request(request, 'bloodanalysis', BloodAnalysis, BloodAnalysisSerializer)
+    return general_request(request, BloodAnalysis, BloodAnalysisSerializer)
 
 @api_view(['POST', 'DELETE', 'PUT'])
 def other_request(request):
-    return general_request(request, 'other', Other, OtherSerializer)
+    return general_request(request, Other, OtherSerializer)
     
 @api_view(['POST', 'DELETE', 'PUT'])
 def question_request(request):
-    return general_request(request, 'question', Question, QuestionTitle)
+    return general_request(request, Question, QuestionTitle)
 
 @api_view(['POST', 'PUT', 'DELETE'])
 def question_title_request(request):
-    return general_request(request, 'question_title', QuestionTitle, QuestionTitleSerializer)
+    return general_request(request, QuestionTitle, QuestionTitleSerializer)
 
 @api_view(['POST', 'PUT', 'DELETE'])
 def initial_question_request(request):
-    return general_request(request, 'initial_question', InitialQuestion, InitialQuestionSerializer)
+    return general_request(request, InitialQuestion, InitialQuestionSerializer)
