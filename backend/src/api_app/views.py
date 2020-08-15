@@ -120,8 +120,6 @@ def GetDistrictById(request, districtId):
 def patient_request(request):
     try:
         ins_name = 'instance'
-        print(request.data)
-        return Response(5, status=201)
         # Get list of data
         if request.method == 'GET':
             return Response(PatientSerializer(Patient.objects.filter(status=True).order_by('-id', ), many=True).data, status=200)
