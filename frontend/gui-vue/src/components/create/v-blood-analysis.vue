@@ -72,7 +72,7 @@ export default {
   methods: {
     initialize() {
       if (typeof this.bloodanalysis.id == "undefined") {
-        this.bloodanalysis.date = Helper.GetCurrentDate();
+        this.bloodanalysis.date = Helper.GetCurrentDate()
         this.bloodanalysis.er = 0;
         this.bloodanalysis.leyk = 0;
         this.bloodanalysis.hb = 0;
