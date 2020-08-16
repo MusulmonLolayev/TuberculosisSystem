@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-message-box :message="mBox" />
+    <v-message-box ref="message" />
     <v-alert-box ref="alert" />
     <v-data-table :headers="headers" :items="items" sort-by="calories" class="elevation-1">
       <template v-slot:top>
@@ -77,12 +77,6 @@ export default {
         sortable: false
       },
       {
-        text: "pok",
-        value: "pok",
-        align: "start",
-        sortable: false
-      },
-      {
         text: "pya",
         value: "pya",
         align: "start",
@@ -155,10 +149,8 @@ export default {
   created() {
     this.initialize();
   },
-
   methods: {
     initialize() {
-      let mBox = this.mBox;
       let patient_id = this.patient.id;
       Api
         .get("/blood_request/" + patient_id)
@@ -170,20 +162,7 @@ export default {
         })
         .catch(e => {
           console.log(e);
-          mBox.showMessage("Error", e, "error");
         });
-    },
-    ToYesNO(value) {
-      return value == true ? "Yes" : "No";
-    },
-    ToBoolFromYesNo(value) {
-      return value == "Yes";
-    },
-    ToPlusMinus(value) {
-      return value == true ? "+" : "-";
-    },
-    ToBoolFromPlusMinus(value) {
-      return value == "+";
     },
     toTemplate(obj) {
       let resOjb = {
@@ -201,7 +180,7 @@ export default {
         act: obj.act,
         alt: obj.alt,
 
-        status: this.ToYesNO(obj.status),
+        status: Helper.ToYesNO(obj.status),
         patient: obj.patient,
         date: obj.date
       };
@@ -226,7 +205,7 @@ export default {
         act: template.act,
         alt: template.alt,
 
-        status: this.ToBoolFromYesNo(template.status),
+        status: Helper.ToBoolFromYesNo(template.status),
         patient: template.patient,
         date: template.date
       };
@@ -239,26 +218,14 @@ export default {
       this.editedItem = this.toObject(item);
       this.dialog = true;
     },
-
-    deleteItem(item) {
+    async deleteItem(item) {
       const index = this.items.indexOf(item);
-      let bloodanalysis = item;
-      confirm("Are you sure you want to delete this item?") &&
-        Api
-        .delete("/blood_request", {
-          data: {bloodanalysis}
-        })
-        .then(() => {
-          this.$refs['alert'].showMessage('Deleted successfully', 
-          Helper.message_types.success)
+      let response = await Helper.deleteInstance(item, '/blood_request')
+      if (response == true){
           this.items.splice(index, 1);
-        })
-        .catch((error) => {
-          this.$refs['alert'].showMessage('Deleting action was unsuccessful: ' + error, 
-          Helper.message_types.error, 5000)
-        })
+      }
+      this.DealSavingRespone(response)
     },
-
     close() {
       this.dialog = false;
       this.$nextTick(() => {
@@ -266,43 +233,30 @@ export default {
         this.editedIndex = -1;
       });
     },
-
-    save() {
-      let mBox = this.mBox;
-      if (this.editedIndex > -1) {
-        let bloodanalysis = this.editedItem;
-        Api
-          .put("/blood_request", {
-            bloodanalysis
-          })
-          .then(() => {
-            console.log("Updated");
-            Object.assign(
-              this.items[this.editedIndex],
-              this.toTemplate(this.editedItem)
-            );
-            this.close();
-          })
-          .catch(e => {
-            mBox.showMessage("Error", e, "error");
-            console.log(e);
-          });
-      } else {
-        var bloodanalysis = this.editedItem;
-        Api
-          .post("/blood_request", {
-            bloodanalysis
-          })
-          .then(respone => {
-            this.editedItem.id = respone.data;
-            this.items.push(this.toTemplate(this.editedItem));
-            this.close();
-          })
-          .catch(e => {
-            mBox.showMessage("Error", e, "error");
-            console.log(e);
-          });
+    DealSavingRespone(response){
+      if (response == true){
+        this.$refs['alert'].showMessage('Action was successfully', Helper.message_types.success)
       }
+      else{
+        this.$refs['alert'].showMessage('Action was unsuccessfully\n' + response, 
+        Helper.message_types.error, 10000)
+      }
+    },
+    async save() {
+      let response = await Helper.saveInstance(this.editedItem, '/blood_request')
+      if (response == true){
+        if (this.editedIndex > -1){
+          Object.assign(
+                this.items[this.editedIndex],
+                this.toTemplate(this.editedItem)
+              );
+        }
+        else{
+          this.items.push(this.toTemplate(this.editedItem));
+        }
+        this.close();
+      }
+      this.DealSavingRespone(response)
     },
     btnNewItem() {
       this.defaultItem = {
