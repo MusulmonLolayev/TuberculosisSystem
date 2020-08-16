@@ -1,8 +1,8 @@
 <template>
   <div>
     <v-message-box ref="message" />
+    <v-alert-box ref='alert' />
     <v-expansion-panels v-model="panel" focusable multiple hover popout>
-      <v-alert-box ref='alert' />
       <v-expansion-panel>
         <v-expansion-panel-header>
           <h2>General information</h2>
@@ -106,39 +106,25 @@ export default {
     async initialize() {
       this.ranges = (await Api.get("/getaccetableintervals")).data
     },
-    btnDelete: function() {
-      let patient = this.patient;
-      let router = this.$router;
-      let mBox = this.$refs['message'];
-      confirm("Do you want to delete patient " + 
-      this.patient.last_name + " " + this.patient.first_name[0] + "." + 
-      this.patient.middle_name[0] + ".") && Api
-        .delete("/patient_request", {
-          data: { patient }
-        })
-        .then(function(response) {
-          console.log(response);
-          router.go(-1);
-        })
-        .catch(function(e) {
-          mBox.showMessage("Error", e, "error");
-        });
+    DealSavingRespone(response){
+      if (response == true){
+        this.$refs['alert'].showMessage('Action was successfully', Helper.message_types.success)
+      }
+      else{
+        this.$refs['alert'].showMessage('Action was unsuccessfully\n' + response, 
+        Helper.message_types.error, 10000)
+      }
     },
-    btnSave: function() {
-      let patient = this.patient;
-      //let self = this;
-
-      Api
-        .put("/patient_request", {
-          patient
-        })
-        .then(function(response) {
-          console.log(response);
-          //self.aBox.showMessage("Saved");
-        })
-        .catch(function(error) {
-          console.log(error);
-        });
+    async btnDelete() {
+      let response = await Helper.deleteInstance(this.patient, '/patient_request')
+      this.DealSavingRespone(response)
+      if (response == true){
+        this.$router.go(-1);
+      }
+    },
+    async btnSave() {
+      let response = await Helper.saveInstance(this.patient, '/patient_request')
+      this.DealSavingRespone(response)
     },
     check_acceptability: function(name, instance){
       return Helper.check_acceptability(name, instance, this.ranges)
