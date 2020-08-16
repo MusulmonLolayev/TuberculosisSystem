@@ -86,7 +86,7 @@ export default {
             .post(url, {
               instance
             })
-          instance.id = respone.date
+          instance.id = respone.data
           return true
         } else {
           await Api
