@@ -100,4 +100,18 @@ export default {
         return e
       }
     },
+
+    async deleteInstance(instance, url){  
+      try{
+        if (confirm('Do you want to delete')){
+          await Api.delete(url, {
+            data: { instance }
+          })
+          return true
+        }
+      }
+      catch (e){
+        return e
+      }
+    },
 }
