@@ -1,7 +1,5 @@
 <template>
   <div>
-    <v-message-box ref="message" />
-    <v-alert-box ref='alert'/>
     <v-stepper alt-labels v-model="step_count" :vertical="vertical">
       <template v-if="vertical">
         <template v-for="(item, index) in stepper_data">
@@ -89,9 +87,6 @@ import vTakingMedicine from "./v-taking-medicine";
 import vComplaint from "./v-complaint";
 import vBloodAnalysis from "./v-blood-analysis";
 import vOther from "./v-other";
-import vMessageBox from "../commons/v-message-box";
-import vAlertBox from "../commons/v-alert-box"
-
 import Helper from "../commons/functions.js"
 
 import {Api} from "@/api/Api";
@@ -106,8 +101,6 @@ export default {
     vComplaint,
     vBloodAnalysis,
     vOther,
-    vMessageBox,
-    vAlertBox,
   },
   data: function() {
     return {
@@ -201,16 +194,16 @@ export default {
     },
     DealSavingRespone(response){
       if (response == true){
-        this.$refs['alert'].showMessage('Action was successfully', Helper.message_types.success)
+        this.$store.state.message.showMessage('Action was successfully', Helper.message_types.success)
       }
       else{
-        this.$refs['alert'].showMessage('Action was unsuccessfully\n' + response, 
+        this.$store.state.message.showMessage('Action was unsuccessfully\n' + response, 
         Helper.message_types.error, 10000)
       }
     },
     async SavePatient() {
       if (this.$refs['PatientForm'].hasError()){
-        this.$refs['alert'].showMessage('Error, please fill all the required fields in initial information', 
+        this.$store.state.message.showMessage('Error, please fill all the required fields in initial information', 
         Helper.message_types.error)
         this.step_count = 0
         return 0
@@ -246,7 +239,7 @@ export default {
         let response = await Helper.saveInstance(this.initial_question, '/initial_question_request')
         this.DealSavingRespone(response)
       } catch (e) {
-        this.$ref['message'].showMessage("Error", e, "error");
+        this.$store.state.message.showMessage("Error", e, "error");
       }
     },
     async SavePrimaryDiagnose() {
@@ -267,7 +260,7 @@ export default {
 
       } catch (e) {
         console.log(e);
-        this.$ref['message'].showMessage("Error", e, "error");
+        this.$store.state.message.showMessage("Error", e, "error");
       }
     },
     async SaveTakingMedicine() {
@@ -286,8 +279,7 @@ export default {
         let response = await Helper.saveInstance(this.takingmedicine, '/taking_request')
         this.DealSavingRespone(response)
       } catch (e) {
-        console.log(e);
-        this.$ref['message'].showMessage("Error", e, "error");
+        this.$store.state.message.showMessage("Error", e, "error");
       }
     },
     async SaveComplaint() {
@@ -306,15 +298,14 @@ export default {
         this.DealSavingRespone(response)
 
       } catch (e) {
-        console.log(e);
-        this.$ref['message'].showMessage("Error", e, "error");
+        this.$store.state.message.showMessage("Error", e, "error");
       }
     },
     async SaveBlood() {
       try {
 
         if (this.$refs['BloodAnalysis'].hasError()){
-          this.$refs['alert'].showMessage('Error, please fill all the required fields in initial information', 
+          this.$store.state.message.showMessage('Error, please fill all the required fields in initial information', 
           Helper.message_types.error)
           this.step_count = 5
           return 0
@@ -335,8 +326,7 @@ export default {
         this.DealSavingRespone(response)
 
       } catch (e) {
-        console.log(e);
-        this.$ref['message'].showMessage("Error", e, "error");
+        this.$store.state.message.showMessage("Error", e, "error");
       }
     },
     async SaveOther() {
@@ -356,8 +346,7 @@ export default {
         this.DealSavingRespone(response)
         
       } catch (e) {
-        console.log(e);
-        this.$ref['message'].showMessage("Error", e, "error");
+        this.$store.state.message.showMessage("Error", e, "error");
       }
     },
     btnSave() {
