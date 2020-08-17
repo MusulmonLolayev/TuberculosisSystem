@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-message-box :message="mBox" />
+    <v-message-box ref='message' />
     <v-alert-box ref="alert" />
     <v-data-table :headers="headers" :items="items" sort-by="calories" class="elevation-1">
       <template v-slot:top>
@@ -132,9 +132,8 @@ export default {
 
   methods: {
     async initialize() {
-      await this.GET_CHARACTER_STOOL_FROM_Api;
+      await this.GET_CHARACTER_STOOL_FROM_API();
 
-      let mBox = this.mBox;
       let patient_id = this.patient.id;
       await Api
         .get("/complaint_request/" + patient_id)
@@ -146,34 +145,23 @@ export default {
         })
         .catch(e => {
           console.log(e);
-          mBox.showMessage("Error", e, "error");
+          this.$refs['message'].showMessage("Error", e, "error");
         });
     },
     ...mapActions(["GET_CHARACTER_STOOL_FROM_API"]),
-    ToYesNO(value) {
-      return value == true ? "Yes" : "No";
-    },
-    ToBoolFromYesNo(value) {
-      return value == "Yes";
-    },
-    ToPlusMinus(value) {
-      return value == true ? "+" : "-";
-    },
-    ToBoolFromPlusMinus(value) {
-      return value == "+";
-    },
+    
     toTemplate(obj) {
       let resOjb = {
-        diarrhea: this.ToYesNO(obj.diarrhea),
-        normal_stool: this.ToYesNO(obj.normal_stool),
-        constipation: this.ToYesNO(obj.constipation),
-        flatulence: this.ToYesNO(obj.flatulence),
-        stomachache: this.ToYesNO(obj.stomachache),
+        diarrhea: Helper.ToYesNO(obj.diarrhea),
+        normal_stool: Helper.ToYesNO(obj.normal_stool),
+        constipation: Helper.ToYesNO(obj.constipation),
+        flatulence: Helper.ToYesNO(obj.flatulence),
+        stomachache: Helper.ToYesNO(obj.stomachache),
         from_stool_frequency: obj.from_stool_frequency,
         to_stool_frequency: obj.to_stool_frequency,
         character: this.CHARACTER_STOOLS.find(item => item.id == obj.character),
 
-        status: this.ToYesNO(obj.status),
+        status: Helper.ToYesNO(obj.status),
         patient: obj.patient,
         date: obj.date
       };
@@ -184,16 +172,16 @@ export default {
     },
     toObject(template) {
       let resObj = {
-        diarrhea: this.ToBoolFromYesNo(template.diarrhea),
-        normal_stool: this.ToBoolFromYesNo(template.normal_stool),
-        constipation: this.ToBoolFromYesNo(template.constipation),
-        flatulence: this.ToBoolFromYesNo(template.flatulence),
-        stomachache: this.ToBoolFromYesNo(template.stomachache),
+        diarrhea: Helper.ToBoolFromYesNo(template.diarrhea),
+        normal_stool: Helper.ToBoolFromYesNo(template.normal_stool),
+        constipation: Helper.ToBoolFromYesNo(template.constipation),
+        flatulence: Helper.ToBoolFromYesNo(template.flatulence),
+        stomachache: Helper.ToBoolFromYesNo(template.stomachache),
         from_stool_frequency: template.from_stool_frequency,
         to_stool_frequency: template.to_stool_frequency,
         character: template.character.id,
 
-        status: this.ToBoolFromYesNo(template.status),
+        status: Helper.ToBoolFromYesNo(template.status),
         patient: template.patient,
         date: template.date
       };
@@ -207,23 +195,23 @@ export default {
       this.dialog = true;
     },
 
-    deleteItem(item) {
+    DealSavingRespone(response){
+      if (response == true){
+        this.$refs['alert'].showMessage('Action was successfully', Helper.message_types.success)
+      }
+      else{
+        this.$refs['alert'].showMessage('Action was unsuccessfully\n' + response, 
+        Helper.message_types.error, 10000)
+      }
+    },
+
+    async deleteItem(item) {
       const index = this.items.indexOf(item);
-      let complaint = item;
-      confirm("Are you sure you want to delete this item?") &&
-        Api
-        .delete("/complaint_request", {
-          data: {complaint}
-        })
-        .then(() => {
-          this.$refs['alert'].showMessage('Deleted successfully', 
-          Helper.message_types.success)
+      let response = await Helper.deleteInstance(item, '/complaint_request')
+      if (response == true){
           this.items.splice(index, 1);
-        })
-        .catch((error) => {
-          this.$refs['alert'].showMessage('Deleting action was unsuccessful: ' + error, 
-          Helper.message_types.error, 5000)
-        })
+      }
+      this.DealSavingRespone(response)
     },
 
     close() {
@@ -234,42 +222,22 @@ export default {
       });
     },
 
-    save() {
-      let mBox = this.mBox;
-      if (this.editedIndex > -1) {
-        let complaint = this.editedItem;
-        Api
-          .put("/complaint_request", {
-            complaint
-          })
-          .then(() => {
-            console.log("Updated");
-            Object.assign(
-              this.items[this.editedIndex],
-              this.toTemplate(this.editedItem)
-            );
-            this.close();
-          })
-          .catch(e => {
-            mBox.showMessage("Error", e, "error");
-            console.log(e);
-          });
-      } else {
-        var complaint = this.editedItem;
-        Api
-          .post("/complaint_request", {
-            complaint
-          })
-          .then(respone => {
-            this.editedItem.id = respone.data;
-            this.items.push(this.toTemplate(this.editedItem));
-            this.close();
-          })
-          .catch(e => {
-            mBox.showMessage("Error", e, "error");
-            console.log(e);
-          });
+    async save() {
+      console.log(this.editedItem)
+      let response = await Helper.saveInstance(this.editedItem, '/complaint_request')
+      if (response == true){
+        if (this.editedIndex > -1){
+          Object.assign(
+                this.items[this.editedIndex],
+                this.toTemplate(this.editedItem)
+              );
+        }
+        else{
+          this.items.push(this.toTemplate(this.editedItem));
+        }
+        this.close();
       }
+      this.DealSavingRespone(response)
     },
     btnNewItem() {
       this.defaultItem = {
@@ -282,7 +250,7 @@ export default {
         to_stool_frequency: 0,
         character: this.CHARACTER_STOOLS[0].id,
 
-        //date: new Date(),
+        date: Helper.GetCurrentDate(),
         status: false,
         patient: this.patient.id
       };
