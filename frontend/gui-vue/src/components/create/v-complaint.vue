@@ -26,7 +26,6 @@
         :items="CHARACTER_STOOLS"
         item-text="name"
         item-value="id"
-        return-object
         v-model="selectedcharacter_stool"
         @change="changedCharacet_stool"
       />
@@ -79,7 +78,7 @@ export default {
       this.complaint.character = id
     }
   },
-  beforeMount() {
+  mounted() {
     this.initialize();
   },
 };
