@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-message-box :message="mBox" />
+    <v-message-box ref="message" />
     <v-alert-box ref="alert" />
     <v-data-table :headers="headers" :items="items" sort-by="calories" class="elevation-1">
       <template v-slot:top>
@@ -145,7 +145,6 @@ export default {
 
   methods: {
     initialize() {
-      let mBox = this.mBox;
       let patient_id = this.patient.id;
       Api
         .get("/other_request/" + patient_id)
@@ -157,36 +156,24 @@ export default {
         })
         .catch(e => {
           console.log(e);
-          mBox.showMessage("Error", e, "error");
+          this.refs['message'].showMessage("Error", e, "error");
         });
-    },
-    ToYesNO(value) {
-      return value == true ? "Yes" : "No";
-    },
-    ToBoolFromYesNo(value) {
-      return value == "Yes";
-    },
-    ToPlusMinus(value) {
-      return value == true ? "+" : "-";
-    },
-    ToBoolFromPlusMinus(value) {
-      return value == "+";
     },
     toTemplate(obj) {
       let resOjb = {
-        tuberculosis_tolerance: this.ToYesNO(obj.tuberculosis_tolerance),
-        related_disease: this.ToYesNO(obj.related_disease),
-        nausea: this.ToYesNO(obj.nausea),
-        vomiting: this.ToYesNO(obj.vomiting),
-        headache: this.ToYesNO(obj.headache),
-        sweating: this.ToYesNO(obj.sweating),
-        weakness: this.ToYesNO(obj.weakness),
-        allergodermatosis: this.ToYesNO(obj.allergodermatosis),
-        coproscopy: this.ToYesNO(obj.coproscopy),
+        tuberculosis_tolerance: Helper.ToYesNO(obj.tuberculosis_tolerance),
+        related_disease: Helper.ToYesNO(obj.related_disease),
+        nausea: Helper.ToYesNO(obj.nausea),
+        vomiting: Helper.ToYesNO(obj.vomiting),
+        headache: Helper.ToYesNO(obj.headache),
+        sweating: Helper.ToYesNO(obj.sweating),
+        weakness: Helper.ToYesNO(obj.weakness),
+        allergodermatosis: Helper.ToYesNO(obj.allergodermatosis),
+        coproscopy: Helper.ToYesNO(obj.coproscopy),
         from_weight_loss: obj.from_weight_loss,
         to_weight_loss: obj.to_weight_loss,
 
-        status: this.ToYesNO(obj.status),
+        status: Helper.ToYesNO(obj.status),
         patient: obj.patient,
         date: obj.date
       };
@@ -197,19 +184,19 @@ export default {
     },
     toObject(template) {
       let resObj = {
-        tuberculosis_tolerance: this.ToBoolFromYesNo(template.tuberculosis_tolerance),
-        related_disease: this.ToBoolFromYesNo(template.related_disease),
-        nausea: this.ToBoolFromYesNo(template.nausea),
-        vomiting: this.ToBoolFromYesNo(template.vomiting),
-        headache: this.ToBoolFromYesNo(template.headache),
-        sweating: this.ToBoolFromYesNo(template.sweating),
-        weakness: this.ToBoolFromYesNo(template.weakness),
-        allergodermatosis: this.ToBoolFromYesNo(template.allergodermatosis),
-        coproscopy: this.ToBoolFromYesNo(template.coproscopy),
+        tuberculosis_tolerance: Helper.ToBoolFromYesNo(template.tuberculosis_tolerance),
+        related_disease: Helper.ToBoolFromYesNo(template.related_disease),
+        nausea: Helper.ToBoolFromYesNo(template.nausea),
+        vomiting: Helper.ToBoolFromYesNo(template.vomiting),
+        headache: Helper.ToBoolFromYesNo(template.headache),
+        sweating: Helper.ToBoolFromYesNo(template.sweating),
+        weakness: Helper.ToBoolFromYesNo(template.weakness),
+        allergodermatosis: Helper.ToBoolFromYesNo(template.allergodermatosis),
+        coproscopy: Helper.ToBoolFromYesNo(template.coproscopy),
         from_weight_loss: template.from_weight_loss,
         to_weight_loss: template.to_weight_loss,
 
-        status: this.ToBoolFromYesNo(template.status),
+        status: Helper.ToBoolFromYesNo(template.status),
         patient: template.patient,
         date: template.date
       };
@@ -223,8 +210,27 @@ export default {
       this.dialog = true;
     },
 
-    deleteItem(item) {
+    DealSavingRespone(response){
+      if (response == true){
+        this.$refs['alert'].showMessage('Action was successfully', Helper.message_types.success)
+      }
+      else{
+        this.$refs['alert'].showMessage('Action was unsuccessfully\n' + response, 
+        Helper.message_types.error, 10000)
+      }
+    },
+
+    async deleteItem(item) {
+      
       const index = this.items.indexOf(item);
+      let response = await Helper.deleteInstance(item, '/other_request')
+      if (response == true){
+          this.items.splice(index, 1);
+      }
+      this.DealSavingRespone(response)
+
+
+      /*const index = this.items.indexOf(item);
       let other = item;
       confirm("Are you sure you want to delete this item?") &&
         Api
@@ -239,7 +245,7 @@ export default {
         .catch((error) => {
           this.$refs['alert'].showMessage('Deleting action was unsuccessful: ' + error, 
           Helper.message_types.error, 5000)
-        })
+        })*/
     },
 
     close() {
@@ -250,42 +256,22 @@ export default {
       });
     },
 
-    save() {
-      let mBox = this.mBox;
-      if (this.editedIndex > -1) {
-        let other = this.editedItem;
-        Api
-          .put("/other_request", {
-            other
-          })
-          .then(() => {
-            console.log("Updated");
-            Object.assign(
-              this.items[this.editedIndex],
-              this.toTemplate(this.editedItem)
-            );
-            this.close();
-          })
-          .catch(e => {
-            mBox.showMessage("Error", e, "error");
-            console.log(e);
-          });
-      } else {
-        var other = this.editedItem;
-        Api
-          .post("/other_request", {
-            other
-          })
-          .then(respone => {
-            this.editedItem.id = respone.data;
-            this.items.push(this.toTemplate(this.editedItem));
-            this.close();
-          })
-          .catch(e => {
-            mBox.showMessage("Error", e, "error");
-            console.log(e);
-          });
+    async save() {
+      let response = await Helper.saveInstance(this.editedItem, '/other_request')
+      if (response == true){
+        if (this.editedIndex > -1){
+          Object.assign(
+                this.items[this.editedIndex],
+                this.toTemplate(this.editedItem)
+              );
+        }
+        else{
+          this.items.push(this.toTemplate(this.editedItem));
+        }
+        this.close();
       }
+      this.DealSavingRespone(response)
+
     },
     btnNewItem() {
       this.defaultItem = {
@@ -300,7 +286,7 @@ export default {
         from_weight_loss: 0,
         to_weight_loss: 0,
 
-        //date: new Date(),
+        date: Helper.GetCurrentDate(),
         status: false,
         patient: this.patient.id
       };
