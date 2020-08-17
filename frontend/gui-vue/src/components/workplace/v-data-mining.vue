@@ -1,7 +1,6 @@
 <template>
   <div>
-      <v-alert-box ref="alert"/>
-    <div>
+      <div>
         <v-btn text @click="btnMean">Mean</v-btn>
         <v-btn text @click="btnMedian">Median</v-btn>
     </div>
@@ -17,7 +16,6 @@
 <script>
 
 import {Api} from '@/api/Api'
-import vAlertBox from '../commons/v-alert-box'
 import Helper from '../commons/functions'
 
 export default {
@@ -35,11 +33,11 @@ export default {
         UPDATE_BY_API(method){
             Api.get('/updateaccetableintervals/' + method)
             .then(() => {
-                this.$refs['alert'].showMessage('Updated successfully', 
+                this.$store.state.message.showMessage('Updated successfully', 
           Helper.message_types.success)
             })
             .catch((error) => {
-                this.$refs['alert'].showMessage('Updating was unsuccessful' + error, 
+                this.$store.state.message.showMessage('Updating was unsuccessful' + error, 
           Helper.message_types.error)
             })
         },
@@ -62,9 +60,6 @@ export default {
         this.makeFeatures()
         this.isLoading = false*/
     },
-    components: {
-        vAlertBox,
-    }
 }
 </script>
 

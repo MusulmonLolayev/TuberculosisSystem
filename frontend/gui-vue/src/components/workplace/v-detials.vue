@@ -1,7 +1,5 @@
 <template>
   <div>
-    <v-message-box ref="message" />
-    <v-alert-box ref='alert' />
     <v-expansion-panels v-model="panel" focusable multiple hover popout>
       <v-expansion-panel>
         <v-expansion-panel-header>
@@ -80,14 +78,12 @@
 <script>
 import vPatient from "../create/v-patient";
 import {Api} from "@/api/Api";
-import vMessageBox from "../commons/v-message-box";
 import vPrimaryTable from "../list/v-primary-table";
 import vTakingMedicineTable from "../list/v-taking-medicine-table";
 import vComplaintTable from "../list/v-complaint-table";
 import vBloodTable from "../list/v-blood-table.vue";
 import vOtherTable from "../list/v-other-table";
 import vInitialQuestionTable from "../list/v-initial-question-table";
-import vAlertBox from "../commons/v-alert-box"
 
 import Helper from "../commons/functions.js"
 
@@ -108,10 +104,10 @@ export default {
     },
     DealSavingRespone(response){
       if (response == true){
-        this.$refs['alert'].showMessage('Action was successfully', Helper.message_types.success)
+        this.$store.state.message.showMessage('Action was successfully', Helper.message_types.success)
       }
       else{
-        this.$refs['alert'].showMessage('Action was unsuccessfully\n' + response, 
+        this.$store.state.message.showMessage('Action was unsuccessfully\n' + response, 
         Helper.message_types.error, 10000)
       }
     },
@@ -132,13 +128,11 @@ export default {
   },
   components: {
     vPatient,
-    vMessageBox,
     vPrimaryTable,
     vTakingMedicineTable,
     vComplaintTable,
     vBloodTable,
     vOtherTable,
-    vAlertBox,
     vInitialQuestionTable
   }
 };

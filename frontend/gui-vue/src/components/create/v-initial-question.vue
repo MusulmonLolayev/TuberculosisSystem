@@ -1,6 +1,5 @@
 <template>
   <div>
-    <v-message-box ref="message" />
     <ol>
       <li v-for="(item, index) in question_titles" :key="'Q' + index">
         <h3>{{item.title}}</h3>
@@ -63,7 +62,6 @@
 
 <script>
 import {Api} from "@/api/Api";
-import vMessageBox from "../commons/v-message-box";
 import Helper from "../commons/functions.js";
 
 export default {
@@ -95,8 +93,7 @@ export default {
           this.questions.push(x);
         });
       } catch (e) {
-        console.log(e);
-        this.$ref['message'].showMessage("Error", e, "error");
+        this.$store.state.message.showMessage("Error", e, "error");
       }
     },
     get_questions(title_id) {
@@ -107,9 +104,6 @@ export default {
       return res;
     },
   },
-  components: {
-    vMessageBox,
-  }
 };
 </script>
 

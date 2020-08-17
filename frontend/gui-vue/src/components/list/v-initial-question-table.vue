@@ -1,7 +1,5 @@
 <template>
   <div>
-    <v-message-box ref="message" />
-    <v-alert-box ref="alert" />
     <v-data-table :headers="headers" :items="items" sort-by="calories" class="elevation-1">
       <template v-slot:top>
         <v-toolbar flat color="white">
@@ -42,8 +40,6 @@
 <script>
 import vInitialQuestion from "../create/v-initial-question";
 import {Api} from "@/api/Api";
-import vMessageBox from "../commons/v-message-box";
-import vAlertBox from '../commons/v-alert-box'
 
 import Helper from "../commons/functions.js"
 
@@ -150,11 +146,9 @@ export default {
           this.questions.push(x);
         });
       } catch (e) {
-        console.log(e);
-        this.mBox.showMessage("Error", e, "error");
+        this.$store.state.message.showMessage("Error", e, "error");
       }
 
-      let mBox = this.mBox;
       let patient_id = this.patient.id;
       Api
         .get("/initial_questions/" + patient_id)
@@ -166,7 +160,7 @@ export default {
         })
         .catch(e => {
           console.log(e);
-          mBox.showMessage("Error", e, "error");
+          this.$store.state.message.showMessage("Error", e, "error");
         });
     },
     toTemplate(obj) {
@@ -218,10 +212,10 @@ export default {
     },
     DealSavingRespone(response){
       if (response == true){
-        this.$refs['alert'].showMessage('Action was successfully', Helper.message_types.success)
+        this.$store.state.message.showMessage('Action was successfully', Helper.message_types.success)
       }
       else{
-        this.$refs['alert'].showMessage('Action was unsuccessfully\n' + response, 
+        this.$store.state.message.showMessage('Action was unsuccessfully\n' + response, 
         Helper.message_types.error, 10000)
       }
     },
@@ -305,9 +299,7 @@ export default {
     }
   },
   components: {
-    vInitialQuestion,
-    vMessageBox,
-    vAlertBox,
+    vInitialQuestion
   },
   mounted: function() {}
 };

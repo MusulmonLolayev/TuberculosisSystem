@@ -1,7 +1,5 @@
 <template>
   <div>
-    <v-message-box ref="message" />
-    <v-alert-box ref="alert" />
     <v-data-table :headers="headers" :items="items" sort-by="calories" class="elevation-1">
       <template v-slot:top>
         <v-toolbar flat color="white">
@@ -42,9 +40,7 @@
 <script>
 import vOther from "../create/v-other";
 import {Api} from "@/api/Api";
-import vMessageBox from "../commons/v-message-box";
 import Helper from '../commons/functions'
-import vAlertBox from "../commons/v-alert-box"
 
 export default {
   name: "v-other-table",
@@ -155,8 +151,7 @@ export default {
           });
         })
         .catch(e => {
-          console.log(e);
-          this.refs['message'].showMessage("Error", e, "error");
+          this.$store.state.message.showMessage("Error", e, "error");
         });
     },
     toTemplate(obj) {
@@ -212,10 +207,10 @@ export default {
 
     DealSavingRespone(response){
       if (response == true){
-        this.$refs['alert'].showMessage('Action was successfully', Helper.message_types.success)
+        this.$store.state.message.showMessage('Action was successfully', Helper.message_types.success)
       }
       else{
-        this.$refs['alert'].showMessage('Action was unsuccessfully\n' + response, 
+        this.$store.state.message.showMessage('Action was unsuccessfully\n' + response, 
         Helper.message_types.error, 10000)
       }
     },
@@ -228,24 +223,6 @@ export default {
           this.items.splice(index, 1);
       }
       this.DealSavingRespone(response)
-
-
-      /*const index = this.items.indexOf(item);
-      let other = item;
-      confirm("Are you sure you want to delete this item?") &&
-        Api
-        .delete("/other_request", {
-          data: {other}
-        })
-        .then(() => {
-          this.$refs['alert'].showMessage('Deleted successfully', 
-          Helper.message_types.success)
-          this.items.splice(index, 1);
-        })
-        .catch((error) => {
-          this.$refs['alert'].showMessage('Deleting action was unsuccessful: ' + error, 
-          Helper.message_types.error, 5000)
-        })*/
     },
 
     close() {
@@ -295,10 +272,7 @@ export default {
     }
   },
   components: {
-    vOther,
-    vMessageBox,
-    vAlertBox,
-  },
+    vOther },
   mounted: function() {}
 };
 </script>
