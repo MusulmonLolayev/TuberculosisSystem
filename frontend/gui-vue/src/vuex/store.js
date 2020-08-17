@@ -78,6 +78,7 @@ let store = new Vuex.Store({
                         console.log(error);
                         return error;
                     })
+            else return true
         },
         GET_REGIONS_FROM_API({ commit }, url) {
             return Api.get(url)
@@ -112,6 +113,7 @@ let store = new Vuex.Store({
                         console.log(error);
                         return error;
                     })
+            else return true
         },
         login({ commit }, user) {
             return new Promise((resolve, reject) => {
@@ -172,6 +174,7 @@ let store = new Vuex.Store({
                         console.log(error)
                         return error
                     })
+            else return true
         },
         GET_LOCALIZATION_FROM_API({ commit }) {
             if (this.state.localizations.length == 0)
@@ -184,6 +187,7 @@ let store = new Vuex.Store({
                         console.log(error)
                         return error
                     })
+            else return true
         },
         GET_PREVALENCES_FROM_API({ commit }) {
             if (this.state.prevalences.length == 0)
@@ -194,15 +198,18 @@ let store = new Vuex.Store({
                     .catch((error) => {
                         console.log(error)
                     })
+            else return true
         },
-        async GET_CHARACTER_STOOL_FROM_API({ commit }) {
-            return await Api.get('/characterofstool')
+        GET_CHARACTER_STOOL_FROM_API({ commit }) {
+            if (this.state.character_stools.length == 0)
+                return Api.get('/characterofstool')
                     .then((response) => {
                         commit('SET_CHARACTER_STOOLS_TO_STATE', response.data)
                     })
                     .catch((error) => {
                         console.log(error)
                     })
+            else return true
         }
     },
     getters: {
