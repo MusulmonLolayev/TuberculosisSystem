@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-message-box :message="mBox" />
+    <v-message-box ref='message' />
     <v-alert-box ref='alert' />
     <v-data-table :headers="headers" :items="items" sort-by="calories" class="elevation-1">
       <template v-slot:top>
@@ -90,7 +90,6 @@ export default {
     editedIndex: -1,
     editedItem: {},
     defaultItem: null,
-    aBox: '',
   }),
   props: ["patient"],
   computed: {
@@ -113,10 +112,10 @@ export default {
   methods: {
     async initialize() {
 
-      await Promise.all([this.GET_CLINICAL_FORMS_FROM_Api, this.GET_LOCALIZATION_FROM_Api, this.GET_PREVALENCES_FROM_Api])
+      await Promise.all([this.GET_CLINICAL_FORMS_FROM_API(), 
+      this.GET_LOCALIZATION_FROM_API(), this.GET_PREVALENCES_FROM_API()])
 
       let patient_id = this.patient.id;
-      let mBox = this.mBox;
       await Api
         .get("/primary_request/" + patient_id)
         .then(respone => {
@@ -127,7 +126,7 @@ export default {
         })
         .catch(e => {
           console.log(e);
-          mBox.showMessage("Error", e, "error");
+          this.$refs['message'].showMessage("Error", e, "error");
         });
     },
     ...mapActions([
@@ -135,18 +134,6 @@ export default {
       "GET_LOCALIZATION_FROM_API",
       "GET_PREVALENCES_FROM_API"
     ]),
-    ToYesNO(value) {
-      return value == true ? "Yes" : "No";
-    },
-    ToBoolFromYesNo(value) {
-      return value == "Yes";
-    },
-    ToPlusMinus(value) {
-      return value == true ? "+" : "-";
-    },
-    ToBoolFromPlusMinus(value) {
-      return value == "+";
-    },
     toTemplate(obj) {
       let resOjb = {
         clinicalform: this.CLINICAL_FORMS.find(
@@ -156,15 +143,15 @@ export default {
           item => item.id == obj.localization
         ),
         prevalence: this.PREVALENCES.find(item => item.id == obj.prevalence),
-        infiltration: this.ToYesNO(obj.infiltration),
-        decay: this.ToYesNO(obj.decay),
-        seeding: this.ToYesNO(obj.seeding),
-        resorption: this.ToYesNO(obj.resorption),
-        compaction: this.ToYesNO(obj.compaction),
-        scarring: this.ToYesNO(obj.scarring),
-        calcification: this.ToYesNO(obj.calcification),
-        bk: this.ToPlusMinus(obj.bk),
-        status: this.ToYesNO(obj.status),
+        infiltration: Helper.ToYesNO(obj.infiltration),
+        decay: Helper.ToYesNO(obj.decay),
+        seeding: Helper.ToYesNO(obj.seeding),
+        resorption: Helper.ToYesNO(obj.resorption),
+        compaction: Helper.ToYesNO(obj.compaction),
+        scarring: Helper.ToYesNO(obj.scarring),
+        calcification: Helper.ToYesNO(obj.calcification),
+        bk: Helper.ToPlusMinus(obj.bk),
+        status: Helper.ToYesNO(obj.status),
         patient: obj.patient,
         date: obj.date,
         id: obj.id,
@@ -177,21 +164,20 @@ export default {
         clinicalform: template.clinicalform.id,
         localization: template.localization.id,
         prevalence: template.prevalence.id,
-        infiltration: this.ToBoolFromYesNo(template.infiltration),
-        decay: this.ToBoolFromYesNo(template.decay),
-        seeding: this.ToBoolFromYesNo(template.seeding),
-        resorption: this.ToBoolFromYesNo(template.resorption),
-        compaction: this.ToBoolFromYesNo(template.compaction),
-        scarring: this.ToBoolFromYesNo(template.scarring),
-        calcification: this.ToBoolFromYesNo(template.calcification),
-        bk: this.ToBoolFromPlusMinus(template.bk),
-        status: this.ToBoolFromYesNo(template.status),
+        infiltration: Helper.ToBoolFromYesNo(template.infiltration),
+        decay: Helper.ToBoolFromYesNo(template.decay),
+        seeding: Helper.ToBoolFromYesNo(template.seeding),
+        resorption: Helper.ToBoolFromYesNo(template.resorption),
+        compaction: Helper.ToBoolFromYesNo(template.compaction),
+        scarring: Helper.ToBoolFromYesNo(template.scarring),
+        calcification: Helper.ToBoolFromYesNo(template.calcification),
+        bk: Helper.ToBoolFromPlusMinus(template.bk),
+        status: Helper.ToBoolFromYesNo(template.status),
         patient: template.patient,
         date: template.date,
         id: template.id,
       };
- 
- return resObj;
+      return resObj;
     },
 
     editItem(item) {
@@ -199,24 +185,23 @@ export default {
       this.editedItem = this.toObject(item);
       this.dialog = true;
     },
+    DealSavingRespone(response){
+      if (response == true){
+        this.$refs['alert'].showMessage('Action was successfully', Helper.message_types.success)
+      }
+      else{
+        this.$refs['alert'].showMessage('Action was unsuccessfully\n' + response, 
+        Helper.message_types.error, 10000)
+      }
+    },
 
-    deleteItem(item) {
+    async deleteItem(item) {
       const index = this.items.indexOf(item);
-      let primarydiagnose = item;
-      confirm("Are you sure you want to delete this item?") &&
-        Api
-        .delete("/primary_request", {
-          data: {primarydiagnose}
-        })
-        .then(() => {
-          this.$refs['alert'].showMessage('Deleted successfully', 
-          Helper.message_types.success)
+      let response = await Helper.deleteInstance(item, '/primary_request')
+      if (response == true){
           this.items.splice(index, 1);
-        })
-        .catch((error) => {
-          this.$refs['alert'].showMessage('Deleting action was unsuccessful: ' + error, 
-          Helper.message_types.error, 5000)
-        })
+      }
+      this.DealSavingRespone(response)
     },
 
     close() {
@@ -227,42 +212,21 @@ export default {
       });
     },
 
-    save() {
-      let mBox = this.mBox;
-      let primarydiagnose = this.editedItem;
-      if (this.editedIndex > -1) {
-        Api
-          .put("/primary_request", {
-            primarydiagnose
-          })
-          .then(() => {
-            console.log("Updated");
-            this.aBox.showMessage('Updated')
-            Object.assign(
-              this.items[this.editedIndex],
-              this.toTemplate(this.editedItem)
-            );
-            this.close();
-          })
-          .catch(e => {
-            console.log(e);
-            mBox.showMessage("Error", e, "error");
-          });
-      } else {
-        Api
-          .post("/primary_request", {
-            primarydiagnose
-          })
-          .then(respone => {
-            this.editedItem.id = respone.data;
-            this.items.push(this.toTemplate(this.editedItem));
-            this.close();
-          })
-          .catch(e => {
-            console.log(e);
-            mBox.showMessage("Error", e, "error");
-          });
+    async save() {
+      let response = await Helper.saveInstance(this.editedItem, '/primary_request')
+      if (response == true){
+        if (this.editedIndex > -1){
+          Object.assign(
+                this.items[this.editedIndex],
+                this.toTemplate(this.editedItem)
+              );
+        }
+        else{
+          this.items.push(this.toTemplate(this.editedItem));
+        }
+        this.close();
       }
+      this.DealSavingRespone(response)
     },
     btnNewItem() {
       this.dialog = true;
@@ -279,7 +243,7 @@ export default {
         calcification: false,
         bk: false,
 
-        //date: new Date(),
+        date: Helper.GetCurrentDate(),
         status: false,
         patient: this.patient.id
       };

@@ -111,6 +111,20 @@ export default {
             row[attribut].id += "," + question.id;
           }
         });
+      else{
+        let id = item.questions
+        let question = Object.assign(
+            {},
+            this.questions.find(q => q.id == id)
+          );
+          let attribut = "v" + question.question_title;
+          if (typeof row[attribut] == "undefined") {
+            row[attribut] = question;
+          } else {
+            row[attribut].text += "; " + question.text;
+            row[attribut].id += "," + question.id;
+          }
+      }
       row["id"] = item.id;
       row["status"] = item.status;
       row["date"] = item.date;
@@ -155,21 +169,9 @@ export default {
           mBox.showMessage("Error", e, "error");
         });
     },
-    ToYesNO(value) {
-      return value == true ? "Yes" : "No";
-    },
-    ToBoolFromYesNo(value) {
-      return value == "Yes";
-    },
-    ToPlusMinus(value) {
-      return value == true ? "+" : "-";
-    },
-    ToBoolFromPlusMinus(value) {
-      return value == "+";
-    },
     toTemplate(obj) {
       let resObj = Object.assign({}, obj);
-      resObj.status = this.ToYesNO(obj.status);
+      resObj.status = Helper.ToYesNO(obj.status);
 
       if (typeof obj.id != "undefined") resObj.id = obj.id;
 
@@ -177,7 +179,7 @@ export default {
     },
     toObject(template) {
       let resObj = Object.assign({}, template);
-      resObj.status = this.ToBoolFromYesNo(template.status);
+      resObj.status = Helper.ToBoolFromYesNo(template.status);
 
       if (typeof template.id != "undefined") resObj.id = template.id;
       return resObj;
@@ -205,7 +207,6 @@ export default {
           }
         }
       });
-
       return res;
     },
     editItem(item) {
@@ -215,46 +216,42 @@ export default {
 
       this.dialog = true;
     },
-
-    deleteItem(item) {
-      const index = this.items.indexOf(item);
-      
+    DealSavingRespone(response){
+      if (response == true){
+        this.$refs['alert'].showMessage('Action was successfully', Helper.message_types.success)
+      }
+      else{
+        this.$refs['alert'].showMessage('Action was unsuccessfully\n' + response, 
+        Helper.message_types.error, 10000)
+      }
+    },
+    async deleteItem(deletedItem) {
+      const index = this.items.indexOf(deletedItem);
+      deletedItem = this.toItem(deletedItem)
       let initial_question = {
+        id: deletedItem.id,
         patient: this.patient.id,
         questions: "",
-        status: this.editedItem.status,
-        date: this.editedItem.date
+        status: deletedItem.status,
+        date: deletedItem.date
       };
-
       // Convert the ids into text
-      this.editedItem.checkbox.map(item => {
+      deletedItem.checkbox.map(item => {
         initial_question.questions += item + ",";
       });
-      Object.values(this.editedItem.radio).map(item => {
+      Object.values(deletedItem.radio).map(item => {
         initial_question.questions += item + ",";
       });
 
       // Clean the last mark (,)
       initial_question.questions = initial_question.questions.slice(0, -1);
 
-      initial_question.id = item.id
-
-      confirm("Are you sure you want to delete this item?") &&
-        Api
-        .delete("/initial_question_request", {
-          data: {initial_question}
-        })
-        .then(() => {
-          this.$refs['alert'].showMessage('Deleted successfully', 
-          Helper.message_types.success)
+      let response = await Helper.deleteInstance(initial_question, '/initial_question_request')
+      if (response == true){
           this.items.splice(index, 1);
-        })
-        .catch((error) => {
-          this.$refs['alert'].showMessage('Deleting action was unsuccessful: ' + error, 
-          Helper.message_types.error, 5000)
-        })
+      }
+      this.DealSavingRespone(response)
     },
-
     close() {
       this.dialog = false;
       this.$nextTick(() => {
@@ -262,15 +259,13 @@ export default {
         this.editedIndex = -1;
       });
     },
-
-    save() {
-      let mBox = this.mBox;
-
+    async save() {
       let initial_question = {
         patient: this.patient.id,
         questions: "",
         status: this.editedItem.status,
-        date: this.editedItem.date
+        date: this.editedItem.date,
+        id: this.editedItem.id
       };
 
       // Convert the ids into text
@@ -283,47 +278,25 @@ export default {
 
       // Clean the last mark (,)
       initial_question.questions = initial_question.questions.slice(0, -1);
-
-      let _this = this;
-      if (this.editedIndex > -1) {
-        initial_question.id = this.editedItem.id;
-        Api
-          .put("/initial_question_request", {
-            initial_question
-          })
-          .then(() => {
-            let row = _this.toRow(initial_question);
-            Object.assign(_this.items[this.editedIndex], _this.toTemplate(row));
-            _this.close();
-          })
-          .catch(e => {
-            mBox.showMessage("Error", e, "error");
-            console.log(e);
-          });
-      } else {
-        // Chech the primary diagnose id to be undefined to know ethier create instane or edit
-        Api
-          .post("/initial_question_request", {
-            initial_question
-          })
-          .then(function(response) {
-            let row = _this.toRow(initial_question);
-            row.id = response.data;
-            _this.items.push(_this.toTemplate(row));
-            _this.close();
-          })
-          .catch(e => {
-            console.log(e);
-            this.mBox.showMessage("Error", e, "error");
-          });
+      let response = await Helper.saveInstance(initial_question, '/initial_question_request')
+      if (response == true){
+        let row = this.toRow(initial_question)
+        if (this.editedIndex > -1){
+          Object.assign(this.items[this.editedIndex], this.toTemplate(row))
+        }
+        else{
+          this.items.push(this.toTemplate(row))
+        }
+        this.close();
       }
+      this.DealSavingRespone(response)
     },
     btnNewItem() {
       this.defaultItem = {
         checkbox: [],
         radio: {},
 
-        //date: new Date(),
+        date: Helper.GetCurrentDate(),
         status: false,
         patient: this.patient.id
       };

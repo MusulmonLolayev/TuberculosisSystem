@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-message-box :message="mBox" />
+    <v-message-box ref='message' />
     <v-alert-box ref="alert" />
     <v-data-table :headers="headers" :items="items" sort-by="calories" class="elevation-1">
       <template v-slot:top>
@@ -112,43 +112,28 @@ export default {
 
   methods: {
     async initialize() {
-      let mBox = this.mBox;
       let patient_id = this.patient.id;
       await Api
         .get("/taking_request/" + patient_id)
         .then(respone => {
-          //console.log(respone);
           respone.data.map(item => {
             this.items.push(this.toTemplate(item));
           });
         })
         .catch(e => {
-          console.log(e);
-          mBox.showMessage("Error", e, "error");
+          this.$refs['message'].showMessage("Error", e, "error");
         });
-    },
-    ToYesNO(value) {
-      return value == true ? "Yes" : "No";
-    },
-    ToBoolFromYesNo(value) {
-      return value == "Yes";
-    },
-    ToPlusMinus(value) {
-      return value == true ? "+" : "-";
-    },
-    ToBoolFromPlusMinus(value) {
-      return value == "+";
     },
     toTemplate(obj) {
       let resOjb = {
         fromdate: obj.fromdate,
-        streptomycin: this.ToYesNO(obj.streptomycin),
-        rifampicin: this.ToYesNO(obj.rifampicin),
-        isoniazid: this.ToYesNO(obj.isoniazid),
-        pyrazinamide: this.ToYesNO(obj.pyrazinamide),
-        ethambutol: this.ToYesNO(obj.ethambutol),
+        streptomycin: Helper.ToYesNO(obj.streptomycin),
+        rifampicin: Helper.ToYesNO(obj.rifampicin),
+        isoniazid: Helper.ToYesNO(obj.isoniazid),
+        pyrazinamide: Helper.ToYesNO(obj.pyrazinamide),
+        ethambutol: Helper.ToYesNO(obj.ethambutol),
 
-        status: this.ToYesNO(obj.status),
+        status: Helper.ToYesNO(obj.status),
         patient: obj.patient,
         date: obj.date
       };
@@ -160,13 +145,13 @@ export default {
     toObject(template) {
       let resObj = {
         fromdate: template.fromdate,
-        streptomycin: this.ToBoolFromYesNo(template.streptomycin),
-        rifampicin: this.ToBoolFromYesNo(template.rifampicin),
-        isoniazid: this.ToBoolFromYesNo(template.isoniazid),
-        pyrazinamide: this.ToBoolFromYesNo(template.pyrazinamide),
-        ethambutol: this.ToBoolFromYesNo(template.ethambutol),
+        streptomycin: Helper.ToBoolFromYesNo(template.streptomycin),
+        rifampicin: Helper.ToBoolFromYesNo(template.rifampicin),
+        isoniazid: Helper.ToBoolFromYesNo(template.isoniazid),
+        pyrazinamide: Helper.ToBoolFromYesNo(template.pyrazinamide),
+        ethambutol: Helper.ToBoolFromYesNo(template.ethambutol),
 
-        status: this.ToBoolFromYesNo(template.status),
+        status: Helper.ToBoolFromYesNo(template.status),
         patient: template.patient,
         date: template.date
       };
@@ -180,23 +165,23 @@ export default {
       this.dialog = true;
     },
 
-    deleteItem(item) {
+    DealSavingRespone(response){
+      if (response == true){
+        this.$refs['alert'].showMessage('Action was successfully', Helper.message_types.success)
+      }
+      else{
+        this.$refs['alert'].showMessage('Action was unsuccessfully\n' + response, 
+        Helper.message_types.error, 10000)
+      }
+    },
+
+    async deleteItem(item) {
       const index = this.items.indexOf(item);
-      let takingmedicine = item;
-      confirm("Are you sure you want to delete this item?") &&
-        Api
-        .delete("/taking_request", {
-          data: {takingmedicine}
-        })
-        .then(() => {
-          this.$refs['alert'].showMessage('Deleted successfully', 
-          Helper.message_types.success)
+      let response = await Helper.deleteInstance(item, '/taking_request')
+      if (response == true){
           this.items.splice(index, 1);
-        })
-        .catch((error) => {
-          this.$refs['alert'].showMessage('Deleting action was unsuccessful: ' + error, 
-          Helper.message_types.error, 5000)
-        })
+      }
+      this.DealSavingRespone(response)
     },
 
     close() {
@@ -207,53 +192,33 @@ export default {
       });
     },
 
-    save() {
-      let mBox = this.mBox;
-      if (this.editedIndex > -1) {
-        let takingmedicine = this.editedItem;
-        Api
-          .put("/taking_request", {
-            takingmedicine
-          })
-          .then(() => {
-            Object.assign(
-              this.items[this.editedIndex],
-              this.toTemplate(this.editedItem)
-            );
-            this.close();
-          })
-          .catch(e => {
-            mBox.showMessage("Error", e, "error");
-            console.log(e);
-          });
-      } else {
-        let takingmedicine = this.editedItem;
-        Api
-          .post("/taking_request", {
-            takingmedicine
-          })
-          .then(respone => {
-            this.editedItem.id = respone.data;
-            this.items.push(this.toTemplate(this.editedItem));
-            this.close();
-          })
-          .catch(e => {
-            mBox.showMessage("Error", e, "error");
-            console.log(e);
-          });
+    async save() {
+      let response = await Helper.saveInstance(this.editedItem, '/taking_request')
+      if (response == true){
+        if (this.editedIndex > -1){
+          Object.assign(
+                this.items[this.editedIndex],
+                this.toTemplate(this.editedItem)
+              );
+        }
+        else{
+          this.items.push(this.toTemplate(this.editedItem));
+        }
+        this.close();
       }
+      this.DealSavingRespone(response)
     },
     btnNewItem() {
       this.dialog = true;
       this.defaultItem = {
-        //fromdate: new Date().toISOString(),
+        fromdate: Helper.GetCurrentDate(),
         streptomycin: false,
         rifampicin: false,
         isoniazid: false,
         pyrazinamide: false,
         ethambutol: false,
 
-        //date: new Date(),
+        date: Helper.GetCurrentDate(),
         status: false,
         patient: this.patient.id
       };
