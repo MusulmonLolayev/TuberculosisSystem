@@ -12,11 +12,11 @@ Vue.use(Router)
 Vue.config.productionTip = false
 
 new Vue({
-  store,
   el: '#app',
   router,
   render: h => h(App),
   template: '<App />',
   components: {App},
   vuetify,
+  store
 }).$mount('#app')
