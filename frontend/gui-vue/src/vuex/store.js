@@ -18,6 +18,9 @@ let store = new Vuex.Store({
         localizations: [],
         prevalences: [],
         character_stools: [],
+        loader: false,
+        message: null,
+        alert: null,
     },
     mutations: {
         SET_COUNTRIES_TO_STATE: (state, countries) => {
@@ -64,6 +67,9 @@ let store = new Vuex.Store({
         },
         SET_CHARACTER_STOOLS_TO_STATE: (state, characters) => {
             state.character_stools = characters
+        },
+        LOADER(state, payload){
+            state.loader = payload
         }
     },
     actions: {
