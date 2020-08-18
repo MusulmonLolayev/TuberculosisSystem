@@ -88,8 +88,8 @@
 <script>
 import {Api} from './api/Api'
 import store from './vuex/store.js'
-import vMessageBox from "./components/commons/v-alert-box";
-import vAlertBox from "./components/commons/v-message-box"
+import vMessageBox from "./components/commons/v-message-box";
+import vAlertBox from "./components/commons/v-alert-box.vue"
 
 
 export default {
