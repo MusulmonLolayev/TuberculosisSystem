@@ -6,50 +6,81 @@
       app
       clipped
     >
-      <v-list dense>
-        <v-list-item link @click="gotocreate">
-          <v-list-item-action>
-            <v-icon>mdi-folder-plus</v-icon>
-          </v-list-item-action>
 
+      <v-list>
+        <v-list-item dense to = '/' link>
+          <v-list-item-icon>
+            <v-icon>mdi-home</v-icon>
+          </v-list-item-icon>
+
+          <v-list-item-title>Home</v-list-item-title>
+        </v-list-item>
+
+      <v-list-group
+        prepend-icon="mdi-database"
+        dense
+      >
+        <template v-slot:activator>
+          <v-list-item-title>Data</v-list-item-title>
+        </template>
+
+        <v-list-item link dense to='/create' style='margin-left:20px'>
+          <v-list-item-action>
+            <v-icon>mdi-account-multiple-plus</v-icon>
+          </v-list-item-action>
           <v-list-item-content>
-            <v-list-item-title>Create</v-list-item-title>
+            <v-list-item-title>New Patient</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
 
-        <v-list-item link @click="gotodata">
+        <v-list-item link dense to='/data' style='margin-left:20px'>
           <v-list-item-action>
-            <v-icon>mdi-database</v-icon>
+            <v-icon>mdi-account-multiple</v-icon>
           </v-list-item-action>
-
           <v-list-item-content>
-            <v-list-item-title>Data</v-list-item-title>
+            <v-list-item-title>My patients</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
 
-        <v-list-item link @click="gotodatamining">
-          <v-list-item-action>
-            <v-icon>mdi-database-search</v-icon>
-          </v-list-item-action>
+      </v-list-group>
 
+      <v-list-group
+        prepend-icon="mdi-database"
+        dense
+      >
+        <template v-slot:activator>
+          <v-list-item-title>Intellectual analysis</v-list-item-title>
+        </template>
+
+        <v-list-item link dense to='/datamining' style='margin-left:20px'>
+          <v-list-item-action>
+            <v-icon>mdi-square-edit-outline</v-icon>
+          </v-list-item-action>
           <v-list-item-content>
             <v-list-item-title>Data mining</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-        
-        <v-divider />
+      </v-list-group>
 
-        <v-list-item link @click="gotolog">
+      <v-list-group
+        prepend-icon="mdi-account"
+        dense
+      >
+        <template v-slot:activator>
+          <v-list-item-title>Account</v-list-item-title>
+        </template>
+
+        <v-list-item link dense to='/editaccount' style='margin-left:20px'>
           <v-list-item-action>
-            <v-icon>mdi-login</v-icon>
+            <v-icon>mdi-square-edit-outline</v-icon>
           </v-list-item-action>
-
           <v-list-item-content>
-            <v-list-item-title>Login</v-list-item-title>
+            <v-list-item-title>Settings</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-      </v-list>
-    </v-navigation-drawer>
+      </v-list-group>
+    </v-list>
+  </v-navigation-drawer>
 
 
     <v-app-bar 
@@ -57,10 +88,39 @@
       app
       clipped-left
     >
-    <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
-      <router-link to="/" class="router-link">Home</router-link>
-      <!--<router-link to="/news" class="router-link">News</router-link>-->
-      <router-link to="/about" class="router-link">About</router-link>
+      <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+
+      <v-toolbar-title>{{$store.state.nav_title}}</v-toolbar-title>
+      
+      <v-spacer></v-spacer>
+
+
+      <v-menu
+        transition="slide-y-transition"
+      >
+      <template v-slot:activator="{ on, attrs }">
+        <v-btn
+          v-bind="attrs"
+          v-on="on"
+          text
+        >
+          {{langueges[selectedLanguage].title}}<v-icon right>mdi-menu-down</v-icon>
+        </v-btn>
+      </template>
+      <v-list>
+        <v-list-item
+          v-for="(item, i) in langueges"
+          :key="i"
+          @click="ChangedLanguage(i)"
+        >
+          <v-list-item-title>{{ item.title }}</v-list-item-title>
+        </v-list-item>
+      </v-list>
+    </v-menu>
+      <!--<router-link to="/" class="router-link">Home</router-link>
+      <router-link to="/news" class="router-link">News</router-link>
+      <router-link to="/about" class="router-link">About</router-link>-->
+    
     </v-app-bar>
 
     <!-- Sizes your content based upon application components -->
@@ -96,6 +156,23 @@ export default {
   name: 'App',
   data: () => ({
     drawer: null,
+    langueges: [
+      {title: "English", key: 'en'},
+      {title: "Russian", key: 'ru'},
+      {title: "Uzbek", key: 'uz'},
+    ],
+    selectedLanguage: 0,
+    admins: [
+        ['Management', 'people_outline'],
+        ['Settings', 'settings'],
+      ],
+      cruds: [
+        ['Create', 'add'],
+        ['Read', 'insert_drive_file'],
+        ['Update', 'update'],
+        ['Delete', 'delete'],
+      ],
+    mnuCreate: false,
   }),
   methods: {
     logout: function(){
@@ -116,6 +193,9 @@ export default {
     gotodatamining: function(){
       this.$router.push('/datamining')
     },
+    ChangedLanguage(index){
+      this.selectedLanguage = index
+    }
   },
   created() {
     // Add a request interceptor
@@ -158,5 +238,8 @@ export default {
   .router-link{
     margin-right: 10px;
     margin-left: 10px;
+  }
+  v-list-group.inner v-list-item {
+    margin-left:30px;
   }
 </style>
