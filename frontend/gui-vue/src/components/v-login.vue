@@ -33,7 +33,7 @@
 
 <script>
 export default {
-    name: 'login',
+    name: 'v-login',
     data: function(){
         return{
             username: '',

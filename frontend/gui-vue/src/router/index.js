@@ -5,7 +5,7 @@ import About from '../components/About'
 import Contact from '../components/Contact'
 import News from '../components/News'
 import vCreate from '../components/create/v-create'
-import Login from '../components/Login'
+import vLogin from '../components/v-login'
 import store from '../vuex/store'
 import vData from '../components/workplace/v-data'
 import vDetials from '../components/workplace/v-detials'
@@ -45,7 +45,7 @@ var router = new Router({
         {
             path: '/login',
             name: 'login',
-            component: Login
+            component: vLogin
         },
         {
             path: '/data',
