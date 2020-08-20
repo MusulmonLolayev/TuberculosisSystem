@@ -1,8 +1,8 @@
 <template>
   <div>
       <div>
-        <v-btn text @click="btnMean">Mean</v-btn>
-        <v-btn text @click="btnMedian">Median</v-btn>
+        <v-btn text @click="btnMean" :disabled='!isEnableUpdatingRangeButton'>Mean</v-btn>
+        <v-btn text @click="btnMedian" :disabled='!isEnableUpdatingRangeButton'>Median</v-btn>
     </div>
       <!--<h2 v-if="isLoading">Loading.....</h2>
       <v-row>
@@ -26,19 +26,20 @@ export default {
             },
             names: ['Возрост', 'эр', 'лейк', 'Hb', 'Цв.', 'Пок.', 'П/я', 'С/я', 'эоз', 'Лф', 'мон', 'СОЭ', 'ACT', 'ALT'],
             combination: [],
-            isLoading: true
+            isLoading: true,
+            GLOBAL_UPDATINGS: {
+                hasUpdating: true,
+                IsUpdatedRanges: true,
+            }
         }
     },
     methods: {
         UPDATE_BY_API(method){
             Api.get('/updateaccetableintervals/' + method)
-            .then(() => {
-                this.$store.state.message.showMessage('Updated successfully', 
+            .then((response) => {
+                this.$store.state.alert.showMessage('Updated successfully', 
           Helper.message_types.success)
-            })
-            .catch((error) => {
-                this.$store.state.message.showMessage('Updating was unsuccessful' + error, 
-          Helper.message_types.error)
+                this.GLOBAL_UPDATINGS = response.data
             })
         },
         makeFeatures(){
@@ -54,12 +55,22 @@ export default {
         btnMedian(){
             this.UPDATE_BY_API('median')    
         },
+        initialize(){
+            Api.get('/GetRangesUpdatingStatus').then((response) => {
+                this.GLOBAL_UPDATINGS = response.data
+            })
+        }
     },
     mounted: function(){
         /*this.GER_DATA_FROM_API('mean')
         this.makeFeatures()
         this.isLoading = false*/
     },
+    computed: {
+        isEnableUpdatingRangeButton(){
+            return this.GLOBAL_UPDATINGS.hasUpdating && !this.GLOBAL_UPDATINGS.IsUpdatedRanges
+        }
+    }
 }
 </script>
 
