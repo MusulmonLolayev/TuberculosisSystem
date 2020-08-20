@@ -21,6 +21,7 @@ let store = new Vuex.Store({
         loader: false,
         message: null,
         alert: null,
+        nav_title: 'Tuberculosis diagnostic system'
     },
     mutations: {
         SET_COUNTRIES_TO_STATE: (state, countries) => {
