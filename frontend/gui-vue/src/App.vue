@@ -150,7 +150,7 @@ import {Api} from './api/Api'
 import store from './vuex/store.js'
 import vMessageBox from "./components/commons/v-message-box";
 import vAlertBox from "./components/commons/v-alert-box.vue"
-
+import Helper from './components/commons/functions.js'
 
 export default {
   name: 'App',
@@ -206,6 +206,7 @@ export default {
     }, function (error) {
     // Do something with request error
       store.commit('LOADER', false)
+      this.message.showMessage(error, Helper.message_types.error)
       return Promise.reject(error);
     });
 
@@ -219,6 +220,7 @@ export default {
         // Any status codes that falls outside the range of 2xx cause this function to trigger
         // Do something with response error
         store.commit('LOADER', false)
+        this.message.showMessage(error, Helper.message_types.error)
         return Promise.reject(error);
       });
   },
