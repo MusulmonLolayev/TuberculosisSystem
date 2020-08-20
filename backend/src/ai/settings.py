@@ -1,10 +1,12 @@
 """
     The global varabiles
 """
-GLOBAL_UPDATINGS: {
+GLOBAL_UPDATINGS = {
     # The hasUpdating variable is aimed to know there are some changes in features of patients or new patients
     # By default when server is started it has True.
-    'hasUpdating' : True
+    'hasUpdating' : True,
+    # It gives that about updating or should not updating
+    'IsUpdatedRanges': False,
 }
 
 """
@@ -20,7 +22,7 @@ MODELS_NAMES = [
 ]
 
 # The DISCRIPTION_FEATURES is that taking the featureas when is computing from all features
-# It is alsa array with in nested dictionary
+# It is also array with in nested dictionary
 """
 Keys discription
 'feature' : 'birthday', # That key must be the same with features in the models
