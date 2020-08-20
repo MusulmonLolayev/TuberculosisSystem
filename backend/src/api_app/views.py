@@ -7,6 +7,8 @@ from patientapp.models import *
 
 from .serializer import *
 
+from ai.settings import GLOBAL_UPDATINGS
+
 class CountryListView(ListAPIView):
     queryset = Country.objects.all()
     serializer_class = CountrySerializer
@@ -163,6 +165,8 @@ def general_request(request, ins_class, ins_ser):
             serializer = ins_ser(data=request.data.get(ins_name))
             if serializer.is_valid():
                 serializer.save()
+                GLOBAL_UPDATINGS['hasUpdating'] = True
+                GLOBAL_UPDATINGS['IsUpdatedRanges'] = False
                 return Response(serializer.data.get('id'), status=201)
             else:
                 return Response(serializer.errors, status=406)
@@ -178,11 +182,15 @@ def general_request(request, ins_class, ins_ser):
             serializer = ins_ser(instance, data=request.data.get(ins_name))
             if serializer.is_valid():
                 serializer.save()
+                GLOBAL_UPDATINGS['hasUpdating'] = True
+                GLOBAL_UPDATINGS['IsUpdatedRanges'] = False
                 return Response(status=200)
             else:
                 return Response(serializer.errors, status=406)
         else:
             instance.delete()
+            GLOBAL_UPDATINGS['hasUpdating'] = True
+            GLOBAL_UPDATINGS['IsUpdatedRanges'] = False
             return Response('Deleted', status=200)
     except:
         Response(status=500)
