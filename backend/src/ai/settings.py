@@ -1,6 +1,11 @@
 """
     The global varabiles
 """
+GLOBAL_UPDATINGS: {
+    # The hasUpdating variable is aimed to know there are some changes in features of patients or new patients
+    # By default when server is started it has True.
+    'hasUpdating' : True
+}
 
 """
 The list of models names
