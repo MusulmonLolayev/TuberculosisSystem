@@ -7,6 +7,7 @@ from ai.settings import DISCRIPTION_FEATURES, MODELS_NAMES
 from ai.common.functions import AcceptableInterval, GetFeatures, GetAttributes_Names, UpdateAcceptableIntevals
 from ai.models import Range
 from ai.serializer import RangeSerializer
+from ai.settings import GLOBAL_UPDATINGS
 
 class RangeListView(ListAPIView):
     serializer_class = RangeSerializer
@@ -15,11 +16,17 @@ class RangeListView(ListAPIView):
         update_number = Range.objects.last().udapte_number
         return Range.objects.filter(udapte_number=update_number)
 
+@api_view(['GET'])
+def GetRangesUpdatingStatus(request):
+    return Response(GLOBAL_UPDATINGS, status=200)
 
 @api_view(['GET'])
 def UpdateAcceptableIntevals_as_View(request, method):
     try:
-        UpdateAcceptableIntevals(method=method)
+        # Check there are any updating.
+        if GLOBAL_UPDATINGS['hasUpdating'] and not GLOBAL_UPDATINGS['IsUpdatedRanges']:
+            UpdateAcceptableIntevals(method=method)
+            GLOBAL_UPDATINGS['IsUpdatedRanges'] = True
     except:
         return Response(status=500)
-    return Response('Udated', status=200)
+    return Response(GLOBAL_UPDATINGS, status=200)
