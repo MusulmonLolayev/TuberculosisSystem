@@ -165,7 +165,6 @@ def general_request(request, ins_class, ins_ser):
                 serializer.save()
                 return Response(serializer.data.get('id'), status=201)
             else:
-                print(serializer.errors)
                 return Response(serializer.errors, status=406)
         
         # find suitable instance
