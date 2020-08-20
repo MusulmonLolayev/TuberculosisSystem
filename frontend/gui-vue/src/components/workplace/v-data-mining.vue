@@ -62,9 +62,7 @@ export default {
         }
     },
     mounted: function(){
-        /*this.GER_DATA_FROM_API('mean')
-        this.makeFeatures()
-        this.isLoading = false*/
+        this.initialize()
     },
     computed: {
         isEnableUpdatingRangeButton(){
