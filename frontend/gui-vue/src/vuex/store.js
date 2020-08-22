@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import {Api} from '../api/Api'
+import Helper from '../components/commons/functions.js'
 
 Vue.use(Vuex)
 
@@ -10,8 +11,6 @@ let store = new Vuex.Store({
         regions: [],
         districts: [],
         occupations: [],
-        token: localStorage.getItem('token') || '',
-        user: {},
         patients: [],
         district: {},
         clinical_forms: [],
@@ -21,7 +20,9 @@ let store = new Vuex.Store({
         loader: false,
         message: null,
         alert: null,
-        nav_title: 'Tuberculosis diagnostic system'
+        nav_title: 'Tuberculosis diagnostic system',
+        token: localStorage.getItem('token') || null,
+        refreshToken: localStorage.getItem('refreshToken') || null,
     },
     mutations: {
         SET_COUNTRIES_TO_STATE: (state, countries) => {
@@ -42,20 +43,26 @@ let store = new Vuex.Store({
         SET_DISTRICT_TO_STATE: (state, district) => {
             state.district = district
         },
-        auth_request(state) {
-            state.status = 'loading'
-        },
-        auth_success(state, token, user) {
+        auth_success(state, {access, refresh}) {
             state.status = 'success'
-            state.token = token
-            state.user = user
+            state.token = access
+            state.refreshToken = refresh
+            //console.log(refresh)
+            localStorage.setItem('token', access)
+            localStorage.setItem('refreshToken', refresh)
         },
-        auth_error(state) {
+        auth_error(state, error) {
+            state.message.showMessage(error, Helper.message_types.error)
             state.status = 'error'
         },
         logout(state) {
             state.status = ''
             state.token = ''
+        },
+        updateAccess(state, access){
+            state.token = access
+            localStorage.setItem('token', access)
+            Api.defaults.headers.common['Authorization'] = `Bearer ${access}`
         },
         SET_CLINICAL_FORMS_TO_STATE: (state, clinical_forms) => {
             state.clinical_forms = clinical_forms
@@ -123,29 +130,35 @@ let store = new Vuex.Store({
             else return true
         },
         login({ commit }, user) {
-            return new Promise((resolve, reject) => {
-                commit('auth_request')
-                Api().post('/login', { user })
-                    .then(response => {
-                        const token = response.data.token
-                        const user = response.data.user
-
-                        localStorage.setItem('token', token)
-                        commit('auth_success', token, user)
-                        resolve(response)
-                    })
-                    .catch(error => {
-                        commit('auth_error')
-                        localStorage.removeItem('token')
-                        reject(error)
-                    })
+            return Api.post('/login', {
+                username: user.username,
+                password: user.password
+            })
+            .then(response => {
+                //console.log(response.data.refresh)
+                commit('auth_success', {access: response.data.access, refresh: response.data.refresh})
+                Api.defaults.headers.common['Authorization'] = `Bearer ${response.data.access}`
+                return true
+            })
+            .catch((error) => {
+                commit('auth_error', error)
             })
         },
         logout({ commit }) {
-            return new Promise((resolve) => {
-                commit('logout')
-                localStorage.removeItem('token')
-                resolve()
+            commit('logout')
+            localStorage.removeItem('token')
+            Api.defaults.headers.common['Authorization'] = null
+            return true
+        },
+        refreshToken({commit}){
+            Api.post('/login/refresh', {
+                refresh: this.state.refreshToken
+            })
+            .then((response) => {
+                commit('updateAccess', response.data.access)
+            })
+            .catch((error) => {
+                console.log(error)
             })
         },
         GET_PATIETNS_FROM_API({ commit }) {
@@ -154,10 +167,10 @@ let store = new Vuex.Store({
                     commit('SET_PATIETNS_TO_STATE', patients.data);
                     return patients;
                 })
-                .catch((error) => {
+                /*.catch((error) => {
                     console.log(error);
                     return error;
-                })
+                })*/
         },
         GET_DISTRICT_FROM_API({ commit }, id) {
             return Api.get('/districts/' + id)
@@ -217,6 +230,11 @@ let store = new Vuex.Store({
                         console.log(error)
                     })
             else return true
+        },
+        SET_TOKEN(){
+            if (this.state.token != null && typeof this.state.token != 'undefined'){
+                Api.defaults.headers.common['Authorization'] = `Bearer ${this.state.token}`
+            }
         }
     },
     getters: {
@@ -233,9 +251,11 @@ let store = new Vuex.Store({
             return state.occupations;
         },
 
-        isLoggedIn: state => !!state.token,
-
-        authStatus: state => state.status,
+        isLoggedIn(state){
+            if (state.token != null && typeof state.token != 'undefined')
+                return true
+            return false
+        },
 
         PATIENTS(state) {
             return state.patients;

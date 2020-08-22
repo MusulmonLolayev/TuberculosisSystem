@@ -1,5 +1,5 @@
 <template>
-  <v-form>
+  <v-form style="margin-top: 20px">
     <v-card
     class="mx-auto"
     max-width="344"
@@ -14,18 +14,17 @@
                 required
                 v-model="username"/>
             <v-text-field
-                :append-icon="show4 ? 'mdi-eye' : 'mdi-eye-off'"
-                label="Error"
+                :append-icon="show ? 'mdi-eye' : 'mdi-eye-off'"
+                label="Password"
                 hint="At least 8 characters"
-                value="Pa"
-                error
-                @click:append="show4 = !show4"
+                :type="show ? 'text' : 'password'"
+                @click:append="show = !show"
                 v-model="password"
             />
         </v-list-item-content>
         </v-list-item>
         <v-card-actions>
-            <v-btn text @click='login'>Login</v-btn>
+            <v-btn text @click='login()'>Login</v-btn>
         </v-card-actions>
     </v-card>
   </v-form>
@@ -37,16 +36,18 @@ export default {
     data: function(){
         return{
             username: '',
-            password: ''
+            password: '',
+            show: false,
         }
     },
     methods: {
-        login: function() {
+        async login() {
             let username = this.username
             let password = this.password
+            //let response = await 
             this.$store.dispatch('login', {username, password})
-            .then(() => this.$router.push('/'))
-            .catch((err) => console.log(err))
+            
+            //response == true && this.$router.go(-1)
         }
     }
 }

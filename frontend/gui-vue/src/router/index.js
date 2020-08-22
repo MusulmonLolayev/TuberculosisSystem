@@ -40,7 +40,10 @@ var router = new Router({
         {
             path: '/create',
             name: 'create',
-            component: vCreate
+            component: vCreate,
+            meta: {
+                requiresAuth: true
+            },
         },
         {
             path: '/login',
@@ -50,17 +53,26 @@ var router = new Router({
         {
             path: '/data',
             name: 'data',
-            component: vData
+            component: vData,
+            meta: {
+                requiresAuth: true
+            },
         },
         {
             path: '/detials/:patient',
             name: 'detials',
-            component: vDetials
+            component: vDetials,
+            meta: {
+                requiresAuth: true
+            },
         },
         {
             path: '/datamining',
             name: 'datamining',
-            component: vDataMining
+            component: vDataMining,
+            meta: {
+                requiresAuth: true
+            },
         },
     ]
 })
