@@ -2,9 +2,21 @@ from django.urls import path
 
 from rest_framework.urlpatterns import format_suffix_patterns
 
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+    TokenVerifyView)
+
 from .views import *
 
 urlpatterns = [
+
+    # Path to obtain a new access and refresh token
+    path('login', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    # Submit your refresh token to this path to obtain a new access token
+    path('login/refresh', TokenRefreshView.as_view(), name='token_refresh'),
+    path('login/verify/', TokenVerifyView.as_view(), name='token_verify'),
+
     # /countries
     path('countries', CountryListView.as_view()),
 
