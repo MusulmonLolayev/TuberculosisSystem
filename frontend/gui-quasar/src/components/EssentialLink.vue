@@ -21,31 +21,29 @@
   </q-item>
 </template>
 
-<script lang="ts">
-import { defineComponent } from '@vue/composition-api';
-
-export default defineComponent({
+<script>
+export default {
   name: 'EssentialLink',
   props: {
     title: {
       type: String,
-      required: true,
+      required: true
     },
 
     caption: {
       type: String,
-      default: '',
+      default: ''
     },
 
     link: {
       type: String,
-      default: '#',
+      default: '#'
     },
 
     icon: {
       type: String,
-      default: '',
-    },
-  },
-});
+      default: ''
+    }
+  }
+}
 </script>

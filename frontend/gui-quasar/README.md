@@ -1,6 +1,6 @@
-# tuberculosissystem (gui-quasar)
+# tuberculosissytem (tuberculosissytem)
 
-The tuberculosis diagnostic system
+Tuberculosis diagnostic system
 
 ## Install the dependencies
 ```bash
