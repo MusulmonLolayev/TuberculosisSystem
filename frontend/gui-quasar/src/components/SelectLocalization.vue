@@ -24,8 +24,12 @@ export default {
   },
   watch: {
     lang(lang) {
+      localStorage.setItem('lang', lang)
       this.$i18n.locale = lang
     }
+  },
+  mounted(){
+     this.lang = localStorage.getItem('lang') || this.$i18n.locale
   }
 }
 </script>
