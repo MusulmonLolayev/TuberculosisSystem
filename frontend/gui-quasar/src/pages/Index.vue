@@ -1,10 +1,7 @@
 <template>
-  <q-page class="flex flex-center">
-    <img
-      alt="Quasar logo"
-      src="~assets/quasar-logo-full.svg"
-    >
-  </q-page>
+  <div>
+    <h3>{{$t('app_name')}}</h3>
+  </div>
 </template>
 
 <script>
