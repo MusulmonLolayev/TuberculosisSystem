@@ -45,6 +45,7 @@ export default {
               access_token: response.data.access, 
               refresh_token: response.data.refresh
         })
+        this.$axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.access}`
         this.$router.go(-1)
       })
       .catch((error) => {
