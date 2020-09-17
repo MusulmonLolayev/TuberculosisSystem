@@ -1,10 +1,24 @@
 import {Api} from '../boot/axios'
 
+String.prototype.format = function() {
+  var formatted = this;
+  for( var arg in arguments ) {
+      formatted = formatted.replace("{" + arg + "}", arguments[arg]);
+  }
+  return formatted;
+};
+
 let helper = {
 
     message_types: {
         success: 'success',
         error: 'error'
+    },
+
+    
+    rules: {
+      select: [val => !!val],
+      number: [val => !!val],
     },
 
     ToYesNO(value) {
@@ -28,7 +42,7 @@ let helper = {
         today = yyyy + '-' + mm + '-' + dd;
         return today
     },
-    check_acceptability: function(name, instance, ranges){
+    check_acceptability: function(name, instance, ranges, lang){
         let res = [
   
         ]
@@ -60,15 +74,13 @@ let helper = {
                 }
   
                 //r_val = val1 / sub_val1 - val2 / sub_val2
-  
                 let l_R = item['l_R']
                 let r_R = item['r_R']
-  
                 if (r_val < l_R || r_R < r_val){
                   res.push({
                     feature_name1: name,
                     feature_name2: names[i],
-                    error: `It can not be logically possible when ${name} has ${val1} and ${names[i]} has ${val2}`
+                    error: lang('logical_error_message').format(lang(name), val1, lang(names[i]), val2)
                   })
                 }
               }            

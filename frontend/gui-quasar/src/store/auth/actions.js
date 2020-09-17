@@ -6,12 +6,15 @@ export function login(context, {access_token, refresh_token}) {
 }
 
 export function refresh_token(context){
-    console.log(this.state.refresh_token)
+    delete this.$axios.defaults.headers.common["Authorization"]
+    console.log(this.$axios.defaults.headers.common)
     this.$axios.post('/login/refresh', {
-        refresh: this.state.refresh_token
+        refresh: this.state.auth.refresh_token
     })
     .then((response) => {
         console.log(response.data)
+        this.$axios.defaults.headers.common["Authorization"] = `Bearer ${response.data.access}`
+        context.commit('refresh_token', {refresh_token: response.data.access})
     })
     .catch(() => {
         this.$router.push('/login')

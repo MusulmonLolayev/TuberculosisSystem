@@ -340,7 +340,7 @@ export default {
         // other
         this.other.patient = this.patient.id;
         // For test Patient id = 70
-        this.other.patient = 70;
+        //this.other.patient = 70;
         
         let response = await Helper.saveInstance(this.other, '/other_request')
         this.DealSavingRespone(response)
