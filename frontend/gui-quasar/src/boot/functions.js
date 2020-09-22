@@ -1,4 +1,5 @@
 import {Api} from '../boot/axios'
+import {i18n} from '../boot/i18n'
 
 String.prototype.format = function() {
   var formatted = this;
@@ -9,6 +10,8 @@ String.prototype.format = function() {
 };
 
 let helper = {
+
+    lang: i18n,
 
     message_types: {
         success: 'success',
