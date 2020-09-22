@@ -25,10 +25,10 @@ let helper = {
     },
 
     ToYesNO(value) {
-        return value == true ? "Yes" : "No";
+        return value == true ? this.lang.t('yes') : this.lang.t('no');
     },
     ToBoolFromYesNo(value) {
-        return value == "Yes";
+        return value == this.lang.t('yes');
     },
     ToPlusMinus(value) {
         return value == true ? "+" : "-";
@@ -127,6 +127,13 @@ let helper = {
       catch (e){
         return e
       }
+    },
+
+    getSelectedString(numberOfRows) {
+      return numberOfRows + " " + i18n.t("selected");
+    },
+    get_pagination_label(firstRowIndex, endRowIndex, totalRowsNumber) {
+      return firstRowIndex + "-" + endRowIndex + " " + i18n.t("of") + " " + totalRowsNumber;
     },
 }
 
