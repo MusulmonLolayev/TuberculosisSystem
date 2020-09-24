@@ -130,5 +130,7 @@ export default {
   of: 'dan',
   editing: 'Tahrirlash',
   yes: 'Ha',
-  no: "Yo'q"
+  no: "Yo'q",
+  nothing_here: 'Sahifa topilmadi',
+  go_home: 'Bosh sahifaga qayting',
 };

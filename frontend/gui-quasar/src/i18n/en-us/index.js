@@ -130,5 +130,7 @@ export default {
   of: 'of',
   editing: 'Editing',
   yes: 'Yes',
-  no: 'No'
+  no: 'No',
+  nothing_here: 'Nothing here',
+  go_home: 'Go Home'
 }

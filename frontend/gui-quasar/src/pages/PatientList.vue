@@ -15,7 +15,7 @@
     >
       <template v-slot:top-right>
         <div class="row">
-          <q-btn round icon="update" style="margin-right:30px; margin-top:5px" @click="updateData"/>
+          <q-btn round icon="update" style="margin-right:30px; margin-top:5px" @click="updateDate"/>
           <q-input dense debounce="300" v-model="filter" :placeholder="$t('search')">
             <template v-slot:append>
               <q-icon name="search" />
@@ -125,7 +125,7 @@ export default {
   },
   methods: {
     initialize() {
-      this.updateData()
+      this.updateDate()
     },
     async removePatient(id) {
       this.$q
@@ -175,7 +175,7 @@ export default {
       this.$router.push("detail");
     },
 
-    updateData(){
+    updateDate(){
       this.$axios.get("/patient_request").then((response) => {
         this.data = response.data;
       });
