@@ -438,11 +438,8 @@ export default {
       console.log(this.$refs)
     },
     check_acceptability: function(name, instance){
-      return this.$helper.check_acceptability(name, instance, this.ranges, this.lang)
+      return this.$helper.check_acceptability(name, instance, this.ranges)
     },
-    lang(name){
-      return this.$t(name)
-    }
   },
   mounted(){
     this.initialize()

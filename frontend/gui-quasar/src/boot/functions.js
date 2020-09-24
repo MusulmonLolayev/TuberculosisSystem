@@ -45,7 +45,7 @@ let helper = {
         today = yyyy + '-' + mm + '-' + dd;
         return today
     },
-    check_acceptability: function(name, instance, ranges, lang){
+    check_acceptability: function(name, instance, ranges){
         let res = [
   
         ]
@@ -83,7 +83,7 @@ let helper = {
                   res.push({
                     feature_name1: name,
                     feature_name2: names[i],
-                    error: lang('logical_error_message').format(lang(name), val1, lang(names[i]), val2)
+                    error: this.lang.t('logical_error_message').format(this.lang.t(name), val1, this.lang.t(names[i]), val2)
                   })
                 }
               }            
