@@ -60,7 +60,7 @@
         <q-checkbox v-model="primarydiagnose.calcification" :label="$t('calcification')" />
       </div>
       <div class="col-5">
-        BK: 
+        {{this.$t('bk')}}: 
           <q-radio v-model="primarydiagnose.bk" label="+" :val="true" />
           <q-radio v-model="primarydiagnose.bk" label="-" :val="false" />
       </div>

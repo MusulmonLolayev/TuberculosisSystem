@@ -172,6 +172,37 @@ export default {
             }
             else{
                 // to do when working editing
+                // selecting region
+                this.$axios.get('/districts/' + this.patient.district)
+                .then(district => {
+                    // Read the countries
+                    this.$axios.get('/countries')
+                    .then(countries => {
+                        this.countries = countries.data
+                        if (this.countries.length > 0){
+                            this.selectedCountry = district.data.region.country.id
+
+                            this.$axios.get('/regions_by_country/' + this.selectedCountry)
+                            .then(regions => {
+                                this.regions = regions.data
+                                if (this.regions.length > 0){
+                                    this.selectedRegion = district.data.region.id
+
+                                    this.$axios.get('/districts_by_region/' + this.selectedRegion)
+                                    .then((response) => {
+                                        this.districts = response.data
+                                    })
+                                }
+                            })
+                        }
+                    })
+                })
+
+                // selecting occupation
+                this.$axios.get('/occupations')
+                .then(response => {
+                    this.occupations = response.data
+                })
             }
         },
         counrty_changed(){
