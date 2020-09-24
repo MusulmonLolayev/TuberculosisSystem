@@ -48,6 +48,8 @@ module.exports = function (/* ctx */) {
     build: {
       vueRouterMode: 'hash', // available values: 'hash', 'history'
 
+      publicPath: 'http://127.0.0.1:8000/spa/static',
+
       // transpile: false,
 
       // Add dependencies for transpiling with Babel (Array of string/regex)
