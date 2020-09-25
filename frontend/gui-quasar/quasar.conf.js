@@ -48,7 +48,7 @@ module.exports = function (/* ctx */) {
     build: {
       vueRouterMode: 'hash', // available values: 'hash', 'history'
 
-      publicPath: 'http://127.0.0.1:8000/spa/static',
+      publicPath: '',
 
       // transpile: false,
 
@@ -67,14 +67,15 @@ module.exports = function (/* ctx */) {
       // extractCSS: false,
 
       // https://quasar.dev/quasar-cli/handling-webpack
-      /*extendWebpack (cfg) {
+      extendWebpack (cfg) {
         cfg.module.rules.push({
           enforce: 'pre',
           test: /\.(js|vue)$/,
-          loader: 'eslint-loader',
+          //loader: 'eslint-loader',
           exclude: /node_modules/
         })
-      }*/
+      },
+      
     },
 
     // Full list of options: https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-devServer
