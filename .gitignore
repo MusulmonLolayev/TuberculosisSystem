@@ -1,3 +1,2 @@
 frontend/gui-react
 find . -name "*.pyc" -exec git rm -f "{}" \;
-frontend/gui-quasar/src/boot/axios.js
