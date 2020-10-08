@@ -12,7 +12,7 @@ const axiosConfig = {
 
 export const Api = axios.create(axiosConfig)
 
-function refreshToken(store, router) {
+function refreshToken(store) {
   const refreshingCall = Api.post('/login/refresh', {
     refresh: store.state.auth.refresh_token
   })
@@ -23,12 +23,13 @@ function refreshToken(store, router) {
         })
       return Promise.resolve(true)
     })
-    .catch(error => {
-      router.push('/login')
-      return Promise.resolve(true)
+    .catch(() => {
+      return Promise.reject()
     })
   return refreshingCall
 }
+
+let Is_Refreshed_Token = false
 
 export default ({ store, Vue, router }) => {
   Api.defaults.headers.common['Authorization'] = `Bearer ${store.state.auth.access_token}`,
@@ -37,13 +38,28 @@ export default ({ store, Vue, router }) => {
     Api.interceptors.response.use(response => response,
       function (error) {
         let data = error.response.data
-        if (error.response.status === 401) {
-          return refreshToken(store, router).then(_ => {
+        if (!Is_Refreshed_Token &&
+          error.response.status === 401 && 
+          data && data.code && data.code == "token_not_valid" && 
+          store.state.auth.refresh_token) {
+            Is_Refreshed_Token = true
+          return refreshToken(store).then(_ => {
             error.config.headers['Authorization'] = 'Bearer ' + store.state.auth.access_token;
             error.config.baseURL = undefined;
             return Api.request(error.config);
-          });
+          })
+          .catch(() => {
+            return Promise.reject(true)
+          })
         }
+        else{
+          if (Is_Refreshed_Token) {
+            router.push('/login')
+          }
+          else{
+
+          }
+        } 
       }
     )
 }
