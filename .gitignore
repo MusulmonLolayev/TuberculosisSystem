@@ -1,2 +1,4 @@
 frontend/gui-react
 find . -name "*.pyc" -exec git rm -f "{}" \;
+.vscode/settings.json
+.gitignore
