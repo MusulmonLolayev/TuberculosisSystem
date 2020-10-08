@@ -3,6 +3,7 @@ import Vuex from 'vuex'
 
 import auth from './auth'
 import patient from './patient'
+import common from './common'
 
 Vue.use(Vuex)
 
@@ -19,7 +20,8 @@ export default function (/* { ssrContext } */) {
   const Store = new Vuex.Store({
     modules: {
       auth,
-      patient
+      patient,
+      common,
     },
 
     // enable strict mode (adds overhead!)
