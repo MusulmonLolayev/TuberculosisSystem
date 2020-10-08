@@ -4,7 +4,7 @@
       grid
       :title="$t('patients')"
       :data="data"
-      :columns="columns"
+      :columns="$store.state.common.PatientList_Colunms"
       row-key="name"
       :filter="filter"
       grid-header
@@ -82,44 +82,6 @@ export default {
   data() {
     return {
       filter: "",
-      columns: [
-        {
-          name: "fio",
-          required: true,
-          label: this.$t("fio"),
-          align: "left",
-          field: "name",
-          sortable: true,
-        },
-        {
-          name: "number",
-          align: "center",
-          label: this.$t("number"),
-          field: "number",
-          sortable: true,
-        },
-        {
-          name: "birthday",
-          align: "center",
-          label: this.$t("birthday"),
-          field: "birthday",
-          sortable: true,
-        },
-        {
-          name: "fromdate",
-          align: "right",
-          label: this.$t("from_date"),
-          field: "fromdate",
-          sortable: true,
-        },
-        {
-          name: "gender",
-          align: "right",
-          label: this.$t("gender"),
-          field: "gender",
-          sortable: true,
-        },
-      ],
       data: [],
     };
   },
