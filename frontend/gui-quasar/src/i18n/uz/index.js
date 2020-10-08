@@ -136,4 +136,5 @@ export default {
   token_has_expired: 'Tokenning muddati o\'tgan',
   please_relogin: 'Iltimos, qayta kiring',
   fill_all_fields: 'Iltimos, hamma maydonlarni to\'ldiring',
+  update_data: "Ma'lumotlarni yangilash"
 };

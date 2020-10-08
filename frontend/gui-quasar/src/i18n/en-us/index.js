@@ -136,4 +136,5 @@ export default {
   token_has_expired: 'Your token time has expired',
   please_relogin: 'Please, relogin',
   fill_all_fields: 'Please, fill all fields',
+  update_data: 'Update the data',
 }
