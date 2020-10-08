@@ -132,5 +132,8 @@ export default {
   yes: 'Yes',
   no: 'No',
   nothing_here: 'Nothing here',
-  go_home: 'Go Home'
+  go_home: 'Go Home',
+  token_has_expired: 'Your token time has expired',
+  please_relogin: 'Please, relogin',
+  fill_all_fields: 'Please, fill all fields',
 }

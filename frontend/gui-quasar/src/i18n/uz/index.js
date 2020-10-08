@@ -133,4 +133,7 @@ export default {
   no: "Yo'q",
   nothing_here: 'Sahifa topilmadi',
   go_home: 'Bosh sahifaga qayting',
+  token_has_expired: 'Tokenning muddati o\'tgan',
+  please_relogin: 'Iltimos, qayta kiring',
+  fill_all_fields: 'Iltimos, hamma maydonlarni to\'ldiring',
 };
