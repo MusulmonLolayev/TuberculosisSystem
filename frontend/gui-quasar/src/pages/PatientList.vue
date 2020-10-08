@@ -8,15 +8,30 @@
       row-key="name"
       :filter="filter"
       grid-header
+      hide-header
       :no-data-label="$t('nothingtoshow')"
-      :rows-per-page-label="$t('rows_per_page_label')+':'"
+      :rows-per-page-label="$t('rows_per_page_label') + ':'"
       :selected-rows-label="$helper.getSelectedString"
       :pagination-label="$helper.get_pagination_label"
     >
-      <template v-slot:top-right>
+      <template v-slot:top-right="props">
         <div class="row">
-          <q-btn round icon="update" style="margin-right:30px; margin-top:5px" @click="updateDate"/>
-          <q-input dense debounce="300" v-model="filter" :placeholder="$t('search')">
+          <q-btn
+            round
+            icon="update"
+            style="margin-right: 30px; margin-top: 5px"
+            @click="updateDate"
+          >
+            <q-tooltip content-class="bg-accent">{{
+              $t("update_data")
+            }}</q-tooltip>
+          </q-btn>
+          <q-input
+            dense
+            debounce="300"
+            v-model="filter"
+            :placeholder="$t('search')"
+          >
             <template v-slot:append>
               <q-icon name="search" />
             </template>
@@ -25,52 +40,65 @@
       </template>
 
       <template v-slot:item="props">
-        <div class="q-pa-xs col-xs-5 col-sm-5 col-md-3">
-          <q-card>
-            <q-card-section>
-              <div class="row items-center no-wrap">
-                <div class="col">
-                  <strong>{{ props.row.last_name + " " + props.row.first_name[0] + " " + props.row.middle_name[0]}}</strong>
-                </div>
-
-                <div class="col-auto">
-                  <q-btn color="grey-7" round flat icon="more_vert">
-                    <q-menu cover auto-close>
-                      <q-list>
-                        <q-item clickable @click="goDetail(props.row)">
-                          <q-item-section>{{$t('detail')}}</q-item-section>
-                        </q-item>
-                        <q-item clickable @click="removePatient(props.row.id)">
-                          <q-item-section>{{$t('remove')}}</q-item-section>
-                        </q-item>
-                      </q-list>
-                    </q-menu>
-                  </q-btn>
-                </div>
-              </div>
-            </q-card-section>
-            <q-separator />
-            <q-card-section class="flex flex-center">
-              <div class="column">
-                <div class="col">{{$t('number')}}</div>
-                <div class="col">{{props.row.number}}</div>
-              </div>
-              <div class="row">
-                <div class="col">{{$t('birthday')}}</div>
-                <div class="col">{{props.row.birthday}}</div>
-              </div>
-              <div class="row">
-                <div class="col">{{$t('from_date')}}</div>
-                <div class="col">{{props.row.fromdate}}</div>
+        <q-card style="margin: 5px; min-width: 220px">
+          <q-card-section>
+            <div class="row items-center no-wrap">
+              <div class="col">
+                <strong>{{
+                  props.row.last_name +
+                  " " +
+                  props.row.first_name[0] +
+                  " " +
+                  props.row.middle_name[0]
+                }}</strong>
               </div>
 
-              <div class="row">
-                <div class="col">{{$t('gender')}}</div>
-                <div class="col">{{props.row.gender ? $t('male'):$t('female')}}</div>
+              <div class="col-auto">
+                <q-btn color="grey-7" round flat icon="more_vert">
+                  <q-menu cover auto-close>
+                    <q-list>
+                      <q-item clickable @click="goDetail(props.row)">
+                        <q-item-section>{{ $t("detail") }}</q-item-section>
+                      </q-item>
+                      <q-item clickable @click="removePatient(props.row.id)">
+                        <q-item-section>{{ $t("remove") }}</q-item-section>
+                      </q-item>
+                    </q-list>
+                  </q-menu>
+                </q-btn>
               </div>
-            </q-card-section>
-          </q-card>
-        </div>
+            </div>
+          </q-card-section>
+          <q-separator />
+          <q-card-section>
+            <table>
+              <tr>
+                <td>
+                  <strong>{{ $t("number") }}:</strong>
+                </td>
+                <td>{{ props.row.number }}</td>
+              </tr>
+              <tr>
+                <td>
+                  <strong>{{ $t("birthday") }}:</strong>
+                </td>
+                <td>{{ props.row.birthday }}</td>
+              </tr>
+              <tr>
+                <td>
+                  <strong>{{ $t("from_date") }}:</strong>
+                </td>
+                <td>{{ props.row.fromdate }}</td>
+              </tr>
+              <tr>
+                <td>
+                  <strong>{{ $t("gender") }}:</strong>
+                </td>
+                <td>{{ props.row.gender ? $t("male") : $t("female") }}</td>
+              </tr>
+            </table>
+          </q-card-section>
+        </q-card>
       </template>
     </q-table>
   </div>
@@ -87,7 +115,7 @@ export default {
   },
   methods: {
     initialize() {
-      this.updateDate()
+      this.updateDate();
     },
     async removePatient(id) {
       this.$q
@@ -137,11 +165,11 @@ export default {
       this.$router.push("detail");
     },
 
-    updateDate(){
+    updateDate() {
       this.$axios.get("/patient_request").then((response) => {
         this.data = response.data;
       });
-    }
+    },
   },
   beforeMount() {
     this.initialize();
@@ -149,5 +177,5 @@ export default {
 };
 </script>
 
-<style>
+<style scop>
 </style>
