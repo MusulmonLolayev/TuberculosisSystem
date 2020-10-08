@@ -1,11 +1,39 @@
 <template>
-  <q-card class="row justify-center q-pa-md">
+  <q-card class="card">
     <q-layout>
-      <span v-show="IsError">
-        {{$t('username_or_password_incorrect')}}
+      <span v-show="IsError" style="color: red">
+        {{ $t("username_or_password_incorrect") }}
       </span>
-      <q-input v-model="username" :label="$t('user_or_email')" style="margin:5px"/>
-      <q-input v-model="password" :type="isPwd ? 'password' : 'text'" :label="$t('password')" style="margin:5px">
+      <span
+        v-show="$store.state.common.IsRefreshingTokenExpired"
+        style="color: red"
+      >
+        {{ $t("token_has_expired") }} <br />
+        {{ $t("please_relogin") }}
+      </span>
+      <span v-show="IsNotFilled" style="color: red">
+        {{ $t("fill_all_fields") }}
+      </span>
+      <q-input
+        v-model="username"
+        :label="$t('user_or_email')"
+        style="margin: 5px"
+        @keydown.enter.prevent="login"
+      >
+        <template v-slot:prepend>
+          <q-icon name="person_outline" />
+        </template>
+      </q-input>
+      <q-input
+        v-model="password"
+        :type="isPwd ? 'password' : 'text'"
+        :label="$t('password')"
+        style="margin: 5px"
+        @keydown.enter.prevent="login"
+      >
+        <template v-slot:prepend>
+          <q-icon name="login" />
+        </template>
         <template v-slot:append>
           <q-icon
             :name="isPwd ? 'visibility_off' : 'visibility'"
@@ -14,47 +42,64 @@
           />
         </template>
       </q-input>
-      <q-btn flat class="full-width" style="margin:5px" @click="login()">
-        {{$t('login')}}
+      <q-btn
+        flat
+        class="full-width"
+        style="margin: 5px"
+        @click="login()"
+        :disabled="IsDisabled"
+      >
+        {{ $t("login") }}
       </q-btn>
     </q-layout>
   </q-card>
 </template>
 
 <script>
-
 export default {
-  data: function(){
+  data: function () {
     return {
       isPwd: true,
-      username: '',
-      password: '',
-      IsError: false
-    }
+      username: "",
+      password: "",
+      IsError: false,
+      IsNotFilled: false,
+    };
+  },
+  computed: {
+    IsDisabled() {
+      return !this.username || !this.password;
+    },
   },
   methods: {
-    login(){
-      this.IsError = false
-      this.$axios.post('/login', 
-      {
+    login() {
+      if (this.IsDisabled) {
+        this.IsNotFilled = true;
+        return;
+      }
+      this.IsNotFilled = false;
+      this.IsError = false;
+      this.$axios
+        .post("/login", {
           username: this.username,
-          password: this.password
-      })
-      .then((response) => {
-        this.$store.dispatch('auth/login',{
-              access_token: response.data.access, 
-              refresh_token: response.data.refresh
+          password: this.password,
         })
-        this.$axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.access}`
-        this.$router.go(-1)
-      })
-      .catch((error) => {
-          if (error.response.status === 401)
-            this.IsError = true
-      })
-    }
-  }
-}
+        .then((response) => {
+          this.$store.dispatch("auth/login", {
+            access_token: response.data.access,
+            refresh_token: response.data.refresh,
+          });
+          this.$axios.defaults.headers.common[
+            "Authorization"
+          ] = `Bearer ${response.data.access}`;
+          this.$router.go(-1);
+        })
+        .catch(() => {
+          this.IsError = true;
+        });
+    },
+  },
+};
 </script>
 
 <style scoped>
@@ -62,5 +107,14 @@ export default {
   width: 300px;
   height: 180px;
   align-self: center;
+}
+.card {
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 20px;
+  width: 100%;
+  max-width: 350px;
+  padding: 10px;
+  max-height: 200px;
 }
 </style>
