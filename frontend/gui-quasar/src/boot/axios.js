@@ -21,6 +21,7 @@ function refreshToken(store) {
         {
           access: response.data.access
         })
+      store.dispatch('common/setIsRefreshingTokenExpired', {status: false})
       return Promise.resolve(true)
     })
     .catch(() => {
@@ -54,6 +55,7 @@ export default ({ store, Vue, router }) => {
         }
         else{
           if (Is_Refreshed_Token) {
+            store.dispatch('common/setIsRefreshingTokenExpired', {status: true})
             router.push('/login')
           }
           else{
