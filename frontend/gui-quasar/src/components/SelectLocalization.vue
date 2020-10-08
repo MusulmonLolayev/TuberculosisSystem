@@ -1,7 +1,7 @@
 <template>
   <q-select
     v-model="lang"
-    :options="langOptions"
+    :options="$store.state.common.LangOptions"
     dense
     borderless
     emit-value
@@ -16,20 +16,18 @@ export default {
   data: function () {
     return {
       lang: this.$i18n.locale,
-      langOptions: [
-        { value: 'en-us', label: this.$t('lang_en') },
-        { value: 'uz', label: this.$t('lang_uz') }
-      ]
     }
   },
   watch: {
     lang (lang) {
       localStorage.setItem('lang', lang)
       this.$i18n.locale = lang
+      this.$store.dispatch('common/setLangOptions')
     }
   },
   mounted: function () {
     this.lang = localStorage.getItem('lang') || this.$i18n.locale
+    this.$store.dispatch('common/setLangOptions')
   }
 }
 </script>
