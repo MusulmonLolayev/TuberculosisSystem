@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { Loading } from 'quasar'
 
 const baseURL = 'http://127.0.0.1:8000/api'
 
@@ -41,12 +42,16 @@ export default ({ store, Vue, router }) => {
         store.dispatch('common/no_internet_notify')
         return Promise.reject(request)
       }
-
+      Loading.show()
       return Promise.resolve(request)
     }, error => {
 
     }),
-    Api.interceptors.response.use(response => response,
+    Api.interceptors.response.use(
+      function (response) {
+        Loading.hide()
+        return Promise.resolve(response)
+      },
       function (error) {
         // Check error is Network error
         if (!error.status) {
