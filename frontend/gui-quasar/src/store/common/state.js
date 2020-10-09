@@ -3,5 +3,6 @@ export default function () {
     IsRefreshingTokenExpired: false,
     LangOptions: [],
     PatientList_Colunms: [],
+    IsOnline: window.navigator.IsOnline ? true : false,
   }
 }

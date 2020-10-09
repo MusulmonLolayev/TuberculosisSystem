@@ -45,3 +45,6 @@ export function setLangOptions(state) {
         },
     ]
 }
+export function setConnectionStatus(state, { status }) {
+    state.IsOnline = status
+}
