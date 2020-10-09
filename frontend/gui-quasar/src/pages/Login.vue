@@ -51,6 +51,14 @@
       >
         {{ $t("login") }}
       </q-btn>
+
+      <q-btn
+        flat
+        class="full-width"
+        to="register"
+      >
+        {{ $t("register") }}
+      </q-btn>
     </q-layout>
   </q-card>
 </template>
@@ -115,6 +123,6 @@ export default {
   width: 100%;
   max-width: 350px;
   padding: 10px;
-  max-height: 200px;
+  max-height: 230px;
 }
 </style>
