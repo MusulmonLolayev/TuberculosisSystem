@@ -136,5 +136,11 @@ export default {
   token_has_expired: 'Tokenning muddati o\'tgan',
   please_relogin: 'Iltimos, qayta kiring',
   fill_all_fields: 'Iltimos, hamma maydonlarni to\'ldiring',
-  update_data: "Ma'lumotlarni yangilash"
+  update_data: "Ma'lumotlarni yangilash",
+  acount: "Ro'yxat",
+  user: "Foydalanuvchi",
+  logout: "Chiqish",
+  register: "Ro'yxatdan o'tish",
+  reenter_password: "Paroni qayta kiriting",
+  passwords_not_compatible: "Parollar bir xil emas",
 };

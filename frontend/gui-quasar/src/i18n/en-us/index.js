@@ -137,4 +137,10 @@ export default {
   please_relogin: 'Please, relogin',
   fill_all_fields: 'Please, fill all fields',
   update_data: 'Update the data',
+  acount: "Account",
+  user: "User",
+  logout: "Logout",
+  register: 'Register',
+  reenter_password: 'Confirm password',
+  passwords_not_compatible: "Passwords are not compatible",
 }
