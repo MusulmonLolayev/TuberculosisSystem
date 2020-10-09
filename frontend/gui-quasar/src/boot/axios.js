@@ -38,6 +38,10 @@ export default ({ store, Vue, router }) => {
     store.$axios = Api,
     Api.interceptors.response.use(response => response,
       function (error) {
+        // Check error is Network error
+        if (!error.status){
+          return Promise.reject(error)
+        }
         let data = error.response.data
         if (!Is_Refreshed_Token &&
           error.response.status === 401 && 
@@ -49,8 +53,8 @@ export default ({ store, Vue, router }) => {
             error.config.baseURL = undefined;
             return Api.request(error.config);
           })
-          .catch(() => {
-            return Promise.reject(true)
+          .catch((error) => {
+            return Promise.reject(error)
           })
         }
         else{
