@@ -11,22 +11,25 @@
           @click="leftDrawerOpen = !leftDrawerOpen"
         />
         <q-toolbar-title>
-          {{$t('app_name')}}
+          {{ $t("app_name") }}
         </q-toolbar-title>
 
-        <div style="float:right; margin-right:20px" v-if="!$store.state.auth.IsLoggined">
-          <q-btn
-            flat
-            dense
-            borderless
-            :label="$t('login')"
-            to="login"
-          />
+        <div
+          style="float: right; margin-right: 20px"
+          v-if="!$store.state.auth.IsLoggined"
+        >
+          <q-btn flat dense borderless :label="$t('login')" to="login" />
         </div>
 
-        <div style="float:right">
+        <div style="float: right">
           <select-localization />
         </div>
+
+        <q-icon
+          name="fas fa-signal"
+          style="margin-left: 10px; margin-right: 10px"
+          v-if="$store.state.common.IsOnline == true"
+        />
       </q-toolbar>
     </q-header>
     <q-drawer
@@ -51,16 +54,32 @@
 </template>
 
 <script>
-import EssentialLink from '../components/EssentialLink.vue'
-import SelectLocalization from '../components/SelectLocalization.vue'
+import EssentialLink from "../components/EssentialLink.vue";
+import SelectLocalization from "../components/SelectLocalization.vue";
 
 export default {
-  name: 'MainLayout',
-  data () {
+  name: "MainLayout",
+  data() {
     return {
-      leftDrawerOpen: false
+      leftDrawerOpen: false,
+      IsOnline: window.navigator.onLine,
+    };
+  },
+  watch: {
+    IsOnline: function(){
+      return window.navigator.onLine
     }
   },
-  components: { EssentialLink, SelectLocalization }
-}
+  mounted() {
+    let store = this.$store
+    window.addEventListener("offline", function (e) {
+      store.dispatch('common/setConnectionStatus', {status: false})
+    });
+
+    window.addEventListener("online", function (e) {
+      store.dispatch('common/setConnectionStatus', {status: true})
+    });
+  },
+  components: { EssentialLink, SelectLocalization },
+};
 </script>
