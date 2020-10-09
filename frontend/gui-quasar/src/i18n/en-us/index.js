@@ -143,4 +143,6 @@ export default {
   register: 'Register',
   reenter_password: 'Confirm password',
   passwords_not_compatible: "Passwords are not compatible",
+  no_internet_connection: 'No internet connection',
+  internal_server_error: 'Internal server error',
 }

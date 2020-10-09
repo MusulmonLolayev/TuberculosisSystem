@@ -143,4 +143,6 @@ export default {
   register: "Ro'yxatdan o'tish",
   reenter_password: "Paroni qayta kiriting",
   passwords_not_compatible: "Parollar bir xil emas",
+  no_internet_connection: 'Internet bilan aloqa yo\'q',
+  internal_server_error: 'Server xatoligi',
 };
