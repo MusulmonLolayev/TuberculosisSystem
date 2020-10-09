@@ -44,15 +44,15 @@
         </q-expansion-item>
         <q-expansion-item
           expand-separator
-          icon="account"
-          :label="$t('int_analysis')"
+          icon="person_outline"
+          :label="$t('user')"
           >
           <q-list>
-            <q-item clickable to='mining' style="margin-left:20px">
+            <q-item clickable @click="logout" style="margin-left:20px">
               <q-item-section avatar>
-                <q-icon color="primary" name="poll"/>
+                <q-icon color="primary" name="fas fa-sign-out-alt"/>
               </q-item-section>
-              <q-item-section>{{$t('data_mining')}}</q-item-section>
+              <q-item-section>{{$t('logout')}}</q-item-section>
             </q-item>
           </q-list>
         </q-expansion-item>
@@ -68,6 +68,16 @@ export default {
     show_loggined_div(){
       return this.$store.state.auth.IsLoggined;
     }
-  }
+  },
+  methods: {
+    logout(){
+      this.$store.dispatch('auth/logout')
+      .then(() => {
+        if (this.$router.currentRoute.path != "/"){
+          this.$router.push("/")
+        }
+      })
+    }
+  },
 }
 </script>
