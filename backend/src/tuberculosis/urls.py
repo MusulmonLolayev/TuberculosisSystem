@@ -8,4 +8,6 @@ urlpatterns = [
     path('api/', include('api_app.urls')),
     path('api/', include('ai.datamining.urls')),
     path('patient/', include('patientapp.urls')),
+    path('patient/', include('patientapp.urls')),
+    path('api/', include('jwtauth.urls'), name='jwtauth'),
 ]
