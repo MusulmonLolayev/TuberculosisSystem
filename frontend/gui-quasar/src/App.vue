@@ -1,6 +1,7 @@
 <template>
   <div id="q-app">
-    <router-view />
+    <q-ajax-bar ref="bar" size="3px" color="green" :delay="delay" />
+    <router-view v-on:startAjaxBar="onStartAjaxBar" v-on:stopAjaxBar="onStopAjaxBar" />
   </div>
 </template>
 <script>
@@ -9,11 +10,20 @@ export default {
   data: function(){
     return {
       title: '',
+      delay: 0
     }
   },
   methods: {
     initialize(){
       this.title = this.$t('app_name')
+    },
+    onStartAjaxBar () {
+      console.log('started')
+      this.$refs.bar.start()
+    },
+    onStopAjaxBar () {
+      console.log('stopped')
+      this.$refs.bar.stop()
     }
   },
 
