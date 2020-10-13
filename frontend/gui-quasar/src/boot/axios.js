@@ -44,8 +44,9 @@ export default ({ store, Vue, router }) => {
       }
       Loading.show()
       return Promise.resolve(request)
-    }, error => {
-
+    }, function(error) {
+      Loading.hide()
+      return Promise.reject(error)
     }),
     Api.interceptors.response.use(
       function (response) {
@@ -53,10 +54,12 @@ export default ({ store, Vue, router }) => {
         return Promise.resolve(response)
       },
       function (error) {
+        Loading.hide()
         // Check error is Network error
-        if (!error.status) {
+        if (!error.response.status) {
           return Promise.reject(error)
         }
+
         // Check Internal server error
         if (error.response.status === 500) {
           store.dispatch('common/internal_server_error_dialog')
@@ -81,6 +84,7 @@ export default ({ store, Vue, router }) => {
         else {
           // If the refresh token is experid too, then the user must relogin 
           if (Is_Refreshed_Token) {
+
             store.dispatch('common/setIsRefreshingTokenExpired', { status: true })
             router.push('/login')
           }
