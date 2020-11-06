@@ -30,7 +30,7 @@
       <q-step
         :name="3"
         :title="$t('primary_diagnose')"
-        icon="sick"
+        icon="fas fa-diagnoses"
         :done="step > 3"
       >
         <primary-diagnose :primarydiagnose="primary_diagnose" ref="refPrimary"/>
@@ -40,7 +40,7 @@
       <q-step
         :name="4"
         :title="$t('taking_medicine')"
-        icon="local_pharmacy"
+        icon="fas fa-capsules"
         :done="step > 4"
       >
       <taking-medicine :takingmedicine='taking_medicine' ref='refTaking'/>
@@ -49,7 +49,7 @@
       <q-step
         :name="5"
         :title="$t('complaint')"
-        icon="forum"
+        icon="fas fa-comment-medical"
         :done="step > 5"
       >
         <complaint :complaint="complaint" ref='refComplaint'/>
@@ -58,7 +58,7 @@
       <q-step
         :name="6"
         :title="$t('blood_analysis')"
-        icon="forum"
+        icon="fas fa-burn"
         :done="step > 6"
       >
         <blood-analysis :bloodanalysis="blood_analysis" ref="refBlood" :check_acceptability="check_acceptability"/>
@@ -67,7 +67,7 @@
       <q-step
         :name="7"
         :title="$t('other_analysis')"
-        icon="forum"
+        icon="fas fa-biohazard"
       >
         <other-component :other="others" ref="refOther"/>
       </q-step>
